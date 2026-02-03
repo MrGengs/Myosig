@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Myosig - Login & Register</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        /* Auth Page Specific Styles */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+            padding-bottom: 2rem;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .auth-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3), 0 0 30px rgba(157, 80, 255, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .auth-logo i {
+            font-size: 3.5rem;
+            color: var(--white);
+        }
+
+        .auth-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-subtitle {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .auth-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 450px;
+            margin: 0 auto;
+            width: 100%;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .auth-card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .auth-card-title i {
+            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.75rem;
+        }
+
+        .auth-card-subtitle {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .auth-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .auth-form-label i {
+            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.1rem;
+        }
+
+        .auth-input-wrapper {
+            position: relative;
+        }
+
+        .auth-form-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--lighter-blue);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .auth-form-input:focus {
+            outline: none;
+            border-color: #5B8DEF;
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15);
+            background: var(--milky-white);
+        }
+
+        .auth-form-input::placeholder {
+            color: var(--text-light);
+            opacity: 0.7;
+        }
+
+        .auth-input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .auth-password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .auth-password-toggle:hover {
+            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .auth-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .auth-checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary-blue);
+        }
+
+        .auth-forgot-link {
+            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .auth-forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .auth-submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(91, 141, 239, 0.4), 0 0 20px rgba(157, 80, 255, 0.3);
+        }
+
+        .auth-submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .auth-submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            right: 0;
+            height: 1px;
+            background: var(--lighter-blue);
+        }
+
+        .auth-divider span {
+            background: var(--white);
+            padding: 0 1rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            position: relative;
+        }
+
+        /* Auth switch text - teks biasa dengan link di dalamnya */
+        .auth-switch-text {
+            width: 100%;
+            text-align: center;
+            padding: 0.875rem 0;
+            font-size: 1rem;
+        }
+
+        .auth-switch-text span {
+            color: var(--text-dark);
+        }
+
+        .auth-switch-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .auth-switch-link:hover {
+            color: var(--primary-blue-dark);
+            text-decoration: underline;
+        }
+
+        .auth-switch-link:active {
+            color: var(--primary-blue-dark);
+        }
+
+        .auth-google-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+        }
+
+        .auth-google-btn:hover {
+            background: #FAFAFA;
+            border-color: #D0D0D0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-google-btn:active {
+            transform: scale(0.98);
+        }
+
+        .auth-google-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .auth-google-logo {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+
+        .auth-terms {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-top: 0.5rem;
+        }
+
+        .auth-terms a {
+            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-terms a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 0.75rem;
+                padding-bottom: 1.5rem;
+            }
+
+            .auth-logo {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 1rem;
+            }
+
+            .auth-logo i {
+                font-size: 2.5rem;
+            }
+
+            .auth-title {
+                font-size: 1.75rem;
+            }
+
+            .auth-subtitle {
+                font-size: 0.85rem;
+            }
+
+            .auth-card {
+                padding: 1.5rem 1.25rem;
+                border-radius: 20px;
+            }
+
+            .auth-card-title {
+                font-size: 1.25rem;
+            }
+
+            .auth-form-input {
+                padding: 0.875rem 0.875rem 0.875rem 2.75rem;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .auth-submit-btn {
+                padding: 0.875rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Loading Spinner */
+        .auth-loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Logo and Header -->
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+            <h1 class="auth-title">Myosig</h1>
+            <p class="auth-subtitle">Smart Wearable Device for<br>Rehabilitation Stroke Patient</p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="auth-card">
+            <div class="auth-card-header">
+                <h2 class="auth-card-title">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Masuk ke Akun
+                </h2>
+                <p class="auth-card-subtitle">Selamat datang kembali!</p>
+            </div>
+            
+            <form id="loginFormElement">
+                <div class="auth-form-group">
+                    <label for="loginEmail" class="auth-form-label">
+                        <i class="bi bi-envelope"></i>
+                        Email
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-envelope auth-input-icon"></i>
+                        <input 
+                            type="email" 
+                            id="loginEmail" 
+                            class="auth-form-input" 
+                            placeholder="nama@email.com"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="loginPassword" class="auth-form-label">
+                        <i class="bi bi-lock"></i>
+                        Kata Sandi
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-lock auth-input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            class="auth-form-input" 
+                            placeholder="Masukkan kata sandi"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <button type="button" class="auth-password-toggle" onclick="togglePassword('loginPassword', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-options">
+                    <label class="auth-checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Ingat saya</span>
+                    </label>
+                    <a href="#" class="auth-forgot-link">Lupa kata sandi?</a>
+                </div>
+
+                <button type="submit" class="auth-submit-btn" id="loginSubmitBtn">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>Masuk</span>
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <span>atau</span>
+            </div>
+
+            <button onclick="signInWithGoogle()" class="auth-google-btn" id="googleLoginBtn">
+                <svg class="auth-google-logo" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span>Masuk dengan Google</span>
+            </button>
+
+            <div class="auth-switch-text">
+                <span>Belum punya akun? </span>
+                <a href="#" onclick="showRegister(); return false;" class="auth-switch-link">Daftar di sini</a>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="auth-card hidden">
+            <div class="auth-card-header">
+                <h2 class="auth-card-title">
+                    <i class="bi bi-person-plus"></i>
+                    Buat Akun Baru
+                </h2>
+                <p class="auth-card-subtitle">Mulai perjalanan rehabilitasi Anda</p>
+            </div>
+            
+            <form id="registerFormElement">
+                <div class="auth-form-group">
+                    <label for="registerName" class="auth-form-label">
+                        <i class="bi bi-person"></i>
+                        Nama Lengkap
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-person auth-input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="registerName" 
+                            class="auth-form-input" 
+                            placeholder="Nama lengkap Anda"
+                            required
+                            autocomplete="name"
+                        >
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="registerEmail" class="auth-form-label">
+                        <i class="bi bi-envelope"></i>
+                        Email
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-envelope auth-input-icon"></i>
+                        <input 
+                            type="email" 
+                            id="registerEmail" 
+                            class="auth-form-input" 
+                            placeholder="nama@email.com"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="registerPhone" class="auth-form-label">
+                        <i class="bi bi-telephone"></i>
+                        Nomor Telepon
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-telephone auth-input-icon"></i>
+                        <input 
+                            type="tel" 
+                            id="registerPhone" 
+                            class="auth-form-input" 
+                            placeholder="08xxxxxxxxxx"
+                            required
+                            autocomplete="tel"
+                        >
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="registerPassword" class="auth-form-label">
+                        <i class="bi bi-lock"></i>
+                        Kata Sandi
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-lock auth-input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="registerPassword" 
+                            class="auth-form-input" 
+                            placeholder="Minimal 8 karakter"
+                            required
+                            minlength="8"
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="auth-password-toggle" onclick="togglePassword('registerPassword', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="registerConfirmPassword" class="auth-form-label">
+                        <i class="bi bi-lock-fill"></i>
+                        Konfirmasi Kata Sandi
+                    </label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-lock-fill auth-input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="registerConfirmPassword" 
+                            class="auth-form-input" 
+                            placeholder="Ulangi kata sandi"
+                            required
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="auth-password-toggle" onclick="togglePassword('registerConfirmPassword', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label class="auth-checkbox-label" style="align-items: flex-start;">
+                        <input type="checkbox" id="agreeTerms" required style="margin-top: 0.25rem;">
+                        <span class="auth-terms">
+                            Saya setuju dengan <a href="#">Syarat & Ketentuan</a> dan <a href="#">Kebijakan Privasi</a>
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="auth-submit-btn" id="registerSubmitBtn">
+                    <i class="bi bi-person-plus"></i>
+                    <span>Daftar</span>
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <span>atau</span>
+            </div>
+
+            <button onclick="signInWithGoogle()" class="auth-google-btn" id="googleRegisterBtn">
+                <svg class="auth-google-logo" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span>Daftar dengan Google</span>
+            </button>
+
+            <div class="auth-switch-text">
+                <span>Sudah punya akun? </span>
+                <a href="#" onclick="showLogin(); return false;" class="auth-switch-link">Masuk di sini</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Toggle password visibility
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+
+        // Update button loading state
+        document.getElementById('loginFormElement').addEventListener('submit', function(e) {
+            const btn = document.getElementById('loginSubmitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="auth-loading"></span> <span>Memproses...</span>';
+        });
+
+        document.getElementById('registerFormElement').addEventListener('submit', function(e) {
+            const btn = document.getElementById('registerSubmitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="auth-loading"></span> <span>Memproses...</span>';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Myosig - Redirecting...</title>
+    <script>
+        // Check if user is logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                window.location.href = 'dashboard.html';
+            } else {
+                window.location.href = 'auth.html';
+            }
+        });
+    </script>
+</head>
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #FFF8F0 0%, #E0F6FF 100%);">
+        <div style="text-align: center;">
+            <div style="font-size: 4rem; color: #87CEEB; margin-bottom: 1rem;">⏳</div>
+            <p style="color: #5A6C7D;">Memuat...</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Myosig - Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Header -->
+        <div class="page-header fade-in">
+            <h1 id="welcomeName">Selamat Datang!</h1>
+            <p>Pantau perkembangan rehabilitasi Anda hari ini</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid fade-in">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+                <div class="stat-value" id="todayExercises">0</div>
+                <div class="stat-label">Latihan Hari Ini</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="stat-value" id="totalMinutes">0</div>
+                <div class="stat-label">Menit Total</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+                <div class="stat-value" id="progressPercent">0%</div>
+                <div class="stat-label">Kemajuan</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-fire"></i>
+                </div>
+                <div class="stat-value" id="streakDays">0</div>
+                <div class="stat-label">Hari Berturut</div>
+            </div>
+        </div>
+
+        <!-- Today's Progress Card -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="bi bi-graph-up card-icon"></i>
+                    Kemajuan Hari Ini
+                </h2>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="todayProgressBar" style="width: 100%;">--%</div>
+            </div>
+            
+            <div class="progress-info">
+                <span class="progress-label">Target: 30 menit latihan</span>
+                <span class="progress-value" id="todayProgressValue">00 menit</span>
+            </div>
+        </div>
+
+        <!-- Monitoring Pergerakan Otot Lengan -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="bi bi-activity card-icon"></i>
+                    Monitoring Pergerakan Otot Lengan
+                </h2>
+            </div>
+            
+            <div class="sensor-data">
+                <div class="sensor-info">
+                    <div class="sensor-name">Aktivitas Otot (EMG)</div>
+                    <div class="sensor-value">
+                        <span id="emgVoltage">0.00</span>
+                        <span class="sensor-unit">V</span>
+                    </div>
+                </div>
+                <div class="progress-bar-container" style="margin-top: 0.5rem;">
+                    <div class="progress-bar" id="emgProgress" style="width: 0%;">0%</div>
+                </div>
+            </div>
+            
+            <div class="sensor-data">
+                <div class="sensor-info">
+                    <div class="sensor-name">Gerak Lengan (MPU)</div>
+                    <div class="sensor-value">
+                        <span id="armMovement">Stabil</span>
+                    </div>
+                </div>
+                <div style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-light);">
+                    Akselerasi: <span id="accelMagnitude">0.00</span> g
+                </div>
+            </div>
+            
+            <div class="alert alert-info" style="margin-top: 1rem;">
+                <i class="bi bi-info-circle" style="font-size: 1.5rem;"></i>
+                <div>
+                    <strong>Monitoring Real-time</strong>
+                    <p style="margin: 0; margin-top: 0.25rem;">Data dari sensor EMG dan MPU untuk memantau pergerakan otot lengan selama rehabilitasi.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity Card -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="bi bi-clock-history card-icon"></i>
+                    Aktivitas Terkini
+                </h2>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Hari ini, 14:30</div>
+                    <div class="timeline-content">
+                        <strong>Latihan Lengan Kanan</strong>
+                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Durasi: 15 menit | Repetisi: 30x</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">Hari ini, 10:15</div>
+                    <div class="timeline-content">
+                        <strong>Latihan Peregangan</strong>
+                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Durasi: 10 menit | Repetisi: 20x</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">Kemarin, 16:00</div>
+                    <div class="timeline-content">
+                        <strong>Latihan Koordinasi</strong>
+                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Durasi: 20 menit | Repetisi: 25x</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Tips Card -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="bi bi-lightbulb card-icon"></i>
+                    Tips Kesehatan Hari Ini
+                </h2>
+            </div>
+            
+            <div id="healthTips" class="alert alert-info">
+                <i class="bi bi-hourglass-split" style="font-size: 1.5rem;"></i>
+                <div>
+                    <strong>Memuat tips kesehatan...</strong>
+                    <p style="margin: 0; margin-top: 0.25rem;">Mengambil tips kesehatan terbaru untuk Anda.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <i class="bi bi-house-door-fill" style="color: #5B9BD5 !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #5B9BD5 !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <span>Beranda</span>
+        </a>
+        <a href="exercise.html" class="nav-item">
+            <i class="bi bi-play-circle"></i>
+            <span>Latihan</span>
+        </a>
+        <a href="progress.html" class="nav-item">
+            <i class="bi bi-graph-up"></i>
+            <span>Kemajuan</span>
+        </a>
+        <a href="sensors.html" class="nav-item">
+            <i class="bi bi-activity"></i>
+            <span>Monitoring</span>
+        </a>
+        <a href="account.html" class="nav-item">
+            <i class="bi bi-person"></i>
+            <span>Akun</span>
+        </a>
+    </nav>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>
