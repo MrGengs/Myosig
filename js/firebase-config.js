@@ -47,10 +47,27 @@ function initializeFirebase() {
     return false;
 }
 
-// Gemini API Key
-const GEMINI_API_KEY = 'AIzaSyCvC8BHGYoL_ksE83021AjSohC7mhiCzn8';
-// Use v1beta API with stable gemini-2.5-flash model (stable version 001, released June 2025)
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+// Gemini API Key - Loaded from config.js (secure file, not in git)
+// If config.js is not available, these will be undefined
+// Make sure to load config.js before this file in HTML
+// Access from window object set by config.js
+// Use getter functions to access safely
+function getGeminiApiKey() {
+    return typeof window !== 'undefined' && window.GEMINI_API_KEY 
+        ? window.GEMINI_API_KEY 
+        : undefined;
+}
+
+function getGeminiApiUrl() {
+    return typeof window !== 'undefined' && window.GEMINI_API_URL 
+        ? window.GEMINI_API_URL 
+        : 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+}
+
+// Create constants that reference the window values
+// These are safe because they're just references, not redeclarations
+const GEMINI_API_KEY = getGeminiApiKey();
+const GEMINI_API_URL = getGeminiApiUrl();
 
 // Function to get AI health tips
 async function getAIHealthTips() {

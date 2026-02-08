@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>Myosig - Dashboard</title>
+    <title>Myosig - Dashboard Dokter</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -12,157 +12,105 @@
     <div class="container">
         <!-- Welcome Header -->
         <div class="page-header fade-in">
-            <h1 id="welcomeName">Selamat Datang!</h1>
-            <p>Pantau perkembangan rehabilitasi Anda hari ini</p>
+            <h1 id="welcomeName">Selamat Datang, Dokter!</h1>
+            <p>Pantau dan kelola pasien rehabilitasi stroke Anda</p>
         </div>
 
         <!-- Stats Grid -->
         <div class="stats-grid fade-in">
             <div class="stat-card">
                 <div class="stat-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="stat-value" id="totalPatients">0</div>
+                <div class="stat-label">Total Pasien</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-activity"></i>
+                </div>
+                <div class="stat-value" id="totalRecords">0</div>
+                <div class="stat-label">Total Record</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
                     <i class="bi bi-calendar-check"></i>
                 </div>
-                <div class="stat-value" id="todayExercises">0</div>
-                <div class="stat-label">Latihan Hari Ini</div>
+                <div class="stat-value" id="todayRecords">0</div>
+                <div class="stat-label">Record Hari Ini</div>
             </div>
             
             <div class="stat-card">
                 <div class="stat-icon">
                     <i class="bi bi-clock-history"></i>
                 </div>
-                <div class="stat-value" id="totalMinutes">0</div>
-                <div class="stat-label">Menit Total</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="bi bi-graph-up-arrow"></i>
-                </div>
-                <div class="stat-value" id="progressPercent">0%</div>
-                <div class="stat-label">Kemajuan</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="bi bi-fire"></i>
-                </div>
-                <div class="stat-value" id="streakDays">0</div>
-                <div class="stat-label">Hari Berturut</div>
+                <div class="stat-value" id="avgActivity">0%</div>
+                <div class="stat-label">Rata-rata Aktivitas</div>
             </div>
         </div>
 
-        <!-- Today's Progress Card -->
+        <!-- Quick Actions Card -->
         <div class="card fade-in">
             <div class="card-header">
                 <h2 class="card-title">
-                    <i class="bi bi-graph-up card-icon"></i>
-                    Kemajuan Hari Ini
+                    <i class="bi bi-lightning-charge card-icon"></i>
+                    Aksi Cepat
                 </h2>
             </div>
             
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="todayProgressBar" style="width: 100%;">--%</div>
-            </div>
-            
-            <div class="progress-info">
-                <span class="progress-label">Target: 30 menit latihan</span>
-                <span class="progress-value" id="todayProgressValue">00 menit</span>
-            </div>
-        </div>
-
-        <!-- Monitoring Pergerakan Otot Lengan -->
-        <div class="card fade-in">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <i class="bi bi-activity card-icon"></i>
-                    Monitoring Pergerakan Otot Lengan
-                </h2>
-            </div>
-            
-            <div class="sensor-data">
-                <div class="sensor-info">
-                    <div class="sensor-name">Aktivitas Otot (EMG)</div>
-                    <div class="sensor-value">
-                        <span id="emgVoltage">0.00</span>
-                        <span class="sensor-unit">V</span>
-                    </div>
-                </div>
-                <div class="progress-bar-container" style="margin-top: 0.5rem;">
-                    <div class="progress-bar" id="emgProgress" style="width: 0%;">0%</div>
-                </div>
-            </div>
-            
-            <div class="sensor-data">
-                <div class="sensor-info">
-                    <div class="sensor-name">Gerak Lengan (MPU)</div>
-                    <div class="sensor-value">
-                        <span id="armMovement">Stabil</span>
-                    </div>
-                </div>
-                <div style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-light);">
-                    Akselerasi: <span id="accelMagnitude">0.00</span> g
-                </div>
-            </div>
-            
-            <div class="alert alert-info" style="margin-top: 1rem;">
-                <i class="bi bi-info-circle" style="font-size: 1.5rem;"></i>
-                <div>
-                    <strong>Monitoring Real-time</strong>
-                    <p style="margin: 0; margin-top: 0.25rem;">Data dari sensor EMG dan MPU untuk memantau pergerakan otot lengan selama rehabilitasi.</p>
-                </div>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <a href="sensors.html" class="btn btn-primary" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-record-circle" style="font-size: 2rem;"></i>
+                    <span>Mulai Monitoring</span>
+                </a>
+                <a href="patient.html" class="btn btn-secondary" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-person-heart" style="font-size: 2rem;"></i>
+                    <span>Kelola Pasien</span>
+                </a>
             </div>
         </div>
 
-        <!-- Recent Activity Card -->
+        <!-- Recent Records Card -->
         <div class="card fade-in">
-            <div class="card-header">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
                     <i class="bi bi-clock-history card-icon"></i>
-                    Aktivitas Terkini
+                    Record Terkini
                 </h2>
+                <button onclick="loadRecentRecords()" class="btn btn-sm btn-secondary" style="padding: 0.5rem; min-width: auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0;" title="Refresh">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
             </div>
             
-            <div class="timeline">
+            <div class="timeline" id="recentRecordsTimeline">
                 <div class="timeline-item">
-                    <div class="timeline-date">Hari ini, 14:30</div>
+                    <div class="timeline-date">Memuat...</div>
                     <div class="timeline-content">
-                        <strong>Latihan Lengan Kanan</strong>
-                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Durasi: 15 menit | Repetisi: 30x</p>
-                    </div>
-                </div>
-                
-                <div class="timeline-item">
-                    <div class="timeline-date">Hari ini, 10:15</div>
-                    <div class="timeline-content">
-                        <strong>Latihan Peregangan</strong>
-                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Durasi: 10 menit | Repetisi: 20x</p>
-                    </div>
-                </div>
-                
-                <div class="timeline-item">
-                    <div class="timeline-date">Kemarin, 16:00</div>
-                    <div class="timeline-content">
-                        <strong>Latihan Koordinasi</strong>
-                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Durasi: 20 menit | Repetisi: 25x</p>
+                        <strong>Memuat record terkini...</strong>
+                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Mohon tunggu sebentar.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Health Tips Card -->
+        <!-- Patient Summary Card -->
         <div class="card fade-in">
-            <div class="card-header">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
-                    <i class="bi bi-lightbulb card-icon"></i>
-                    Tips Kesehatan Hari Ini
+                    <i class="bi bi-people card-icon"></i>
+                    Ringkasan Pasien
                 </h2>
+                <a href="patient.html" class="btn btn-sm btn-primary" style="padding: 0.5rem; min-width: auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; flex-shrink: 0;" title="Lihat Semua Pasien">
+                    <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
             
-            <div id="healthTips" class="alert alert-info">
-                <i class="bi bi-hourglass-split" style="font-size: 1.5rem;"></i>
-                <div>
-                    <strong>Memuat tips kesehatan...</strong>
-                    <p style="margin: 0; margin-top: 0.25rem;">Mengambil tips kesehatan terbaru untuk Anda.</p>
+            <div id="patientSummary">
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 1rem;">Memuat data pasien...</p>
                 </div>
             </div>
         </div>
@@ -174,17 +122,13 @@
             <i class="bi bi-house-door-fill" style="color: #5B9BD5 !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #5B9BD5 !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
             <span>Beranda</span>
         </a>
-        <a href="exercise.html" class="nav-item">
-            <i class="bi bi-play-circle"></i>
-            <span>Latihan</span>
-        </a>
-        <a href="progress.html" class="nav-item">
-            <i class="bi bi-graph-up"></i>
-            <span>Kemajuan</span>
-        </a>
         <a href="sensors.html" class="nav-item">
             <i class="bi bi-activity"></i>
             <span>Monitoring</span>
+        </a>
+        <a href="patient.html" class="nav-item">
+            <i class="bi bi-person-heart"></i>
+            <span>Pasien</span>
         </a>
         <a href="account.html" class="nav-item">
             <i class="bi bi-person"></i>
@@ -199,6 +143,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
     
+    <script src="js/config.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/modal.js"></script>
     <script src="js/dashboard.js"></script>

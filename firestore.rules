@@ -1,43 +1,97 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users collection - allow authenticated users to read/write their own data
-    // First-time users can create their own document
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Users collection - for storing doctor accounts only
+    // Doctors can only read/update their own user document
     match /users/{userId} {
-      // Allow read if user is authenticated and reading their own data
-      allow read: if request.auth != null && request.auth.uid == userId;
+      // Allow read if user is authenticated and reading their own document
+      allow read: if isAuthenticated() && request.auth.uid == userId;
       
-      // Allow write (create/update) if:
-      // 1. User is authenticated
-      // 2. User is writing to their own document (userId matches auth.uid)
-      // 3. OR it's a new document creation (document doesn't exist yet)
-      allow create: if request.auth != null && 
-                       (request.auth.uid == userId || !exists(/databases/$(database)/documents/users/$(userId)));
+      // Allow create if user is authenticated and creating their own document
+      allow create: if isAuthenticated() && request.auth.uid == userId;
       
-      allow update: if request.auth != null && request.auth.uid == userId;
-      allow delete: if request.auth != null && request.auth.uid == userId;
+      // Allow update if user is authenticated and updating their own document
+      allow update: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Allow delete if user is authenticated and deleting their own document
+      allow delete: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Patients subcollection - nested under each doctor's document
+      // Doctors can only read/write patients in their own subcollection
+      match /patients/{patientId} {
+        // Allow read if user is authenticated and accessing their own patients subcollection
+        allow read: if isAuthenticated() && request.auth.uid == userId;
+        
+        // Allow create if user is authenticated and creating in their own subcollection
+        allow create: if isAuthenticated() && request.auth.uid == userId;
+        
+        // Allow update if user is authenticated and updating in their own subcollection
+        allow update: if isAuthenticated() && request.auth.uid == userId;
+        
+        // Allow delete if user is authenticated and deleting from their own subcollection
+        allow delete: if isAuthenticated() && request.auth.uid == userId;
+        
+        // Monitoring Records subcollection - nested under each patient's document
+        // Structure: users/{userId}/patients/{patientId}/monitoringRecords/{recordId}
+        // Doctors can only read/write records in their own patients' subcollections
+        match /monitoringRecords/{recordId} {
+          // Allow read if user is authenticated and accessing their own patient's monitoring records
+          allow read: if isAuthenticated() && request.auth.uid == userId;
+          
+          // Allow create if user is authenticated and creating in their own patient's subcollection
+          allow create: if isAuthenticated() && request.auth.uid == userId;
+          
+          // Allow update if user is authenticated and updating in their own patient's subcollection
+          allow update: if isAuthenticated() && request.auth.uid == userId;
+          
+          // Allow delete if user is authenticated and deleting from their own patient's subcollection
+          allow delete: if isAuthenticated() && request.auth.uid == userId;
+        }
+      }
     }
     
-    // Exercises collection - allow authenticated users to read/write their own exercises
+    // Medical Records collection - for storing patient medical notes
+    // Doctors can only read/write medical records for their own patients
+    match /medicalRecords/{recordId} {
+      // Allow read if user is authenticated and record belongs to this doctor
+      allow read: if isAuthenticated() && 
+                    resource.data.doctorId == request.auth.uid;
+      
+      // Allow create if user is authenticated and doctorId matches auth.uid
+      allow create: if isAuthenticated() && 
+                      request.resource.data.doctorId == request.auth.uid;
+      
+      // Allow update/delete if user is authenticated and record belongs to this doctor
+      allow update, delete: if isAuthenticated() && 
+                              resource.data.doctorId == request.auth.uid;
+    }
+    
+    // Exercises collection - legacy collection (may still exist)
+    // Keep for backward compatibility
     match /exercises/{exerciseId} {
-      // Allow read if user is authenticated and reading their own exercises
-      allow read: if request.auth != null && 
-                     resource.data.userId == request.auth.uid;
+      // Allow read if user is authenticated
+      allow read: if isAuthenticated();
       
-      // Allow create if user is authenticated and setting their own userId
-      allow create: if request.auth != null && 
-                       request.resource.data.userId == request.auth.uid;
+      // Allow create if user is authenticated
+      allow create: if isAuthenticated();
       
-      // Allow update/delete if user is authenticated and owns the exercise
-      allow update, delete: if request.auth != null && 
-                               resource.data.userId == request.auth.uid;
+      // Allow update/delete if user is authenticated
+      allow update, delete: if isAuthenticated();
     }
     
-    // Health records collection
+    // Health Records collection - legacy collection (may still exist)
+    // Keep for backward compatibility
     match /healthRecords/{recordId} {
-      allow read, write: if request.auth != null && 
-                            (resource == null || resource.data.userId == request.auth.uid) &&
-                            (request.resource == null || request.resource.data.userId == request.auth.uid);
+      // Allow read if user is authenticated
+      allow read: if isAuthenticated();
+      
+      // Allow write if user is authenticated
+      allow write: if isAuthenticated();
     }
     
     // Default deny all other access

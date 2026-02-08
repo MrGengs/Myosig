@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', function() {
         // Check if user is already logged in
         auth.onAuthStateChanged(function(user) {
             if (user) {
-                // User is already logged in, redirect to dashboard
+                // Redirect to dashboard (all authenticated users are doctors)
                 window.location.href = 'dashboard.html';
             }
         });
@@ -279,6 +279,48 @@ async function signInWithGoogle() {
         
         alert(errorMessage);
     }
+}
+
+// Show forgot password modal
+function showForgotPassword() {
+    const email = prompt('Masukkan email Anda untuk reset kata sandi:');
+    if (!email) return;
+    
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        if (typeof showAlert === 'function') {
+            showAlert('Format email tidak valid!', 'Validasi');
+        } else {
+            alert('Format email tidak valid!');
+        }
+        return;
+    }
+    
+    // Send password reset email
+    auth.sendPasswordResetEmail(email).then(() => {
+        if (typeof showAlert === 'function') {
+            showAlert('Email reset kata sandi telah dikirim ke ' + email + '. Silakan cek inbox Anda.', 'Email Terkirim');
+        } else {
+            alert('Email reset kata sandi telah dikirim ke ' + email + '. Silakan cek inbox Anda.');
+        }
+    }).catch(error => {
+        console.error('Error sending password reset email:', error);
+        let errorMessage = 'Terjadi kesalahan saat mengirim email reset.';
+        if (error.code === 'auth/user-not-found') {
+            errorMessage = 'Email tidak terdaftar.';
+        } else if (error.code === 'auth/invalid-email') {
+            errorMessage = 'Format email tidak valid.';
+        } else if (error.code === 'auth/too-many-requests') {
+            errorMessage = 'Terlalu banyak percobaan. Silakan coba lagi nanti.';
+        }
+        
+        if (typeof showAlert === 'function') {
+            showAlert(errorMessage, 'Kesalahan');
+        } else {
+            alert(errorMessage);
+        }
+    });
 }
 
 // Create user document in Firestore (allows first-time users to write)

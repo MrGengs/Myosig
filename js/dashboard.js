@@ -1,10 +1,7 @@
 // Dashboard JavaScript with Firebase
-// Load and display dashboard data
+// Load and display dashboard data for doctors
 
-let sensorDataListener = null;
-let currentSensorData = null;
-let lastMpuUpdateTime = null; // Track last MPU update time
-const MPU_TIMEOUT = 5000; // 5 seconds timeout for MPU data
+let currentUser = null;
 
 // Check if user is logged in
 window.addEventListener('DOMContentLoaded', function() {
@@ -19,12 +16,13 @@ window.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            currentUser = user;
+            
             // User is logged in, load data
             loadUserData(user);
             loadDashboardData(user);
-            setupSensorListener();
-            loadRecentActivity(user);
-            loadHealthTips();
+            loadRecentRecords(user);
+            loadPatientSummary();
         });
     } else {
         console.error('Firebase SDK not loaded');
@@ -36,7 +34,6 @@ window.addEventListener('DOMContentLoaded', function() {
         }
         loadUserData();
         loadDashboardData();
-        updateSensorStatus();
     }
 });
 
@@ -49,7 +46,7 @@ function loadUserData(user = null) {
                 const userData = doc.data();
                 const welcomeName = document.getElementById('welcomeName');
                 if (welcomeName) {
-                    welcomeName.textContent = `Selamat Datang, ${userData.name || user.displayName || 'Pengguna'}!`;
+                    welcomeName.textContent = `Selamat Datang, ${userData.name || user.displayName || 'Dokter'}!`;
                 }
                 
                 // Store in localStorage for quick access
@@ -63,7 +60,7 @@ function loadUserData(user = null) {
                 // User document doesn't exist, use auth data
                 const welcomeName = document.getElementById('welcomeName');
                 if (welcomeName) {
-                    welcomeName.textContent = `Selamat Datang, ${user.displayName || 'Pengguna'}!`;
+                    welcomeName.textContent = `Selamat Datang, ${user.displayName || 'Dokter'}!`;
                 }
             }
         }).catch(error => {
@@ -72,7 +69,7 @@ function loadUserData(user = null) {
             if (user) {
                 const welcomeName = document.getElementById('welcomeName');
                 if (welcomeName) {
-                    welcomeName.textContent = `Selamat Datang, ${user.displayName || 'Pengguna'}!`;
+                    welcomeName.textContent = `Selamat Datang, ${user.displayName || 'Dokter'}!`;
                 }
             }
         });
@@ -83,247 +80,261 @@ function loadUserData(user = null) {
             const user = JSON.parse(userData);
             const welcomeName = document.getElementById('welcomeName');
             if (welcomeName) {
-                welcomeName.textContent = `Selamat Datang, ${user.name || 'Pengguna'}!`;
+                welcomeName.textContent = `Selamat Datang, ${user.name || 'Dokter'}!`;
             }
         }
     }
 }
 
-// Load and display dashboard statistics
-function loadDashboardData(user = null) {
-    // Get user ID
-    let userId = null;
-    if (user) {
-        userId = user.uid;
-    } else {
-        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        userId = userData.uid;
-    }
-    
-    if (userId && firestore) {
-        // Load from Firestore - avoid orderBy to prevent index requirement
-        firestore.collection('exercises')
-            .where('userId', '==', userId)
-            .get()
-            .then(snapshot => {
-                const exercises = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
-                    exercises.push({
-                        ...data,
-                        date: createdAt.toISOString(),
-                        duration: parseInt(data.duration) || 0,
-                        reps: parseInt(data.reps) || 0
-                    });
-                });
-                // Sort by date descending for consistency
-                exercises.sort((a, b) => new Date(b.date) - new Date(a.date));
-                updateDashboardStats(exercises);
-            })
-            .catch(error => {
-                console.error('Error loading exercises:', error);
-                // Fallback to localStorage
-                const exercises = JSON.parse(localStorage.getItem('exercises') || '[]');
-                exercises.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-                updateDashboardStats(exercises);
-            });
-    } else {
-        // Fallback to localStorage or simulated data
-        const exercises = JSON.parse(localStorage.getItem('exercises') || '[]');
-        exercises.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-        updateDashboardStats(exercises);
-    }
-}
-
-// Update dashboard statistics
-function updateDashboardStats(exercises) {
-    if (!exercises || exercises.length === 0) {
-        // Set default values
-        const todayExercisesEl = document.getElementById('todayExercises');
-        const totalMinutesEl = document.getElementById('totalMinutes');
-        const progressPercentEl = document.getElementById('progressPercent');
-        const streakDaysEl = document.getElementById('streakDays');
-        const todayProgressBarEl = document.getElementById('todayProgressBar');
-        const todayProgressValueEl = document.getElementById('todayProgressValue');
-        
-        if (todayExercisesEl) todayExercisesEl.textContent = '0';
-        if (totalMinutesEl) totalMinutesEl.textContent = '0';
-        if (progressPercentEl) progressPercentEl.textContent = '0%';
-        if (streakDaysEl) streakDaysEl.textContent = '0';
-        if (todayProgressBarEl) {
-            todayProgressBarEl.style.width = '0%';
-            todayProgressBarEl.textContent = '0%';
-        }
-        if (todayProgressValueEl) todayProgressValueEl.textContent = '0 menit';
-        return;
-    }
-    
-    // Filter today's exercises
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayExercises = exercises.filter(ex => {
-        if (!ex.date) return false;
-        const exDate = new Date(ex.date);
-        exDate.setHours(0, 0, 0, 0);
-        return exDate.getTime() === today.getTime();
-    });
-    
-    const todayExercisesEl = document.getElementById('todayExercises');
-    if (todayExercisesEl) {
-        todayExercisesEl.textContent = todayExercises.length;
-    }
-    
-    // Calculate total minutes
-    const totalMinutes = exercises.reduce((sum, ex) => sum + (parseInt(ex.duration) || 0), 0);
-    const totalMinutesEl = document.getElementById('totalMinutes');
-    if (totalMinutesEl) {
-        totalMinutesEl.textContent = totalMinutes;
-    }
-    
-    // Progress percentage based on total exercises (target: 30 exercises)
-    const progressPercent = Math.min(Math.floor((exercises.length / 30) * 100), 100);
-    const progressPercentEl = document.getElementById('progressPercent');
-    if (progressPercentEl) {
-        progressPercentEl.textContent = progressPercent + '%';
-    }
-    
-    // Calculate streak days (consecutive days with exercises)
-    const uniqueDates = new Set();
-    exercises.forEach(ex => {
-        if (ex.date) {
-            const dateStr = ex.date.split('T')[0];
-            uniqueDates.add(dateStr);
-        }
-    });
-    
-    const sortedDates = Array.from(uniqueDates).sort();
-    let streakDays = 0;
-    let currentStreak = 1;
-    
-    if (sortedDates.length > 0) {
-        const dateObjects = sortedDates.map(d => new Date(d)).sort((a, b) => b - a); // Sort descending
-        
-        for (let i = 0; i < dateObjects.length - 1; i++) {
-            const currDate = dateObjects[i];
-            const nextDate = dateObjects[i + 1];
-            const diffDays = Math.floor((currDate - nextDate) / (1000 * 60 * 60 * 24));
+// Load and display dashboard statistics for doctors
+async function loadDashboardData(user = null) {
+    try {
+        if (firestore && user) {
+            // Get total patients count from subcollection under this doctor's document
+            const patientsSnapshot = await firestore.collection('users')
+                .doc(user.uid)
+                .collection('patients')
+                .get();
+            const totalPatients = patientsSnapshot.size;
             
-            if (diffDays === 1) {
-                // Consecutive day
-                currentStreak++;
-            } else {
-                // Not consecutive, check if this is the longest streak
-                streakDays = Math.max(streakDays, currentStreak);
-                currentStreak = 1;
+            const totalPatientsEl = document.getElementById('totalPatients');
+            if (totalPatientsEl) {
+                totalPatientsEl.textContent = totalPatients;
             }
-        }
-        streakDays = Math.max(streakDays, currentStreak);
-    }
-    
-    const streakDaysEl = document.getElementById('streakDays');
-    if (streakDaysEl) {
-        streakDaysEl.textContent = streakDays;
-    }
-    
-    // Today's progress
-    const todayMinutes = todayExercises.reduce((sum, ex) => sum + (parseInt(ex.duration) || 0), 0);
-    const progressPercentValue = Math.min(Math.round((todayMinutes / 30) * 100), 100);
-    
-    const todayProgressBarEl = document.getElementById('todayProgressBar');
-    if (todayProgressBarEl) {
-        todayProgressBarEl.style.width = progressPercentValue + '%';
-        todayProgressBarEl.textContent = progressPercentValue + '%';
-    }
-    
-    const todayProgressValueEl = document.getElementById('todayProgressValue');
-    if (todayProgressValueEl) {
-        todayProgressValueEl.textContent = todayMinutes + ' menit';
-    }
-}
-
-// Load recent activity
-function loadRecentActivity(user = null) {
-    const timelineContainer = document.querySelector('.timeline');
-    if (!timelineContainer) return;
-    
-    // Get user ID
-    let userId = null;
-    if (user) {
-        userId = user.uid;
-    } else {
-        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        userId = userData.uid;
-    }
-    
-    if (userId && firestore) {
-        // Load from Firestore - avoid orderBy to prevent index requirement
-        firestore.collection('exercises')
-            .where('userId', '==', userId)
-            .get()
-            .then(snapshot => {
-                const activities = [];
-                snapshot.forEach(doc => {
+            
+            // Get all monitoring records for this doctor from all patients' subcollections
+            // Structure: users/{userId}/patients/{patientId}/monitoringRecords/{recordId}
+            const allRecords = [];
+            
+            // Get all patients first
+            const patientsSnapshot = await firestore.collection('users')
+                .doc(user.uid)
+                .collection('patients')
+                .get();
+            
+            // Get records from each patient's subcollection
+            for (const patientDoc of patientsSnapshot.docs) {
+                const patientId = patientDoc.id;
+                const recordsSnapshot = await firestore.collection('users')
+                    .doc(user.uid)
+                    .collection('patients')
+                    .doc(patientId)
+                    .collection('monitoringRecords')
+                    .get();
+                
+                recordsSnapshot.forEach(doc => {
                     const data = doc.data();
-                    const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
-                    activities.push({
+                    allRecords.push({
                         ...data,
-                        date: createdAt.toISOString(),
-                        duration: parseInt(data.duration) || 0,
-                        reps: parseInt(data.reps) || 0
+                        patientId: patientId, // Ensure patientId is included
+                        timestamp: data.timestamp ? (data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp)) : new Date()
                     });
                 });
-                // Sort by date descending and take first 3
-                activities.sort((a, b) => new Date(b.date) - new Date(a.date));
-                displayRecentActivity(activities.slice(0, 3));
-            })
-            .catch(error => {
-                console.error('Error loading recent activity:', error);
-                // Fallback to localStorage
-                const exercises = JSON.parse(localStorage.getItem('exercises') || '[]');
-                exercises.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-                displayRecentActivity(exercises.slice(0, 3));
+            }
+            
+            const totalRecords = allRecords.length;
+            const totalRecordsEl = document.getElementById('totalRecords');
+            if (totalRecordsEl) {
+                totalRecordsEl.textContent = totalRecords;
+            }
+            
+            // Get today's records
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayRecords = allRecords.filter(record => {
+                const recordDate = record.timestamp;
+                recordDate.setHours(0, 0, 0, 0);
+                return recordDate.getTime() === today.getTime();
             });
-    } else {
-        // Fallback to localStorage
-        const exercises = JSON.parse(localStorage.getItem('exercises') || '[]');
-        exercises.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-        displayRecentActivity(exercises.slice(0, 3));
+            
+            const todayRecordsEl = document.getElementById('todayRecords');
+            if (todayRecordsEl) {
+                todayRecordsEl.textContent = todayRecords.length;
+            }
+            
+            // Calculate average activity
+            let totalActivity = 0;
+            let activityCount = 0;
+            allRecords.forEach(record => {
+                if (record.avgMuscleActivity !== undefined && record.avgMuscleActivity !== null) {
+                    totalActivity += record.avgMuscleActivity;
+                    activityCount++;
+                }
+            });
+            
+            const avgActivity = activityCount > 0 ? Math.round(totalActivity / activityCount) : 0;
+            const avgActivityEl = document.getElementById('avgActivity');
+            if (avgActivityEl) {
+                avgActivityEl.textContent = avgActivity + '%';
+            }
+            
+        } else {
+            // Fallback: set default values
+            document.getElementById('totalPatients').textContent = '0';
+            document.getElementById('totalRecords').textContent = '0';
+            document.getElementById('todayRecords').textContent = '0';
+            document.getElementById('avgActivity').textContent = '0%';
+        }
+    } catch (error) {
+        console.error('Error loading dashboard data:', error);
+        // Set default values on error
+        document.getElementById('totalPatients').textContent = '0';
+        document.getElementById('totalRecords').textContent = '0';
+        document.getElementById('todayRecords').textContent = '0';
+        document.getElementById('avgActivity').textContent = '0%';
     }
 }
 
-// Display recent activity
-function displayRecentActivity(activities) {
-    const timelineContainer = document.querySelector('.timeline');
+// Load recent records
+async function loadRecentRecords(user = null) {
+    const timelineContainer = document.getElementById('recentRecordsTimeline');
     if (!timelineContainer) return;
     
-    if (!activities || activities.length === 0) {
+    try {
+        if (firestore && user) {
+            // Get recent monitoring records (last 5) for this doctor from all patients' subcollections
+            // Structure: users/{userId}/patients/{patientId}/monitoringRecords/{recordId}
+            const allRecords = [];
+            
+            // Get all patients first
+            const patientsSnapshot = await firestore.collection('users')
+                .doc(user.uid)
+                .collection('patients')
+                .get();
+            
+            // Get records from each patient's subcollection
+            for (const patientDoc of patientsSnapshot.docs) {
+                const patientId = patientDoc.id;
+                try {
+                    const recordsSnapshot = await firestore.collection('users')
+                        .doc(user.uid)
+                        .collection('patients')
+                        .doc(patientId)
+                        .collection('monitoringRecords')
+                        .orderBy('createdAt', 'desc')
+                        .limit(10) // Get more from each patient to ensure we have enough for top 5
+                        .get();
+                    
+                    recordsSnapshot.forEach(doc => {
+                        const data = doc.data();
+                        allRecords.push({
+                            id: doc.id,
+                            patientId: patientId, // Ensure patientId is included
+                            ...data,
+                            timestamp: data.createdAt ? (data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt)) : new Date()
+                        });
+                    });
+                } catch (e) {
+                    // If orderBy fails (no index), get all and sort in memory
+                    console.warn(`OrderBy failed for patient ${patientId}, getting all records:`, e);
+                    const allSnapshot = await firestore.collection('users')
+                        .doc(user.uid)
+                        .collection('patients')
+                        .doc(patientId)
+                        .collection('monitoringRecords')
+                        .get();
+                    
+                    allSnapshot.forEach(doc => {
+                        const data = doc.data();
+                        allRecords.push({
+                            id: doc.id,
+                            patientId: patientId,
+                            ...data,
+                            timestamp: data.createdAt ? (data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt)) : new Date()
+                        });
+                    });
+                }
+            }
+            
+            // Sort by timestamp descending and take first 5
+            allRecords.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+            const records = allRecords.slice(0, 5);
+            
+            // Get patient names
+            const patientIds = [...new Set(records.map(r => r.patientId))];
+            const patientNames = {};
+            
+            for (const patientId of patientIds) {
+                if (patientId && user) {
+                    try {
+                        const patientDoc = await firestore.collection('users')
+                            .doc(user.uid)
+                            .collection('patients')
+                            .doc(patientId)
+                            .get();
+                        if (patientDoc.exists) {
+                            patientNames[patientId] = patientDoc.data().name || 'Pasien';
+                        }
+                    } catch (e) {
+                        console.error('Error loading patient name:', e);
+                    }
+                }
+            }
+            
+            displayRecentRecords(records, patientNames);
+        } else {
+            
+            // Get patient names for records
+            const patientIds = [...new Set(records.map(r => r.patientId))];
+            const patientNames = {};
+            
+            for (const patientId of patientIds) {
+                if (patientId && user) {
+                    try {
+                        const patientDoc = await firestore.collection('users')
+                            .doc(user.uid)
+                            .collection('patients')
+                            .doc(patientId)
+                            .get();
+                        if (patientDoc.exists) {
+                            patientNames[patientId] = patientDoc.data().name || 'Pasien';
+                        }
+                    } catch (e) {
+                        console.error('Error loading patient name:', e);
+                    }
+                }
+            }
+            
+            displayRecentRecords(records, patientNames);
+        } else {
+            timelineContainer.innerHTML = `
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <p style="color: var(--text-light); font-style: italic;">Belum ada record monitoring</p>
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Error loading recent records:', error);
         timelineContainer.innerHTML = `
             <div class="timeline-item">
                 <div class="timeline-content">
-                    <p style="color: var(--text-light); font-style: italic;">Belum ada aktivitas latihan</p>
+                    <p style="color: var(--text-light); font-style: italic;">Gagal memuat record</p>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Display recent records
+function displayRecentRecords(records, patientNames) {
+    const timelineContainer = document.getElementById('recentRecordsTimeline');
+    if (!timelineContainer) return;
+    
+    if (!records || records.length === 0) {
+        timelineContainer.innerHTML = `
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <p style="color: var(--text-light); font-style: italic;">Belum ada record monitoring</p>
                 </div>
             </div>
         `;
         return;
     }
     
-    const exerciseNames = {
-        'lengan-kanan': 'Latihan Lengan Kanan',
-        'lengan-kiri': 'Latihan Lengan Kiri',
-        'peregangan': 'Latihan Peregangan',
-        'koordinasi': 'Latihan Koordinasi',
-        'kekuatan': 'Latihan Kekuatan'
-    };
-    
-    timelineContainer.innerHTML = activities.map(activity => {
-        let date;
-        try {
-            date = activity.date ? new Date(activity.date) : new Date();
-        } catch (e) {
-            date = new Date();
-        }
-        
+    timelineContainer.innerHTML = records.map(record => {
+        const date = record.timestamp;
         const now = new Date();
         const diffMs = now - date;
         const diffMins = Math.floor(diffMs / (1000 * 60));
@@ -343,227 +354,101 @@ function displayRecentActivity(activities) {
             dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
         }
         
-        const exerciseName = exerciseNames[activity.type] || activity.type || 'Latihan';
-        const duration = activity.duration || 0;
-        const reps = activity.reps || 0;
+        const patientName = patientNames[record.patientId] || 'Pasien';
+        const duration = record.duration || 0;
+        const activity = record.avgMuscleActivity || 0;
         
         return `
             <div class="timeline-item">
                 <div class="timeline-date">${dateStr}</div>
                 <div class="timeline-content">
-                    <strong>${exerciseName}</strong>
-                    <p style="margin-top: 0.5rem; margin-bottom: 0;">Durasi: ${duration} menit | Repetisi: ${reps}x</p>
+                    <strong>${patientName}</strong>
+                    <p style="margin-top: 0.5rem; margin-bottom: 0;">
+                        Durasi: ${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, '0')} | 
+                        Aktivitas: ${activity}%
+                    </p>
                 </div>
             </div>
         `;
     }).join('');
 }
 
-// Setup sensor data listener from Realtime Database
-function setupSensorListener() {
-    if (!database) {
-        console.error('Database not initialized');
-        updateSensorStatus(); // Fallback to simulated
+// Load patient summary
+async function loadPatientSummary() {
+    const patientSummary = document.getElementById('patientSummary');
+    if (!patientSummary) return;
+    
+    // Get current user
+    let userId = null;
+    if (currentUser) {
+        userId = currentUser.uid;
+    } else {
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        userId = userData.uid;
+    }
+    
+    if (!userId || !firestore) {
+        patientSummary.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                <i class="bi bi-exclamation-circle" style="font-size: 2rem;"></i>
+                <p style="margin-top: 1rem;">Tidak dapat memuat data pasien</p>
+            </div>
+        `;
         return;
     }
-    
-    // Get selected device from localStorage or use default
-    const selectedDevice = localStorage.getItem('selectedDevice') || 'device 2';
-    
-    // Listen to device data from selected device
-    const deviceRef = database.ref(selectedDevice);
-    
-    sensorDataListener = deviceRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            // Check if MPU data exists and is recent
-            if (data.ax !== undefined && data.ax !== null && 
-                data.ay !== undefined && data.ay !== null && 
-                data.az !== undefined && data.az !== null) {
-                lastMpuUpdateTime = Date.now();
-            }
-            currentSensorData = data;
-            updateSensorStatusFromData(data);
-        } else {
-            // No data available
-            lastMpuUpdateTime = null;
-            updateSensorStatus();
-        }
-    }, (error) => {
-        console.error('Error reading sensor data:', error);
-        lastMpuUpdateTime = null;
-        updateSensorStatus(); // Fallback to simulated
-    });
-    
-    // Check MPU timeout periodically
-    setInterval(() => {
-        if (lastMpuUpdateTime && (Date.now() - lastMpuUpdateTime) > MPU_TIMEOUT) {
-            const armMovementElement = document.getElementById('armMovement');
-            if (armMovementElement) {
-                armMovementElement.textContent = 'Gerak Off';
-            }
-        } else if (!lastMpuUpdateTime) {
-            const armMovementElement = document.getElementById('armMovement');
-            if (armMovementElement) {
-                armMovementElement.textContent = 'Gerak Off';
-            }
-        }
-    }, 1000);
-}
-
-// Update monitoring data from real sensor data
-function updateSensorStatusFromData(data) {
-    // EMG - EMG Voltage
-    const emgVoltage = data.emg_voltage || 0;
-    const emgVoltageElement = document.getElementById('emgVoltage');
-    if (emgVoltageElement) {
-        emgVoltageElement.textContent = emgVoltage.toFixed(2);
-    }
-    
-    // Calculate EMG intensity (0-100%) - EMG typically outputs 0-3.3V
-    const emgIntensity = Math.min((emgVoltage / 3.3) * 100, 100);
-    const emgProgress = document.getElementById('emgProgress');
-    if (emgProgress) {
-        emgProgress.style.width = emgIntensity + '%';
-        emgProgress.textContent = Math.round(emgIntensity) + '%';
-    }
-    
-    // MPU - Calculate acceleration magnitude
-    const ax = data.ax || 0;
-    const ay = data.ay || 0;
-    const az = data.az || 0;
-    const accelMagnitude = Math.sqrt(ax * ax + ay * ay + az * az);
-    
-    const accelMagnitudeElement = document.getElementById('accelMagnitude');
-    if (accelMagnitudeElement) {
-        accelMagnitudeElement.textContent = accelMagnitude.toFixed(2);
-    }
-    
-    // Determine arm movement status - check if MPU data is present
-    let armMovement = 'Gerak Off'; // Default to 'Gerak Off' if no MPU data
-    if (data.ax !== undefined && data.ax !== null) {
-        // MPU data is present, determine status based on movement
-        if (accelMagnitude > 1.5) {
-            armMovement = 'Gerak Aktif';
-        } else if (accelMagnitude > 0.5) {
-            armMovement = 'Gerak Ringan';
-        } else {
-            armMovement = 'Stabil';
-        }
-    }
-    
-    const armMovementElement = document.getElementById('armMovement');
-    if (armMovementElement) {
-        armMovementElement.textContent = armMovement;
-    }
-}
-
-// Update monitoring data (simulated fallback)
-function updateSensorStatus() {
-    // Simulate EMG data (0-3.3V typical range)
-    const emgVoltage = Math.random() * 2.5; // 0-2.5V for simulation
-    const emgVoltageElement = document.getElementById('emgVoltage');
-    if (emgVoltageElement) {
-        emgVoltageElement.textContent = emgVoltage.toFixed(2);
-    }
-    
-    // Calculate EMG intensity
-    const emgIntensity = Math.min((emgVoltage / 3.3) * 100, 100);
-    const emgProgress = document.getElementById('emgProgress');
-    if (emgProgress) {
-        emgProgress.style.width = emgIntensity + '%';
-        emgProgress.textContent = Math.round(emgIntensity) + '%';
-    }
-    
-    // Simulate MPU data - but show "Gerak Off" if no real connection
-    if (!sensorDataListener || !lastMpuUpdateTime) {
-        // No real data connection, show "Gerak Off"
-        const armMovementElement = document.getElementById('armMovement');
-        if (armMovementElement) {
-            armMovementElement.textContent = 'Gerak Off';
-        }
-        
-        const accelMagnitudeElement = document.getElementById('accelMagnitude');
-        if (accelMagnitudeElement) {
-            accelMagnitudeElement.textContent = '0.00';
-        }
-        return;
-    }
-    
-    // Simulate MPU data only if we have real connection
-    const ax = (Math.random() * 4 - 2);
-    const ay = (Math.random() * 4 - 2);
-    const az = (Math.random() * 4 - 2);
-    const accelMagnitude = Math.sqrt(ax * ax + ay * ay + az * az);
-    
-    const accelMagnitudeElement = document.getElementById('accelMagnitude');
-    if (accelMagnitudeElement) {
-        accelMagnitudeElement.textContent = accelMagnitude.toFixed(2);
-    }
-    
-    // Determine arm movement status
-    let armMovement = 'Stabil';
-    if (accelMagnitude > 1.5) {
-        armMovement = 'Gerak Aktif';
-    } else if (accelMagnitude > 0.5) {
-        armMovement = 'Gerak Ringan';
-    }
-    
-    const armMovementElement = document.getElementById('armMovement');
-    if (armMovementElement) {
-        armMovementElement.textContent = armMovement;
-    }
-}
-
-// Load health tips from AI
-async function loadHealthTips() {
-    const healthTipsDiv = document.getElementById('healthTips');
-    if (!healthTipsDiv) return;
     
     try {
-        // Get AI health tips
-        const tips = await getAIHealthTips();
+        // Get first 5 patients from subcollection under this doctor's document
+        const snapshot = await firestore.collection('users')
+            .doc(userId)
+            .collection('patients')
+            .limit(5)
+            .get();
         
-        // Parse tips (format: "Title\nDescription")
-        // Remove any remaining markdown formatting
-        let cleanTips = tips;
-        cleanTips = cleanTips.replace(/\*\*(.*?)\*\*/g, '$1'); // Remove **bold**
-        cleanTips = cleanTips.replace(/__(.*?)__/g, '$1'); // Remove __bold__
-        cleanTips = cleanTips.replace(/\*(.*?)\*/g, '$1'); // Remove *italic*
-        cleanTips = cleanTips.replace(/_(.*?)_/g, '$1'); // Remove _italic_
-        cleanTips = cleanTips.replace(/^#+\s*/gm, ''); // Remove # headers
-        cleanTips = cleanTips.replace(/`(.*?)`/g, '$1'); // Remove `code`
-        cleanTips = cleanTips.replace(/\[(.*?)\]\(.*?\)/g, '$1'); // Remove [links](url)
+        const patients = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            patients.push({
+                id: doc.id,
+                name: data.name || 'Tanpa Nama',
+                email: data.email || '-'
+            });
+        });
         
-        const lines = cleanTips.split('\n').filter(line => line.trim() !== '');
-        const title = lines[0] || 'Tips Kesehatan';
-        const description = lines.slice(1).join('\n').trim() || cleanTips;
+        if (patients.length === 0) {
+            patientSummary.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    <i class="bi bi-person-x" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 1rem;">Belum ada pasien terdaftar</p>
+                    <a href="patient.html" class="btn btn-primary" style="margin-top: 1rem; text-decoration: none;">
+                        <i class="bi bi-plus-circle"></i> Tambah Pasien
+                    </a>
+                </div>
+            `;
+            return;
+        }
         
-        // Update UI with clean formatting
-        healthTipsDiv.innerHTML = `
-            <i class="bi bi-lightbulb-fill" style="font-size: 1.5rem; color: var(--primary-blue);"></i>
-            <div>
-                <strong style="color: var(--text-dark);">${title}</strong>
-                <p style="margin: 0; margin-top: 0.25rem; color: var(--text-gray); white-space: pre-line; line-height: 1.6;">${description}</p>
-            </div>
-        `;
-        
+        patientSummary.innerHTML = patients.map(patient => {
+            return `
+                <div style="padding: 0.75rem; border-bottom: 1px solid var(--lighter-blue); display: flex; align-items: center; gap: 1rem; cursor: pointer;" onclick="window.location.href='patient-detail.html?id=${patient.id}'">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: var(--white);">
+                        <i class="bi bi-person-heart"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--text-dark);">${patient.name}</div>
+                        <div style="font-size: 0.85rem; color: var(--text-light);">${patient.email}</div>
+                    </div>
+                    <i class="bi bi-chevron-right" style="color: var(--text-light);"></i>
+                </div>
+            `;
+        }).join('');
     } catch (error) {
-        console.error('Error loading health tips:', error);
-        healthTipsDiv.innerHTML = `
-            <i class="bi bi-info-circle" style="font-size: 1.5rem;"></i>
-            <div>
-                <strong style="color: var(--text-dark);">Istirahat yang Cukup</strong>
-                <p style="margin: 0; margin-top: 0.25rem; color: var(--text-gray);">Pastikan Anda beristirahat minimal 8 jam setiap malam untuk pemulihan yang optimal setelah latihan rehabilitasi.</p>
+        console.error('Error loading patient summary:', error);
+        patientSummary.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                <p style="margin-top: 1rem;">Gagal memuat data pasien</p>
             </div>
         `;
     }
 }
-
-// Cleanup on page unload
-window.addEventListener('beforeunload', function() {
-    if (sensorDataListener && database) {
-        const selectedDevice = localStorage.getItem('selectedDevice') || 'device 2';
-        database.ref(selectedDevice).off('value', sensorDataListener);
-    }
-});

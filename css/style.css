@@ -466,7 +466,11 @@ a.nav-item.active:hover i,
 .nav-item.active:hover > i,
 a.nav-item.active:hover > i,
 a[href="progress.html"].nav-item.active:hover i,
-a[href="progress.html"].nav-item.active:hover i.bi-graph-up-fill {
+a[href="progress.html"].nav-item.active:hover i.bi-graph-up,
+a[href="sensors.html"].nav-item.active:hover i,
+a[href="sensors.html"].nav-item.active:hover i.bi-activity,
+a[href="patient.html"].nav-item.active:hover i,
+a[href="patient.html"].nav-item.active:hover i.bi-person-heart {
     color: var(--primary-blue-dark) !important;
     display: inline-block !important;
     visibility: visible !important;
@@ -916,10 +920,12 @@ a.nav-item.active i.bi,
 .nav-item.active i.bi,
 a.nav-item.active > i.bi,
 .nav-item.active > i.bi,
-a.nav-item.active i.bi-graph-up-fill,
-.nav-item.active i.bi-graph-up-fill,
-a.nav-item.active i.bi-activity-fill,
-.nav-item.active i.bi-activity-fill,
+a.nav-item.active i.bi-graph-up,
+.nav-item.active i.bi-graph-up,
+a.nav-item.active i.bi-activity,
+.nav-item.active i.bi-activity,
+a.nav-item.active i.bi-person-heart,
+.nav-item.active i.bi-person-heart,
 a.nav-item.active i.bi-house-door-fill,
 .nav-item.active i.bi-house-door-fill,
 a.nav-item.active i.bi-play-circle-fill,
@@ -958,11 +964,19 @@ a.nav-item.active i.bi-person-fill,
     max-height: none !important;
 }
 
-/* Additional fix specifically for bi-graph-up-fill icon */
-a[href="progress.html"].nav-item.active i.bi-graph-up-fill,
-a[href*="progress.html"].nav-item.active i.bi-graph-up-fill,
-a.nav-item.active i.bi-graph-up-fill,
-.nav-item.active i.bi-graph-up-fill {
+/* Additional fix specifically for navigation icons */
+a[href="progress.html"].nav-item.active i.bi-graph-up,
+a[href*="progress.html"].nav-item.active i.bi-graph-up,
+a[href="sensors.html"].nav-item.active i.bi-activity,
+a[href*="sensors.html"].nav-item.active i.bi-activity,
+a[href="patient.html"].nav-item.active i.bi-person-heart,
+a[href*="patient.html"].nav-item.active i.bi-person-heart,
+a.nav-item.active i.bi-graph-up,
+.nav-item.active i.bi-graph-up,
+a.nav-item.active i.bi-activity,
+.nav-item.active i.bi-activity,
+a.nav-item.active i.bi-person-heart,
+.nav-item.active i.bi-person-heart {
     color: var(--primary-blue) !important;
     display: inline-block !important;
     visibility: visible !important;
@@ -1249,4 +1263,280 @@ select::-webkit-scrollbar {
     display: none;             /* Chrome, Safari, Opera */
     width: 0;
     height: 0;
+}
+
+/* ========== Patient Page Styles ========== */
+/* Patient Information Grid */
+.patient-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.patient-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.patient-info-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.patient-info-label i {
+    color: var(--primary-blue);
+    font-size: 1rem;
+}
+
+.patient-info-value {
+    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 600;
+    word-break: break-word;
+}
+
+/* Contact Item Styles */
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--lighter-blue);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.contact-item:hover {
+    background: var(--primary-blue-lightest);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.contact-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--white);
+    flex-shrink: 0;
+}
+
+.contact-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.contact-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.contact-role {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--text-gray);
+}
+
+.contact-details span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.contact-details i {
+    color: var(--primary-blue);
+}
+
+/* Rehabilitation Status Styles */
+.rehab-status-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.rehab-status-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--lighter-blue);
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.rehab-status-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.rehab-status-label i {
+    color: var(--primary-blue);
+    font-size: 1rem;
+}
+
+.rehab-status-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+/* Status Badge Styles */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-active {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-green);
+}
+
+.status-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning-orange);
+}
+
+.status-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger-red);
+}
+
+/* Button Small Variant */
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* Button Outline Primary */
+.btn-outline-primary {
+    background: transparent;
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    transition: var(--transition);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-blue);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Responsive adjustments for patient page */
+@media (max-width: 480px) {
+    .patient-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .rehab-status-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-item {
+        flex-wrap: wrap;
+    }
+    
+    .contact-item button {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Enhanced Alert Styles - ensure all alerts use flex layout */
+.alert-success,
+.alert-info,
+.alert-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.alert-success i,
+.alert-info i,
+.alert-warning i {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.alert-success strong,
+.alert-info strong,
+.alert-warning strong {
+    color: var(--text-dark);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.alert-success p,
+.alert-info p,
+.alert-warning p {
+    color: var(--text-gray);
+    margin: 0;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(91, 155, 213, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-blue);
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-light);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--text-light);
+    margin: 0;
 }

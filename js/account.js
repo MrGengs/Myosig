@@ -43,6 +43,8 @@ async function saveAllProfileData() {
     const email = document.getElementById('profileEmail').value.trim();
     const phone = document.getElementById('profilePhone').value.trim();
     const birthDate = document.getElementById('profileBirthDate').value;
+    const gender = document.getElementById('profileGender')?.value || '';
+    const address = document.getElementById('profileAddress')?.value.trim() || '';
     const strokeDate = document.getElementById('strokeDate').value;
     const medicalNotes = document.getElementById('medicalNotes').value.trim();
     
@@ -67,6 +69,16 @@ async function saveAllProfileData() {
         return;
     }
     
+    // Phone validation (if provided)
+    if (phone && !/^[0-9]{10,13}$/.test(phone.replace(/\s/g, ''))) {
+        if (typeof showAlert === 'function') {
+            showAlert('Format nomor telepon tidak valid! Gunakan 10-13 digit angka.', 'Validasi');
+        } else {
+            alert('Format nomor telepon tidak valid! Gunakan 10-13 digit angka.');
+        }
+        return;
+    }
+    
     // Show loading
     const saveBtn = event?.target || document.querySelector('button[onclick="saveAllProfileData()"]');
     const originalText = saveBtn.innerHTML;
@@ -81,6 +93,8 @@ async function saveAllProfileData() {
                 email: email,
                 phone: phone,
                 birthDate: birthDate,
+                gender: gender,
+                address: address,
                 strokeDate: strokeDate,
                 medicalNotes: medicalNotes,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -120,6 +134,8 @@ async function saveAllProfileData() {
         userData.email = email;
         userData.phone = phone;
         userData.birthDate = birthDate;
+        userData.gender = gender;
+        userData.address = address;
         userData.updatedAt = new Date().toISOString();
         localStorage.setItem('userData', JSON.stringify(userData));
         localStorage.setItem('userEmail', email);
@@ -178,6 +194,14 @@ async function saveAllProfileData() {
 
 // Check if user is logged in
 window.addEventListener('DOMContentLoaded', function() {
+    // Set max date for birth date (today)
+    const birthDateInput = document.getElementById('profileBirthDate');
+    if (birthDateInput) {
+        const today = new Date();
+        today.setFullYear(today.getFullYear() - 10); // Minimum 10 years old
+        birthDateInput.max = today.toISOString().split('T')[0];
+    }
+    
     // Wait for Firebase to load
     if (typeof firebase !== 'undefined') {
         initializeFirebase();
@@ -230,11 +254,15 @@ function loadUserProfile(user = null) {
                 const emailInput = document.getElementById('profileEmail');
                 const phoneInput = document.getElementById('profilePhone');
                 const birthDateInput = document.getElementById('profileBirthDate');
+                const genderInput = document.getElementById('profileGender');
+                const addressInput = document.getElementById('profileAddress');
                 
                 if (nameInput) nameInput.value = userData.name || user.displayName || '';
                 if (emailInput) emailInput.value = userData.email || user.email || '';
                 if (phoneInput) phoneInput.value = userData.phone || '';
                 if (birthDateInput) birthDateInput.value = userData.birthDate || '';
+                if (genderInput) genderInput.value = userData.gender || '';
+                if (addressInput) addressInput.value = userData.address || '';
                 
                 // Store in localStorage for quick access
                 localStorage.setItem('userData', JSON.stringify({
@@ -285,11 +313,15 @@ function loadUserProfileFromLocalStorage() {
             const emailInput = document.getElementById('profileEmail');
             const phoneInput = document.getElementById('profilePhone');
             const birthDateInput = document.getElementById('profileBirthDate');
+            const genderInput = document.getElementById('profileGender');
+            const addressInput = document.getElementById('profileAddress');
             
             if (nameInput) nameInput.value = user.name || '';
             if (emailInput) emailInput.value = user.email || '';
             if (phoneInput) phoneInput.value = user.phone || '';
             if (birthDateInput) birthDateInput.value = user.birthDate || '';
+            if (genderInput) genderInput.value = user.gender || '';
+            if (addressInput) addressInput.value = user.address || '';
         } catch (e) {
             console.error('Error parsing user data:', e);
         }

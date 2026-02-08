@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>Myosig - Monitoring Pergerakan Otot Lengan</title>
+    <title>Myosig - Monitoring Pasien</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -49,50 +49,157 @@
         .legend-accel {
             background: linear-gradient(90deg, #9D50FF 0%, #EC4899 100%);
         }
+
+        /* Recording status styles */
+        .recording-status {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .recording-status.recording {
+            background: rgba(220, 53, 69, 0.1);
+            border: 2px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .recording-status.stopped {
+            background: rgba(108, 117, 125, 0.1);
+            border: 2px solid #6c757d;
+            color: #6c757d;
+        }
+
+        .record-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .record-buttons button {
+            flex: 1;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-record {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: var(--white);
+        }
+
+        .btn-record:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-record:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: var(--white);
+        }
+
+        .btn-stop:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-stop:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Page Header -->
         <div class="page-header fade-in">
-            <h1><i class="bi bi-activity card-icon"></i> Monitoring Pergerakan Otot Lengan</h1>
-            <p>Pantau aktivitas otot dan gerak lengan real-time untuk rehabilitasi stroke</p>
+            <h1><i class="bi bi-activity card-icon"></i> Monitoring Pasien</h1>
+            <p>Pantau aktivitas otot dan gerak lengan pasien secara real-time</p>
         </div>
 
-        <!-- Device Selection Card -->
+        <!-- Patient and Device Selection Card -->
         <div class="card fade-in">
             <div class="card-header">
                 <h2 class="card-title">
-                    <i class="bi bi-device-hdd card-icon"></i>
-                    Pilih Device
+                    <i class="bi bi-person-heart card-icon"></i>
+                    Pilih Pasien & Device
                 </h2>
             </div>
             
             <div style="padding: 1rem;">
-                <label for="deviceSelect" style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-dark);">
-                    <i class="bi bi-router"></i> Device Monitoring
-                </label>
-                <select id="deviceSelect" class="form-control" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-blue); border-radius: var(--border-radius); background: var(--white); color: var(--text-dark); font-size: 1rem; cursor: pointer; transition: var(--transition);">
-                    <option value="device 1">Device 1</option>
-                    <option value="device 2" selected>Device 2</option>
-                </select>
+                <!-- Patient Selection -->
+                <div style="margin-bottom: 1rem;">
+                    <label for="patientSelect" style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-dark);">
+                        <i class="bi bi-person-heart"></i> Pilih Pasien
+                    </label>
+                    <select id="patientSelect" class="form-control" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-blue); border-radius: var(--border-radius); background: var(--white); color: var(--text-dark); font-size: 1rem; cursor: pointer; transition: var(--transition);">
+                        <option value="">-- Pilih Pasien --</option>
+                    </select>
+                </div>
+
+                <!-- Device Selection -->
+                <div>
+                    <label for="deviceSelect" style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-dark);">
+                        <i class="bi bi-router"></i> Pilih Device
+                    </label>
+                    <select id="deviceSelect" class="form-control" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-blue); border-radius: var(--border-radius); background: var(--white); color: var(--text-dark); font-size: 1rem; cursor: pointer; transition: var(--transition);">
+                        <option value="device 1">Device 1</option>
+                        <option value="device 2" selected>Device 2</option>
+                    </select>
+                </div>
+
+                <!-- Recording Status -->
+                <div id="recordingStatus" class="recording-status stopped" style="display: none; margin-top: 1rem;">
+                    <i class="bi bi-circle-fill" style="font-size: 0.8rem; animation: pulse 2s infinite;"></i>
+                    <span id="recordingStatusText">Tidak sedang merekam</span>
+                </div>
+
+                <!-- Record/Stop Buttons -->
+                <div class="record-buttons">
+                    <button id="btnRecord" class="btn-record" onclick="startRecording()">
+                        <i class="bi bi-record-circle"></i>
+                        Mulai Rekam
+                    </button>
+                    <button id="btnStop" class="btn-stop" onclick="stopRecording()" disabled>
+                        <i class="bi bi-stop-circle"></i>
+                        Stop
+                    </button>
+                </div>
+
                 <div class="alert alert-info" style="margin-top: 1rem; margin-bottom: 0;">
                     <i class="bi bi-info-circle" style="font-size: 1.5rem;"></i>
                     <div>
-                        <strong>Info Device</strong>
-                        <p style="margin: 0; margin-top: 0.25rem;">Pilih device yang akan dimonitor. Pastikan device terhubung ke WiFi.</p>
+                        <strong>Petunjuk</strong>
+                        <p style="margin: 0; margin-top: 0.25rem;">Pilih pasien dan device, lalu klik "Mulai Rekam" untuk memulai monitoring. Klik "Stop" untuk menghentikan dan menyimpan data ke Firestore.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Monitoring Summary Card - Dipindahkan ke atas -->
+        <!-- Monitoring Summary Card -->
         <div class="card fade-in">
-            <div class="card-header">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
                     <i class="bi bi-clipboard-data card-icon"></i>
                     Ringkasan Monitoring
                 </h2>
+                <button onclick="resetMonitoringStats()" class="btn btn-sm btn-secondary" style="padding: 0.5rem; min-width: auto;" title="Reset Statistik">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
             </div>
             
             <div class="stats-grid">
@@ -130,7 +237,7 @@
             </div>
         </div>
 
-        <!-- Real-time Chart - Dipindahkan ke atas -->
+        <!-- Real-time Chart -->
         <div class="card fade-in">
             <div class="card-header">
                 <h2 class="card-title">
@@ -190,14 +297,6 @@
                     <div class="sensor-value">
                         <span id="emgRaw">0</span>
                     </div>
-                </div>
-            </div>
-            
-            <div class="alert alert-info" style="margin-top: 1rem;">
-                <i class="bi bi-info-circle" style="font-size: 1.5rem;"></i>
-                <div>
-                    <strong>Sensor EMG</strong>
-                    <p style="margin: 0; margin-top: 0.25rem;">Sensor ini mengukur aktivitas listrik otot lengan untuk memantau kontraksi dan relaksasi otot selama latihan rehabilitasi stroke.</p>
                 </div>
             </div>
         </div>
@@ -265,14 +364,6 @@
                     <div style="font-size: 0.75rem; color: var(--text-light);">°/s</div>
                 </div>
             </div>
-            
-            <div class="alert alert-info" style="margin-top: 1rem;">
-                <i class="bi bi-info-circle" style="font-size: 1.5rem;"></i>
-                <div>
-                    <strong>MPU Sensor untuk Deteksi Gerak</strong>
-                    <p style="margin: 0; margin-top: 0.25rem;">Sensor ini mengukur gerakan dan orientasi lengan menggunakan akselerometer dan gyroscope untuk melacak pergerakan selama latihan rehabilitasi stroke.</p>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -282,17 +373,13 @@
             <i class="bi bi-house-door"></i>
             <span>Beranda</span>
         </a>
-        <a href="exercise.html" class="nav-item">
-            <i class="bi bi-play-circle"></i>
-            <span>Latihan</span>
-        </a>
-        <a href="progress.html" class="nav-item">
-            <i class="bi bi-graph-up"></i>
-            <span>Kemajuan</span>
-        </a>
         <a href="sensors.html" class="nav-item active">
-            <i class="bi bi-activity-fill" style="color: #5B9BD5 !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #5B9BD5 !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <i class="bi bi-activity" style="color: #5B9BD5 !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #5B9BD5 !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
             <span>Monitoring</span>
+        </a>
+        <a href="patient.html" class="nav-item">
+            <i class="bi bi-person-heart"></i>
+            <span>Pasien</span>
         </a>
         <a href="account.html" class="nav-item">
             <i class="bi bi-person"></i>
@@ -307,6 +394,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
     
+    <script src="js/config.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/modal.js"></script>
     <script src="js/sensors.js"></script>
