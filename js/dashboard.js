@@ -90,13 +90,14 @@ function loadUserData(user = null) {
 async function loadDashboardData(user = null) {
     try {
         if (firestore && user) {
-            // Get total patients count from subcollection under this doctor's document
+            // Get all patients first (we'll use this for both total count and records)
             const patientsSnapshot = await firestore.collection('users')
                 .doc(user.uid)
                 .collection('patients')
                 .get();
-            const totalPatients = patientsSnapshot.size;
             
+            // Get total patients count
+            const totalPatients = patientsSnapshot.size;
             const totalPatientsEl = document.getElementById('totalPatients');
             if (totalPatientsEl) {
                 totalPatientsEl.textContent = totalPatients;
@@ -105,12 +106,6 @@ async function loadDashboardData(user = null) {
             // Get all monitoring records for this doctor from all patients' subcollections
             // Structure: users/{userId}/patients/{patientId}/monitoringRecords/{recordId}
             const allRecords = [];
-            
-            // Get all patients first
-            const patientsSnapshot = await firestore.collection('users')
-                .doc(user.uid)
-                .collection('patients')
-                .get();
             
             // Get records from each patient's subcollection
             for (const patientDoc of patientsSnapshot.docs) {
@@ -251,30 +246,6 @@ async function loadRecentRecords(user = null) {
             const records = allRecords.slice(0, 5);
             
             // Get patient names
-            const patientIds = [...new Set(records.map(r => r.patientId))];
-            const patientNames = {};
-            
-            for (const patientId of patientIds) {
-                if (patientId && user) {
-                    try {
-                        const patientDoc = await firestore.collection('users')
-                            .doc(user.uid)
-                            .collection('patients')
-                            .doc(patientId)
-                            .get();
-                        if (patientDoc.exists) {
-                            patientNames[patientId] = patientDoc.data().name || 'Pasien';
-                        }
-                    } catch (e) {
-                        console.error('Error loading patient name:', e);
-                    }
-                }
-            }
-            
-            displayRecentRecords(records, patientNames);
-        } else {
-            
-            // Get patient names for records
             const patientIds = [...new Set(records.map(r => r.patientId))];
             const patientNames = {};
             

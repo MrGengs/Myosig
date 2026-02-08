@@ -3,7 +3,8 @@
 
 let currentUser = null;
 let patientId = null;
-let recordsChart = null;
+let imuChart = null; // Chart for IMU (accelerometer) data
+let emgChart = null; // Chart for EMG data
 let patientData = null; // Store patient data globally
 let patientRecords = []; // Store patient records globally
 let chartPeriod = 'weekly'; // Default: weekly, can be 'weekly' or 'monthly'
@@ -177,7 +178,8 @@ async function loadPatientRecords() {
                     duration: data.duration || 0,
                     avgMuscleActivity: data.avgMuscleActivity || 0,
                     movementCount: data.movementCount || 0,
-                    maxAcceleration: data.maxAcceleration || 0
+                    maxAcceleration: data.maxAcceleration || 0,
+                    recordedData: data.recordedData || [] // Store raw sensor data for charts
                 });
             });
             
@@ -195,18 +197,14 @@ async function loadPatientRecords() {
             // Display records
             displayRecords(records);
             
-            // Create chart - ensure DOM and Chart.js are ready
+            // Create charts - ensure DOM and Chart.js are ready
             // Use requestAnimationFrame to ensure DOM is fully rendered
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    createRecordsChart(records);
+                    createIMUChart(records);
+                    createEMGChart(records);
                     // Set default button state (weekly is default)
-                    const btnWeekly = document.getElementById('btnChartWeekly');
-                    const btnMonthly = document.getElementById('btnChartMonthly');
-                    if (btnWeekly && btnMonthly) {
-                        btnWeekly.className = 'btn btn-sm btn-primary';
-                        btnMonthly.className = 'btn btn-sm btn-secondary';
-                    }
+                    updateChartButtons();
                 }, 50);
             });
             
@@ -293,33 +291,101 @@ function displayRecords(records) {
     }).join('');
 }
 
+// Update chart button styles
+function updateChartButtons() {
+    const btnIMUWeekly = document.getElementById('btnIMUWeekly');
+    const btnIMUMonthly = document.getElementById('btnIMUMonthly');
+    const btnEMGWeekly = document.getElementById('btnEMGWeekly');
+    const btnEMGMonthly = document.getElementById('btnEMGMonthly');
+    
+    if (chartPeriod === 'weekly') {
+        if (btnIMUWeekly) btnIMUWeekly.className = 'btn btn-sm btn-primary';
+        if (btnIMUMonthly) btnIMUMonthly.className = 'btn btn-sm btn-secondary';
+        if (btnEMGWeekly) btnEMGWeekly.className = 'btn btn-sm btn-primary';
+        if (btnEMGMonthly) btnEMGMonthly.className = 'btn btn-sm btn-secondary';
+    } else {
+        if (btnIMUWeekly) btnIMUWeekly.className = 'btn btn-sm btn-secondary';
+        if (btnIMUMonthly) btnIMUMonthly.className = 'btn btn-sm btn-primary';
+        if (btnEMGWeekly) btnEMGWeekly.className = 'btn btn-sm btn-secondary';
+        if (btnEMGMonthly) btnEMGMonthly.className = 'btn btn-sm btn-primary';
+    }
+}
+
 // Change chart period (weekly/monthly)
 // Make function globally accessible
 window.changeChartPeriod = function changeChartPeriod(period) {
     chartPeriod = period;
     
     // Update button styles
-    const btnWeekly = document.getElementById('btnChartWeekly');
-    const btnMonthly = document.getElementById('btnChartMonthly');
+    updateChartButtons();
     
-    if (btnWeekly && btnMonthly) {
-        if (period === 'weekly') {
-            btnWeekly.className = 'btn btn-sm btn-primary';
-            btnMonthly.className = 'btn btn-sm btn-secondary';
-        } else {
-            btnWeekly.className = 'btn btn-sm btn-secondary';
-            btnMonthly.className = 'btn btn-sm btn-primary';
-        }
-    }
-    
-    // Recreate chart with new period
+    // Recreate charts with new period
     if (patientRecords && patientRecords.length > 0) {
-        createRecordsChart(patientRecords);
+        createIMUChart(patientRecords);
+        createEMGChart(patientRecords);
     }
 }
 
-// Create records chart
-function createRecordsChart(records) {
+// Process recordedData to extract average IMU values (ax, ay, az) for each record
+function processIMUData(records) {
+    return records.map(record => {
+        const recordedData = record.recordedData || [];
+        
+        if (recordedData.length === 0) {
+            // If no recordedData, return zeros
+            return { ax: 0, ay: 0, az: 0 };
+        }
+        
+        // Calculate average for each axis
+        let sumAx = 0, sumAy = 0, sumAz = 0;
+        let count = 0;
+        
+        recordedData.forEach(dataPoint => {
+            if (dataPoint.ax !== undefined && dataPoint.ax !== null) {
+                sumAx += parseFloat(dataPoint.ax) || 0;
+                sumAy += parseFloat(dataPoint.ay) || 0;
+                sumAz += parseFloat(dataPoint.az) || 0;
+                count++;
+            }
+        });
+        
+        return {
+            ax: count > 0 ? sumAx / count : 0,
+            ay: count > 0 ? sumAy / count : 0,
+            az: count > 0 ? sumAz / count : 0
+        };
+    });
+}
+
+// Process recordedData to extract average EMG values for each record
+function processEMGData(records) {
+    return records.map(record => {
+        const recordedData = record.recordedData || [];
+        
+        if (recordedData.length === 0) {
+            // If no recordedData, use avgMuscleActivity if available
+            return parseFloat(record.avgMuscleActivity) || 0;
+        }
+        
+        // Calculate average EMG voltage and convert to percentage (0-100%)
+        let sumEMG = 0;
+        let count = 0;
+        
+        recordedData.forEach(dataPoint => {
+            if (dataPoint.emg_voltage !== undefined && dataPoint.emg_voltage !== null) {
+                // Convert voltage (0-3.3V) to percentage (0-100%)
+                const emgPercent = Math.min((parseFloat(dataPoint.emg_voltage) / 3.3) * 100, 100);
+                sumEMG += emgPercent;
+                count++;
+            }
+        });
+        
+        return count > 0 ? sumEMG / count : (parseFloat(record.avgMuscleActivity) || 0);
+    });
+}
+
+// Create IMU chart with x, y, z lines
+function createIMUChart(records) {
     // Wait for Chart.js to be loaded (with retry mechanism)
     let retryCount = 0;
     const maxRetries = 10;
@@ -336,7 +402,7 @@ function createRecordsChart(records) {
             
             // Max retries reached, show error
             console.error('Chart.js is not loaded after', maxRetries, 'retries');
-            const chartContainer = document.querySelector('.chart-container');
+            const chartContainer = document.getElementById('imuChart')?.parentElement;
             if (chartContainer) {
                 chartContainer.innerHTML = `
                     <div style="text-align: center; padding: 2rem; color: var(--text-light);">
@@ -349,104 +415,55 @@ function createRecordsChart(records) {
         }
         
         // Chart.js is loaded, proceed with chart creation
-        createChart(records);
+        createIMUChartInternal(records);
     }
     
     // Start trying to create chart
     tryCreateChart();
 }
 
-// Actual chart creation function
-function createChart(records) {
-    // Get canvas element
-    const ctx = document.getElementById('recordsChart');
-    if (!ctx) {
-        console.error('Chart canvas element not found');
-        const chartContainer = document.querySelector('.chart-container');
-        if (chartContainer) {
-            chartContainer.innerHTML = `
-                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
-                    <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Canvas element tidak ditemukan.</p>
-                </div>
-            `;
-        }
-        return;
-    }
+// Create EMG chart
+function createEMGChart(records) {
+    // Wait for Chart.js to be loaded (with retry mechanism)
+    let retryCount = 0;
+    const maxRetries = 10;
     
-    // Destroy existing chart if any
-    if (recordsChart) {
-        recordsChart.destroy();
-        recordsChart = null;
-    }
-    
-    // Handle empty records - show empty chart with message
-    if (!records || records.length === 0) {
-        recordsChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Belum ada data'],
-                datasets: [
-                    {
-                        label: 'Aktivitas Otot Rata-rata (%)',
-                        data: [],
-                        borderColor: 'rgb(91, 155, 213)',
-                        backgroundColor: 'rgba(91, 155, 213, 0.1)',
-                        tension: 0.4,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Jumlah Gerakan',
-                        data: [],
-                        borderColor: 'rgb(157, 80, 255)',
-                        backgroundColor: 'rgba(157, 80, 255, 0.1)',
-                        tension: 0.4,
-                        yAxisID: 'y1'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    title: {
-                        display: true,
-                        text: 'Belum ada data record untuk ditampilkan',
-                        position: 'bottom'
-                    }
-                },
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        title: {
-                            display: true,
-                            text: 'Aktivitas Otot (%)'
-                        },
-                        beginAtZero: true
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: {
-                            display: true,
-                            text: 'Jumlah Gerakan'
-                        },
-                        beginAtZero: true,
-                        grid: {
-                            drawOnChartArea: false
-                        }
-                    }
-                }
+    function tryCreateChart() {
+        // Check if Chart.js is loaded
+        if (typeof Chart === 'undefined') {
+            retryCount++;
+            if (retryCount < maxRetries) {
+                // Retry after 100ms
+                setTimeout(tryCreateChart, 100);
+                return;
             }
-        });
-        return;
+            
+            // Max retries reached, show error
+            console.error('Chart.js is not loaded after', maxRetries, 'retries');
+            const chartContainer = document.getElementById('emgChart')?.parentElement;
+            if (chartContainer) {
+                chartContainer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                        <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                        <p style="margin-top: 1rem;">Chart.js tidak dimuat. Silakan refresh halaman.</p>
+                    </div>
+                `;
+            }
+            return;
+        }
+        
+        // Chart.js is loaded, proceed with chart creation
+        createEMGChartInternal(records);
+    }
+    
+    // Start trying to create chart
+    tryCreateChart();
+}
+
+// Helper function to filter and prepare records for charts
+function prepareRecordsForChart(records) {
+    if (!records || records.length === 0) {
+        return { recentRecords: [], labels: [] };
     }
     
     // Filter records based on selected period
@@ -522,45 +539,337 @@ function createChart(records) {
         }
     });
     
-    // Extract data values, ensure they are numbers
-    const avgMuscleActivityData = recentRecords.map(r => {
-        const value = parseFloat(r.avgMuscleActivity) || 0;
-        return isNaN(value) ? 0 : value;
-    });
+    return { recentRecords, labels };
+}
+
+// Internal function to create IMU chart with x, y, z lines
+function createIMUChartInternal(records) {
+    // Get canvas element
+    const ctx = document.getElementById('imuChart');
+    if (!ctx) {
+        console.error('IMU Chart canvas element not found');
+        const chartContainer = document.getElementById('imuChart')?.parentElement;
+        if (chartContainer) {
+            chartContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 1rem;">Canvas element tidak ditemukan.</p>
+                </div>
+            `;
+        }
+        return;
+    }
     
-    const movementCountData = recentRecords.map(r => {
-        const value = parseFloat(r.movementCount) || 0;
-        return isNaN(value) ? 0 : value;
-    });
+    // Destroy existing chart if any
+    if (imuChart) {
+        imuChart.destroy();
+        imuChart = null;
+    }
+    
+    // Prepare records for chart
+    const { recentRecords, labels } = prepareRecordsForChart(records);
+    
+    // Handle empty records - show empty chart with message
+    if (!recentRecords || recentRecords.length === 0) {
+        imuChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Belum ada data'],
+                datasets: [
+                    {
+                        label: 'Akselerasi X (g)',
+                        data: [],
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Akselerasi Y (g)',
+                        data: [],
+                        borderColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Akselerasi Z (g)',
+                        data: [],
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Belum ada data record untuk ditampilkan',
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Akselerasi (g)'
+                        },
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+        return;
+    }
+    
+    // Process IMU data to get average ax, ay, az for each record
+    const imuData = processIMUData(recentRecords);
+    
+    // Extract data values for each axis
+    const axData = imuData.map(d => parseFloat(d.ax) || 0);
+    const ayData = imuData.map(d => parseFloat(d.ay) || 0);
+    const azData = imuData.map(d => parseFloat(d.az) || 0);
     
     // Create chart with error handling
     try {
-        recordsChart = new Chart(ctx, {
+        imuChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Aktivitas Otot Rata-rata (%)',
-                        data: avgMuscleActivityData,
-                        borderColor: 'rgb(91, 155, 213)',
-                        backgroundColor: 'rgba(91, 155, 213, 0.1)',
+                        label: 'Akselerasi X (g)',
+                        data: axData,
+                        borderColor: 'rgb(255, 99, 132)', // Red color for X axis
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         borderWidth: 2,
-                        fill: true,
+                        fill: false,
                         tension: 0.4,
-                        yAxisID: 'y',
                         pointRadius: 4,
                         pointHoverRadius: 6
                     },
                     {
-                        label: 'Jumlah Gerakan',
-                        data: movementCountData,
-                        borderColor: 'rgb(157, 80, 255)',
-                        backgroundColor: 'rgba(157, 80, 255, 0.1)',
+                        label: 'Akselerasi Y (g)',
+                        data: ayData,
+                        borderColor: 'rgb(54, 162, 235)', // Blue color for Y axis
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Akselerasi Z (g)',
+                        data: azData,
+                        borderColor: 'rgb(75, 192, 192)', // Teal color for Z axis
+                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 15,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 12
+                        },
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        borderWidth: 1
+                    },
+                    title: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Tanggal',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            display: true,
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Akselerasi (g)',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        beginAtZero: false,
+                        grid: {
+                            display: true,
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    }
+                }
+            }
+        });
+        
+        console.log('IMU Chart created successfully with', recentRecords.length, 'records');
+    } catch (error) {
+        console.error('Error creating IMU chart:', error);
+        // Show error message
+        const chartContainer = document.getElementById('imuChart')?.parentElement;
+        if (chartContainer) {
+            chartContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 1rem;">Gagal membuat grafik IMU: ${error.message}</p>
+                </div>
+            `;
+        }
+    }
+}
+
+// Internal function to create EMG chart
+function createEMGChartInternal(records) {
+    // Get canvas element
+    const ctx = document.getElementById('emgChart');
+    if (!ctx) {
+        console.error('EMG Chart canvas element not found');
+        const chartContainer = document.getElementById('emgChart')?.parentElement;
+        if (chartContainer) {
+            chartContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 1rem;">Canvas element tidak ditemukan.</p>
+                </div>
+            `;
+        }
+        return;
+    }
+    
+    // Destroy existing chart if any
+    if (emgChart) {
+        emgChart.destroy();
+        emgChart = null;
+    }
+    
+    // Prepare records for chart
+    const { recentRecords, labels } = prepareRecordsForChart(records);
+    
+    // Handle empty records - show empty chart with message
+    if (!recentRecords || recentRecords.length === 0) {
+        emgChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Belum ada data'],
+                datasets: [
+                    {
+                        label: 'Aktivitas Otot (%)',
+                        data: [],
+                        borderColor: 'rgb(91, 155, 213)',
+                        backgroundColor: 'rgba(91, 155, 213, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Belum ada data record untuk ditampilkan',
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Aktivitas Otot (%)'
+                        },
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+        return;
+    }
+    
+    // Process EMG data to get average EMG values for each record
+    const emgData = processEMGData(recentRecords);
+    
+    // Extract data values, ensure they are numbers
+    const emgDataValues = emgData.map(value => {
+        const numValue = parseFloat(value) || 0;
+        return isNaN(numValue) ? 0 : Math.min(100, Math.max(0, numValue)); // Clamp between 0-100
+    });
+    
+    // Create chart with error handling
+    try {
+        emgChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Aktivitas Otot (%)',
+                        data: emgDataValues,
+                        borderColor: 'rgb(91, 155, 213)', // Blue color for EMG
+                        backgroundColor: 'rgba(91, 155, 213, 0.1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
-                        yAxisID: 'y1',
                         pointRadius: 4,
                         pointHoverRadius: 6
                     }
@@ -632,6 +941,7 @@ function createChart(records) {
                             }
                         },
                         beginAtZero: true,
+                        max: 100,
                         grid: {
                             display: true,
                             color: 'rgba(0, 0, 0, 0.05)'
@@ -639,41 +949,21 @@ function createChart(records) {
                         ticks: {
                             stepSize: 10
                         }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: {
-                            display: true,
-                            text: 'Jumlah Gerakan',
-                            font: {
-                                size: 12,
-                                weight: 'bold'
-                            }
-                        },
-                        beginAtZero: true,
-                        grid: {
-                            drawOnChartArea: false
-                        },
-                        ticks: {
-                            stepSize: 1
-                        }
                     }
                 }
             }
         });
         
-        console.log('Chart created successfully with', recentRecords.length, 'records');
+        console.log('EMG Chart created successfully with', recentRecords.length, 'records');
     } catch (error) {
-        console.error('Error creating chart:', error);
+        console.error('Error creating EMG chart:', error);
         // Show error message
-        const chartContainer = document.querySelector('.chart-container');
+        const chartContainer = document.getElementById('emgChart')?.parentElement;
         if (chartContainer) {
             chartContainer.innerHTML = `
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Gagal membuat grafik: ${error.message}</p>
+                    <p style="margin-top: 1rem;">Gagal membuat grafik EMG: ${error.message}</p>
                 </div>
             `;
         }
@@ -695,13 +985,16 @@ function formatDate(date) {
     return `${day} ${month} ${year}`;
 }
 
-// Handle window resize to update chart
+// Handle window resize to update charts
 let resizeTimeout;
 window.addEventListener('resize', function() {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function() {
-        if (recordsChart) {
-            recordsChart.resize();
+        if (imuChart) {
+            imuChart.resize();
+        }
+        if (emgChart) {
+            emgChart.resize();
         }
     }, 250);
 });

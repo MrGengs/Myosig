@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Myosig - Detail Pasien</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>">
+    <link rel="icon" href="assets/image/logo.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
@@ -223,7 +223,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="padding-bottom: 100px;">
         <!-- Page Header with Patient Avatar -->
         <div class="page-header fade-in" style="position: relative; padding-top: 2rem;">
             <div class="back-button-container">
@@ -314,25 +314,47 @@
             </div>
         </div>
 
-        <!-- Records Chart -->
+        <!-- IMU Chart -->
         <div class="card fade-in">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
                     <i class="bi bi-graph-up card-icon"></i>
-                    Grafik Record Monitoring
+                    Grafik IMU (Accelerometer)
                 </h2>
                 <div style="display: flex; gap: 0.5rem;">
-                    <button id="btnChartWeekly" onclick="changeChartPeriod('weekly')" class="btn btn-sm btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                    <button id="btnIMUWeekly" onclick="changeChartPeriod('weekly')" class="btn btn-sm btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                         <i class="bi bi-calendar-week"></i> Mingguan
                     </button>
-                    <button id="btnChartMonthly" onclick="changeChartPeriod('monthly')" class="btn btn-sm btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                    <button id="btnIMUMonthly" onclick="changeChartPeriod('monthly')" class="btn btn-sm btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                         <i class="bi bi-calendar-month"></i> Bulanan
                     </button>
                 </div>
             </div>
             
             <div class="chart-container">
-                <canvas id="recordsChart"></canvas>
+                <canvas id="imuChart"></canvas>
+            </div>
+        </div>
+
+        <!-- EMG Chart -->
+        <div class="card fade-in">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="card-title">
+                    <i class="bi bi-activity card-icon"></i>
+                    Grafik EMG (Aktivitas Otot)
+                </h2>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button id="btnEMGWeekly" onclick="changeChartPeriod('weekly')" class="btn btn-sm btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        <i class="bi bi-calendar-week"></i> Mingguan
+                    </button>
+                    <button id="btnEMGMonthly" onclick="changeChartPeriod('monthly')" class="btn btn-sm btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        <i class="bi bi-calendar-month"></i> Bulanan
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="emgChart"></canvas>
             </div>
         </div>
 

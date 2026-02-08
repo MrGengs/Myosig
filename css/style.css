@@ -870,6 +870,23 @@ a.nav-item:hover > i {
     body {
         padding-bottom: 90px !important;
     }
+    
+    /* Add padding to container to prevent content from being hidden by bottom nav */
+    .container {
+        padding-bottom: 100px;
+    }
+}
+
+/* Add padding for desktop as well */
+@media (min-width: 768px) {
+    .container {
+        padding-bottom: 100px;
+    }
+}
+
+/* Exception: ai-chat.html doesn't need padding - container has height: 100vh */
+body:has(.chat-container) .container {
+    padding-bottom: 0 !important;
 }
 
 @media (min-width: 1024px) {

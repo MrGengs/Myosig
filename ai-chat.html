@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Myosig - AI Assistant</title>
+    <link rel="icon" href="assets/image/logo.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        /* AI Chat Specific Styles */
+        body {
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            max-width: 100%;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-bottom: 1px solid rgba(91, 155, 213, 0.1);
+            padding: 1rem 1.25rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .chat-header-icon {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(91, 155, 213, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .chat-header-icon i {
+            display: none;
+        }
+
+
+        .chat-header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-header-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-header-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin: 0.25rem 0 0 0;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .status-indicator {
+            width: 6px;
+            height: 6px;
+            background: #10B981;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .chat-messages-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 1.5rem 1rem;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+            position: relative;
+        }
+
+        /* Custom scrollbar */
+        .chat-messages-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages-wrapper::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(91, 155, 213, 0.3);
+            border-radius: 10px;
+        }
+
+        .chat-messages-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(91, 155, 213, 0.5);
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            max-width: 100%;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 0.75rem;
+            animation: fadeInUp 0.4s ease-out;
+            align-items: flex-start;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background: var(--gradient-primary);
+        }
+
+        .chat-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .chat-avatar i {
+            color: var(--white);
+        }
+
+        .chat-message.user .chat-avatar {
+            background: linear-gradient(135deg, #5B9BD5 0%, #4A90E2 100%);
+        }
+
+        .chat-message.ai .chat-avatar {
+            background: var(--gradient-primary);
+        }
+
+        .chat-content {
+            flex: 1;
+            max-width: 75%;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-message.user .chat-content {
+            align-items: flex-end;
+        }
+
+        .chat-message.ai .chat-content {
+            align-items: flex-start;
+        }
+
+        .chat-bubble {
+            padding: 0.875rem 1.125rem;
+            border-radius: 18px;
+            line-height: 1.65;
+            word-wrap: break-word;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .chat-message.user .chat-bubble {
+            background: linear-gradient(135deg, #5B9BD5 0%, #4A90E2 100%);
+            color: var(--white);
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.ai .chat-bubble {
+            max-width: 100%;
+        }
+
+        .chat-message.ai .chat-bubble {
+            background: var(--white);
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(91, 155, 213, 0.1);
+            box-shadow: 0 2px 12px rgba(91, 155, 213, 0.08);
+        }
+
+        .chat-time {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 0.35rem;
+            text-align: right;
+            padding: 0 0.25rem;
+            opacity: 0.7;
+        }
+
+        .chat-message.user .chat-time {
+            text-align: left;
+        }
+
+        .chat-input-container {
+            background: linear-gradient(to top, #ffffff 0%, #f8f9fa 100%);
+            border-top: 1px solid rgba(91, 155, 213, 0.1);
+            padding: 1rem 1.25rem;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+            background: var(--white);
+            border-radius: 24px;
+            padding: 0.5rem;
+            box-shadow: 0 2px 12px rgba(91, 155, 213, 0.15);
+            border: 1px solid rgba(91, 155, 213, 0.1);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: none;
+            min-height: 44px;
+            max-height: 120px;
+            line-height: 1.5;
+            transition: var(--transition);
+            background: transparent;
+            color: var(--text-dark);
+        }
+
+        .chat-input:focus {
+            outline: none;
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-light);
+            opacity: 0.7;
+        }
+
+        .chat-send-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(91, 155, 213, 0.3);
+        }
+
+        .chat-send-btn:hover:not(:disabled) {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(91, 155, 213, 0.4);
+        }
+
+        .chat-send-btn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .chat-loading {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .chat-loading-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .chat-loading-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .chat-loading-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        .chat-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            background: linear-gradient(to bottom, rgba(91, 155, 213, 0.03) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(91, 155, 213, 0.08);
+        }
+
+        .chat-suggestion {
+            padding: 0.625rem 1.125rem;
+            background: var(--white);
+            border: 1.5px solid rgba(91, 155, 213, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--primary-blue);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 6px rgba(91, 155, 213, 0.1);
+        }
+
+        .chat-suggestion:hover {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(91, 155, 213, 0.25);
+        }
+
+        .chat-suggestion:active {
+            transform: translateY(0);
+        }
+
+        .chat-suggestion i {
+            font-size: 0.9rem;
+        }
+
+        /* Back button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(91, 155, 213, 0.1);
+            color: var(--primary-blue);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover {
+            background: rgba(91, 155, 213, 0.2);
+            transform: scale(1.1);
+        }
+
+        .back-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Desktop styles */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 900px;
+                margin: 0 auto;
+                box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            }
+
+            .chat-messages-wrapper {
+                padding: 2rem 1.5rem;
+            }
+
+            .chat-content {
+                max-width: 65%;
+            }
+
+            .chat-header {
+                padding: 1.25rem 1.5rem;
+            }
+
+            .chat-input-container {
+                padding: 1.25rem 1.5rem;
+            }
+
+            .chat-suggestions {
+                padding: 1.25rem 1.5rem;
+            }
+        }
+
+        /* Empty state */
+        .chat-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            text-align: center;
+            color: var(--text-light);
+            padding: 3rem 2rem;
+        }
+
+        .chat-empty-state i {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.4;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chat-empty-state h3 {
+            font-size: 1.35rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .chat-empty-state p {
+            font-size: 0.95rem;
+            max-width: 450px;
+            line-height: 1.6;
+            color: var(--text-gray);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .chat-header {
+                padding: 1rem;
+            }
+
+            .chat-header-icon {
+                width: 44px;
+                height: 44px;
+            }
+
+            .chat-header-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .chat-header-title {
+                font-size: 1.05rem;
+            }
+
+            .chat-messages-wrapper {
+                padding: 1.25rem 0.875rem;
+            }
+
+            .chat-content {
+                max-width: 80%;
+            }
+
+            .chat-bubble {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .chat-input-container {
+                padding: 0.875rem 1rem;
+            }
+
+            .chat-suggestions {
+                padding: 0.875rem 1rem;
+                gap: 0.5rem;
+            }
+
+            .chat-suggestion {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Chat Header -->
+        <div class="chat-header fade-in">
+            <a href="dashboard.html" class="back-button">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div class="chat-header-icon">
+                <img src="assets/image/logoAi.png" alt="AI Assistant Logo">
+                <i class="bi bi-robot"></i>
+            </div>
+            <div class="chat-header-info">
+                <h2 class="chat-header-title">AI Assistant Dokter</h2>
+                <p class="chat-header-subtitle">
+                    Asisten untuk dokter rehabilitasi stroke
+                </p>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <!-- Chat Suggestions -->
+            <div class="chat-suggestions" id="chatSuggestions">
+                <button class="chat-suggestion" onclick="sendSuggestion('Berikan ringkasan data semua pasien saya')">
+                    <i class="bi bi-people"></i> Ringkasan Pasien
+                </button>
+                <button class="chat-suggestion" onclick="sendSuggestion('Apa rekomendasi program rehabilitasi untuk pasien stroke berdasarkan data monitoring?')">
+                    <i class="bi bi-heart-pulse"></i> Rekomendasi Program
+                </button>
+                <button class="chat-suggestion" onclick="sendSuggestion('Analisis statistik dan tren perkembangan pasien')">
+                    <i class="bi bi-graph-up"></i> Analisis Statistik
+                </button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-messages-wrapper">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-empty-state">
+                        <i class="bi bi-chat-dots"></i>
+                        <h3>Selamat Datang, Dokter!</h3>
+                        <p>Saya adalah AI Assistant khusus untuk membantu dokter dalam mengelola pasien rehabilitasi stroke. Saya dapat membantu dengan analisis data pasien, rekomendasi perawatan, dan evaluasi perkembangan pasien. Silakan tanyakan sesuatu atau pilih salah satu pertanyaan di atas!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="Tanyakan tentang pasien, data monitoring, atau rekomendasi perawatan..."
+                        rows="1"
+                        onkeydown="handleChatInputKeydown(event)"
+                        oninput="autoResizeTextarea(this)"
+                    ></textarea>
+                    <button 
+                        id="chatSendBtn" 
+                        class="chat-send-btn" 
+                        onclick="sendMessage()"
+                        title="Kirim pesan"
+                    >
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    
+    <script src="js/config.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/ai-chat.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>

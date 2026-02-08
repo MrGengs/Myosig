@@ -4,12 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Myosig - Dashboard Dokter</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>">
+    <link rel="icon" href="assets/image/logo.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        /* Floating AI Chat Button */
+        .floating-ai-button {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: transparent;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 1000;
+            text-decoration: none;
+            border: 3px solid var(--white);
+            overflow: hidden;
+        }
+
+        .floating-ai-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .floating-ai-button i {
+            display: none;
+        }
+
+        .floating-ai-button:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .floating-ai-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Pulse animation */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(91, 155, 213, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(91, 155, 213, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(91, 155, 213, 0);
+            }
+        }
+
+        .floating-ai-button::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .floating-ai-button {
+                bottom: 90px;
+                right: 15px;
+                width: 56px;
+                height: 56px;
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .floating-ai-button {
+                bottom: 110px;
+                right: 30px;
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="padding-bottom: 100px;">
         <!-- Welcome Header -->
         <div class="page-header fade-in">
             <h1 id="welcomeName">Selamat Datang, Dokter!</h1>
@@ -115,6 +200,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Floating AI Chat Button -->
+    <a href="ai-chat.html" class="floating-ai-button" title="AI Assistant">
+        <img src="assets/image/logoAi.png" alt="AI Assistant Logo">
+        <i class="bi bi-robot"></i>
+    </a>
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
