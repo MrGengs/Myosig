@@ -75,6 +75,7 @@ document.getElementById('loginFormElement').addEventListener('submit', async fun
                 name: userData.name || user.displayName || 'Pengguna',
                 email: user.email,
                 phone: userData.phone || '',
+                photoURL: userData.photoURL || user.photoURL || '',
                 createdAt: userData.createdAt || new Date().toISOString()
             }));
         } else {
@@ -165,6 +166,7 @@ document.getElementById('registerFormElement').addEventListener('submit', async 
             name: name,
             email: email,
             phone: phone,
+            photoURL: user.photoURL || '',
             createdAt: new Date().toISOString()
         }));
         
@@ -196,6 +198,13 @@ document.getElementById('registerFormElement').addEventListener('submit', async 
 // Sign in with Google
 async function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
+    
+    // Request additional scopes for profile photo
+    // Google Auth Provider already includes profile and email by default
+    // photoURL is included in the profile scope, so we don't need to add it explicitly
+    // But we can add it for clarity if needed
+    provider.addScope('profile');
+    provider.addScope('email');
     
     // Disable buttons
     const loginBtn = document.getElementById('googleLoginBtn');
@@ -230,8 +239,9 @@ async function signInWithGoogle() {
                 photoURL: photoURL
             });
         } else {
-            // Update existing document
+            // Update existing document with latest photoURL from Google
             await firestore.collection('users').doc(user.uid).update({
+                photoURL: photoURL, // Update photoURL from Google
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
         }

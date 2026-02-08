@@ -249,6 +249,28 @@ function loadUserProfile(user = null) {
                     userEmailEl.textContent = userData.email || user.email || 'user@example.com';
                 }
                 
+                // Display user photo if available
+                const userProfilePhoto = document.getElementById('userProfilePhoto');
+                const userProfileIcon = document.getElementById('userProfileIcon');
+                const userProfileImage = document.getElementById('userProfileImage');
+                
+                // Get photoURL from userData (Firestore) or user object (Firebase Auth)
+                // Priority: Firestore data > Firebase Auth user object
+                const photoURL = userData.photoURL || (user ? user.photoURL : '') || '';
+                
+                if (photoURL && userProfilePhoto && userProfileIcon && userProfileImage) {
+                    // Show image, hide icon
+                    userProfileImage.src = photoURL;
+                    userProfileImage.style.display = 'block';
+                    userProfileIcon.style.display = 'none';
+                    userProfilePhoto.style.background = 'transparent';
+                } else if (userProfilePhoto && userProfileIcon && userProfileImage) {
+                    // Show icon, hide image
+                    userProfileImage.style.display = 'none';
+                    userProfileIcon.style.display = 'block';
+                    userProfilePhoto.style.background = 'var(--gradient-primary)';
+                }
+                
                 // Fill form fields
                 const nameInput = document.getElementById('profileName');
                 const emailInput = document.getElementById('profileEmail');
@@ -271,13 +293,14 @@ function loadUserProfile(user = null) {
                     email: userData.email || user.email,
                     phone: userData.phone || '',
                     birthDate: userData.birthDate || '',
-                    photoURL: user.photoURL || ''
+                    photoURL: userData.photoURL || user.photoURL || ''
                 }));
             } else {
                 // User document doesn't exist, create it
                 const userData = {
                     name: user.displayName || 'Pengguna',
                     email: user.email || '',
+                    photoURL: user.photoURL || '',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
@@ -308,6 +331,26 @@ function loadUserProfileFromLocalStorage() {
             
             if (userNameEl) userNameEl.textContent = user.name || 'Pengguna';
             if (userEmailEl) userEmailEl.textContent = user.email || 'user@example.com';
+            
+            // Display user photo if available
+            const userProfilePhoto = document.getElementById('userProfilePhoto');
+            const userProfileIcon = document.getElementById('userProfileIcon');
+            const userProfileImage = document.getElementById('userProfileImage');
+            
+            const photoURL = user.photoURL || '';
+            
+            if (photoURL && userProfilePhoto && userProfileIcon && userProfileImage) {
+                // Show image, hide icon
+                userProfileImage.src = photoURL;
+                userProfileImage.style.display = 'block';
+                userProfileIcon.style.display = 'none';
+                userProfilePhoto.style.background = 'transparent';
+            } else if (userProfilePhoto && userProfileIcon && userProfileImage) {
+                // Show icon, hide image
+                userProfileImage.style.display = 'none';
+                userProfileIcon.style.display = 'block';
+                userProfilePhoto.style.background = 'var(--gradient-primary)';
+            }
             
             const nameInput = document.getElementById('profileName');
             const emailInput = document.getElementById('profileEmail');
