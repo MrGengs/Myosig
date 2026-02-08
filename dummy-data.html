@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Myosig - Generator Dummy Data</title>
+    <link rel="icon" href="assets/image/logo.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .dummy-form-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .dummy-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .dummy-form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dummy-form-label i {
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+        }
+
+        .dummy-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--lighter-blue);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .dummy-select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15);
+        }
+
+        .dummy-radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .dummy-radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            background: var(--lighter-blue);
+            border-radius: var(--border-radius);
+            border: 2px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .dummy-radio-item:hover {
+            background: var(--primary-blue-lightest);
+            border-color: var(--primary-blue);
+        }
+
+        .dummy-radio-item input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary-blue);
+        }
+
+        .dummy-radio-item input[type="radio"]:checked + label {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .dummy-radio-item label {
+            flex: 1;
+            cursor: pointer;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .dummy-radio-item input[type="radio"]:checked ~ .radio-description {
+            color: var(--text-gray);
+        }
+
+        .radio-description {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .dummy-generate-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-md);
+            margin-top: 1rem;
+        }
+
+        .dummy-generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dummy-generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .dummy-status {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .dummy-status.success {
+            background: linear-gradient(135deg, rgba(16, 233, 140, 0.1) 0%, rgba(16, 233, 140, 0.05) 100%);
+            border-left: 4px solid var(--accent-green);
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .dummy-status.error {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
+            border-left: 4px solid var(--danger-red);
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .dummy-status.info {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 212, 255, 0.05) 100%);
+            border-left: 4px solid var(--primary-blue);
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding-bottom: 100px;">
+        <!-- Page Header -->
+        <div class="page-header fade-in">
+            <h1>
+                <i class="bi bi-database-add" style="color: var(--primary-blue);"></i>
+                Generator Dummy Data
+            </h1>
+            <p>Buat data dummy untuk grafik pasien</p>
+        </div>
+
+        <!-- Patient Selection Card -->
+        <div class="dummy-form-card fade-in">
+            <div class="dummy-form-group">
+                <label class="dummy-form-label">
+                    <i class="bi bi-person-heart"></i>
+                    Pilih Pasien
+                </label>
+                <select id="patientSelect" class="dummy-select">
+                    <option value="">Memuat daftar pasien...</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Period Selection Card -->
+        <div class="dummy-form-card fade-in">
+            <div class="dummy-form-group">
+                <label class="dummy-form-label">
+                    <i class="bi bi-calendar-range"></i>
+                    Periode Data
+                </label>
+                <div class="dummy-radio-group">
+                    <div class="dummy-radio-item">
+                        <input type="radio" id="periodWeekly" name="period" value="weekly" checked>
+                        <label for="periodWeekly">
+                            <div>Mingguan (7 hari terakhir)</div>
+                            <div class="radio-description">Data akan dibuat untuk 7 hari terakhir</div>
+                        </label>
+                    </div>
+                    <div class="dummy-radio-item">
+                        <input type="radio" id="periodMonthly" name="period" value="monthly">
+                        <label for="periodMonthly">
+                            <div>Bulanan (30 hari terakhir)</div>
+                            <div class="radio-description">Data akan dibuat untuk 30 hari terakhir</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Type Selection Card -->
+        <div class="dummy-form-card fade-in">
+            <div class="dummy-form-group">
+                <label class="dummy-form-label">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    Tipe Data Dummy
+                </label>
+                <div class="dummy-radio-group">
+                    <div class="dummy-radio-item">
+                        <input type="radio" id="typeGood" name="dataType" value="good" checked>
+                        <label for="typeGood">
+                            <div>Bagus (Trend Meningkat)</div>
+                            <div class="radio-description">Data menunjukkan perkembangan positif dengan trend meningkat</div>
+                        </label>
+                    </div>
+                    <div class="dummy-radio-item">
+                        <input type="radio" id="typeBad" name="dataType" value="bad">
+                        <label for="typeBad">
+                            <div>Jelek (Trend Menurun)</div>
+                            <div class="radio-description">Data menunjukkan kondisi yang perlu perhatian dengan trend menurun</div>
+                        </label>
+                    </div>
+                    <div class="dummy-radio-item">
+                        <input type="radio" id="typeRandom" name="dataType" value="random">
+                        <label for="typeRandom">
+                            <div>Acak (Variasi Random)</div>
+                            <div class="radio-description">Data dengan variasi acak untuk simulasi kondisi normal</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate Button -->
+        <div class="dummy-form-card fade-in">
+            <button id="generateBtn" class="dummy-generate-btn" onclick="generateDummyData()">
+                <i class="bi bi-magic"></i>
+                <span>Generate Dummy Data</span>
+            </button>
+            <div id="statusMessage" class="dummy-status"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="bi bi-house-door"></i>
+            <span>Beranda</span>
+        </a>
+        <a href="sensors.html" class="nav-item">
+            <i class="bi bi-activity"></i>
+            <span>Monitoring</span>
+        </a>
+        <a href="patient.html" class="nav-item">
+            <i class="bi bi-person-heart"></i>
+            <span>Pasien</span>
+        </a>
+        <a href="account.html" class="nav-item">
+            <i class="bi bi-person"></i>
+            <span>Akun</span>
+        </a>
+    </nav>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    
+    <script src="js/config.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/dummy-data.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>

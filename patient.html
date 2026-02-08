@@ -9,21 +9,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         .patient-list-item {
-            background: var(--white);
+            background: var(--neumorphism-base);
             border-radius: var(--border-radius);
             padding: 1rem;
             margin-bottom: 1rem;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-combined);
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 1rem;
+            border: none;
         }
 
         .patient-list-item:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-combined);
         }
 
         .patient-avatar {
@@ -94,16 +95,18 @@
         .search-box input {
             width: 100%;
             padding: 0.75rem 1rem 0.75rem 3rem;
-            border: 2px solid var(--lighter-blue);
+            border: none;
             border-radius: var(--border-radius);
             font-size: 1rem;
             transition: var(--transition);
+            background: var(--neumorphism-base);
+            color: var(--text-dark);
+            box-shadow: var(--shadow-combined);
         }
 
         .search-box input:focus {
             outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 4px rgba(91, 141, 239, 0.15);
+            box-shadow: var(--shadow-inset-combined);
         }
 
         .search-box {
@@ -240,7 +243,7 @@
             <span>Monitoring</span>
         </a>
         <a href="patient.html" class="nav-item active">
-            <i class="bi bi-person-heart" style="color: #5B9BD5 !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #5B9BD5 !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <i class="bi bi-person-heart" style="color: #31456A !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #31456A !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
             <span>Pasien</span>
         </a>
         <a href="account.html" class="nav-item">

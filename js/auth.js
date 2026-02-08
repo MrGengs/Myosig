@@ -10,8 +10,13 @@ window.addEventListener('DOMContentLoaded', function() {
         // Check if user is already logged in
         auth.onAuthStateChanged(function(user) {
             if (user) {
-                // Redirect to dashboard (all authenticated users are doctors)
-                window.location.href = 'dashboard.html';
+                // Check if user is admin and redirect accordingly
+                if (user.email === 'admin@myosig.com') {
+                    window.location.href = 'dummy-data.html';
+                } else {
+                    // Redirect to dashboard (all authenticated users are doctors)
+                    window.location.href = 'dashboard.html';
+                }
             }
         });
     } else {
@@ -83,8 +88,14 @@ document.getElementById('loginFormElement').addEventListener('submit', async fun
             await createUserDocument(user);
         }
         
-        // Redirect to dashboard
-        window.location.href = 'dashboard.html';
+        // Check if user is admin and redirect accordingly
+        // Admin email: admin@myosig.com
+        if (user.email === 'admin@myosig.com') {
+            window.location.href = 'dummy-data.html';
+        } else {
+            // Redirect to dashboard for regular users
+            window.location.href = 'dashboard.html';
+        }
         
     } catch (error) {
         console.error('Login error:', error);
@@ -172,7 +183,14 @@ document.getElementById('registerFormElement').addEventListener('submit', async 
         
         // Show success message and redirect
         alert('Pendaftaran berhasil! Selamat datang di Myosig!');
-        window.location.href = 'dashboard.html';
+        
+        // Check if user is admin and redirect accordingly
+        // Admin email: admin@myosig.com
+        if (email === 'admin@myosig.com') {
+            window.location.href = 'dummy-data.html';
+        } else {
+            window.location.href = 'dashboard.html';
+        }
         
     } catch (error) {
         console.error('Registration error:', error);
@@ -263,8 +281,14 @@ async function signInWithGoogle() {
             createdAt: userData.createdAt || new Date().toISOString()
         }));
         
-        // Redirect to dashboard
-        window.location.href = 'dashboard.html';
+        // Check if user is admin and redirect accordingly
+        // Admin email: admin@myosig.com
+        if (user.email === 'admin@myosig.com') {
+            window.location.href = 'dummy-data.html';
+        } else {
+            // Redirect to dashboard for regular users
+            window.location.href = 'dashboard.html';
+        }
         
     } catch (error) {
         console.error('Google Sign-In error:', error);

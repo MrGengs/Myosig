@@ -43,11 +43,11 @@
         }
         
         .legend-emg {
-            background: linear-gradient(90deg, #87CEEB 0%, #5B9BD5 100%);
+            background: var(--text-dark);
         }
         
         .legend-accel {
-            background: linear-gradient(90deg, #9D50FF 0%, #EC4899 100%);
+            background: var(--text-gray);
         }
 
         /* Recording status styles */
@@ -57,18 +57,17 @@
             margin-bottom: 1rem;
             text-align: center;
             font-weight: 600;
+            background: var(--neumorphism-base);
+            box-shadow: var(--shadow-combined);
+            border: none;
         }
 
         .recording-status.recording {
-            background: rgba(220, 53, 69, 0.1);
-            border: 2px solid #dc3545;
-            color: #dc3545;
+            color: var(--text-dark);
         }
 
         .recording-status.stopped {
-            background: rgba(108, 117, 125, 0.1);
-            border: 2px solid #6c757d;
-            color: #6c757d;
+            color: var(--text-dark);
         }
 
         .record-buttons {
@@ -93,13 +92,18 @@
         }
 
         .btn-record {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: var(--white);
+            background: var(--neumorphism-base);
+            color: var(--text-dark);
+            box-shadow: var(--shadow-combined);
         }
 
         .btn-record:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+            box-shadow: var(--shadow-combined);
+        }
+
+        .btn-record:active:not(:disabled) {
+            box-shadow: var(--shadow-inset-combined);
         }
 
         .btn-record:disabled {
@@ -108,13 +112,18 @@
         }
 
         .btn-stop {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: var(--white);
+            background: var(--neumorphism-base);
+            color: var(--text-dark);
+            box-shadow: var(--shadow-combined);
         }
 
         .btn-stop:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+            box-shadow: var(--shadow-combined);
+        }
+
+        .btn-stop:active:not(:disabled) {
+            box-shadow: var(--shadow-inset-combined);
         }
 
         .btn-stop:disabled {
@@ -374,7 +383,7 @@
             <span>Beranda</span>
         </a>
         <a href="sensors.html" class="nav-item active">
-            <i class="bi bi-activity" style="color: #5B9BD5 !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #5B9BD5 !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <i class="bi bi-activity" style="color: #31456A !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #31456A !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
             <span>Monitoring</span>
         </a>
         <a href="patient.html" class="nav-item">

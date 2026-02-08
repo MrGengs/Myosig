@@ -1,57 +1,56 @@
 /* ============================================
    Myosig - Smart Wearable Device for Rehabilitation Stroke Patient
-   Color Scheme: Light Blue & Milky White
+   Design System: Light Blue Neumorphism
    ============================================ */
 
-/* ========== CSS Variables ========== */
+/* ========== CSS Variables - Neumorphism Design ========== */
 :root {
-    /* Natural Blue & White Color Scheme */
-    /* Primary Blue Colors - Soft and Natural */
-    --primary-blue: #5B9BD5;           /* Soft Blue - main color */
-    --primary-blue-light: #87CEEB;   /* Sky Blue - lighter */
-    --primary-blue-lighter: #B0E0E6; /* Powder Blue - very light */
-    --primary-blue-lightest: #E0F2FE; /* Very Light Blue - almost white */
-    --primary-blue-dark: #4A90E2;    /* Medium Blue - for depth */
+    /* Neumorphism Base Color - Soft Light Blue */
+    --neumorphism-bg: #E3EDF7;        /* Main background color */
+    --neumorphism-base: #E3EDF7;      /* Base color for all elements */
     
-    /* Gradient Colors - Subtle and Natural */
-    --gradient-primary: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
-    --gradient-primary-light: linear-gradient(135deg, #B0E0E6 0%, #87CEEB 100%);
-    --gradient-primary-soft: linear-gradient(135deg, #E0F2FE 0%, #B0E0E6 100%);
-    --gradient-secondary: linear-gradient(135deg, #5B9BD5 0%, #4A90E2 100%);
-    --gradient-accent: linear-gradient(135deg, #B0E0E6 0%, #FFFFFF 100%);
+    /* Text Colors - Dark Blue-Grey for High Contrast */
+    --text-dark: #31456A;             /* Primary text color - Dark Blue-Grey */
+    --text-gray: #5A6B8A;             /* Secondary text color */
+    --text-light: #7A8BA8;            /* Light text color */
     
-    /* Solid colors for easy use */
-    --primary-start: #5B9BD5;
-    --primary-mid: #87CEEB;
-    --primary-end: #B0E0E6;
+    /* Neumorphism Shadows - Dual Shadow System */
+    --shadow-light: -6px -6px 14px rgba(255, 255, 255, 1);           /* Top-Left Highlight */
+    --shadow-dark: 6px 6px 14px rgba(94, 104, 121, 0.288);          /* Bottom-Right Shadow */
+    --shadow-combined: -6px -6px 14px rgba(255, 255, 255, 1), 6px 6px 14px rgba(94, 104, 121, 0.288);
     
-    /* Background - tetap putih susu */
-    --milky-white: #FFF8F0;         /* Milky White */
+    /* Inset Shadows for Pressed/Active States */
+    --shadow-inset-light: inset -6px -6px 14px rgba(255, 255, 255, 1);
+    --shadow-inset-dark: inset 6px 6px 14px rgba(94, 104, 121, 0.288);
+    --shadow-inset-combined: inset -6px -6px 14px rgba(255, 255, 255, 1), inset 6px 6px 14px rgba(94, 104, 121, 0.288);
+    
+    /* Legacy color variables for compatibility (kept for gradients/icons) */
+    --primary-blue: #31456A;
+    --primary-blue-dark: #1E2F4A;
+    --secondary-purple: #5A6B8A;
+    --accent-green: #4A8B6A;
+    --color-orange: #B87A5A;
+    --color-teal: #5A8B8A;
+    --color-pink: #B87A8A;
+    --color-yellow: #B8A85A;
+    
+    /* Gradients - Subtle for icons and accents */
+    --gradient-primary: linear-gradient(135deg, #31456A 0%, #5A6B8A 100%);
+    --gradient-blue: linear-gradient(135deg, #31456A 0%, #4A5A7A 100%);
+    --gradient-purple: linear-gradient(135deg, #5A6B8A 0%, #4A5A7A 100%);
+    --gradient-green: linear-gradient(135deg, #4A8B6A 0%, #3A7B5A 100%);
+    
+    /* Status colors - Subtle for neumorphism */
+    --success-green: #4A8B6A;
+    --warning-orange: #B87A5A;
+    --danger-red: #B85A5A;
+    --off-gray: #7A8BA8;
+    
+    /* White for contrast elements */
     --white: #FFFFFF;
-    --light-blue-bg: #F0F8FF;      /* Alice Blue - very light blue background */
     
-    /* Text colors */
-    --text-dark: #2C3E50;          /* Darker for better contrast */
-    --text-gray: #5A6C7D;
-    --text-light: #7F8C9A;
-    
-    /* Status colors */
-    --success-green: #10B981;
-    --warning-orange: #F59E0B;
-    --danger-red: #EF4444;
-    --off-gray: #9CA3AF;
-    
-    /* Shadows - Soft blue shadows */
-    --shadow-sm: 0 2px 4px rgba(91, 155, 213, 0.1);
-    --shadow-md: 0 4px 12px rgba(91, 155, 213, 0.15);
-    --shadow-lg: 0 8px 24px rgba(91, 155, 213, 0.2);
-    --shadow-glow: 0 0 20px rgba(135, 206, 235, 0.2);
-    
-    /* Additional colors */
-    --lighter-blue: #E0F2FE;       /* Very light blue for backgrounds */
-    --border-blue: #B0E0E6;        /* Light blue for borders */
-    
-    --border-radius: 12px;
+    /* Border radius for soft rounded neumorphism */
+    --border-radius: 20px;
     --transition: all 0.3s ease;
 }
 
@@ -77,8 +76,8 @@ html::-webkit-scrollbar {
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--milky-white); /* Tetap putih susu */
-    color: var(--text-dark);
+    background: var(--neumorphism-bg); /* Soft Light Blue background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
     line-height: 1.6;
     min-height: 100vh;
     padding-bottom: 90px; /* Space for bottom navbar on mobile */
@@ -133,14 +132,15 @@ p {
 .page-header {
     text-align: center;
     padding: 2rem 1rem;
-    background: var(--white);
-    border-radius: var(--border-radius);
+    background: var(--neumorphism-base); /* Neumorphism base color */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-combined); /* Dual shadow for neumorphism */
+    border: none; /* Remove harsh borders */
 }
 
 .page-header h1 {
-    color: var(--primary-blue);
+    color: var(--text-dark); /* Dark Blue-Grey text */
     margin-bottom: 0.5rem;
 }
 
@@ -149,18 +149,19 @@ p {
     font-size: 0.9rem;
 }
 
-/* ========== Cards ========== */
+/* ========== Cards - Neumorphism Design ========== */
 .card {
-    background: var(--white);
-    border-radius: var(--border-radius);
+    background: var(--neumorphism-base); /* Base color matching background */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
     transition: var(--transition);
+    border: none; /* Remove harsh borders */
 }
 
 .card:hover {
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
     transform: translateY(-2px);
 }
 
@@ -170,29 +171,56 @@ p {
     justify-content: space-between;
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid var(--lighter-blue);
+    border-bottom: none; /* Remove harsh borders - use subtle shadow instead */
 }
 
 .card-title {
     font-size: 1.2rem;
-    color: var(--text-dark);
+    color: var(--text-dark); /* Dark Blue-Grey text */
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
 .card-icon {
-    color: var(--primary-blue);
+    color: var(--text-dark); /* Dark Blue-Grey for icons */
     font-size: 1.5rem;
     display: inline-block;
 }
 
-/* ========== Buttons ========== */
+/* Colorful card headers - different colors for different cards */
+.card:nth-of-type(1) .card-icon {
+    color: var(--primary-blue);
+}
+
+.card:nth-of-type(2) .card-icon {
+    color: var(--secondary-purple);
+}
+
+.card:nth-of-type(3) .card-icon {
+    color: var(--accent-green);
+}
+
+.card:nth-of-type(4) .card-icon {
+    color: var(--color-orange);
+}
+
+.card:nth-of-type(5) .card-icon {
+    color: var(--color-teal);
+}
+
+.card:nth-of-type(6) .card-icon {
+    color: var(--color-pink);
+}
+
+/* Remove colorful card borders - neumorphism doesn't use harsh borders */
+
+/* ========== Buttons - Neumorphism Design ========== */
 .btn {
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: var(--border-radius);
+    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
     font-size: 1rem;
     font-weight: 500;
     text-align: center;
@@ -201,68 +229,144 @@ p {
     transition: var(--transition);
     width: 100%;
     margin-bottom: 0.5rem;
+    background: var(--neumorphism-base); /* Base color matching background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
 }
 
-.btn-primary {
-    background: var(--primary-blue);
-    color: var(--white);
-    box-shadow: var(--shadow-md);
-    border: none;
-}
-
-.btn-primary:hover {
-    background: var(--primary-blue-dark);
-    box-shadow: var(--shadow-lg);
+.btn:hover {
+    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
     transform: translateY(-2px);
 }
 
-
-.btn-secondary {
-    background: var(--white);
-    color: var(--primary-blue);
-    border: 2px solid var(--primary-blue);
-    position: relative;
-}
-
-.btn-secondary:hover {
-    background: var(--primary-blue-lightest);
-    color: var(--primary-blue-dark);
-    border-color: var(--primary-blue-dark);
-}
-
-.btn-secondary::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--border-radius);
-    padding: 2px;
-    background: var(--gradient-secondary);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-}
-
-.btn-secondary:hover {
-    background: var(--gradient-secondary);
-    -webkit-text-fill-color: var(--white);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-success {
-    background: var(--success-green);
-    color: var(--white);
-}
-
-.btn-danger {
-    background: var(--danger-red);
-    color: var(--white);
-}
-
-.btn:active {
+/* Active/Pressed state - Inset shadows for pressed effect */
+.btn:active,
+.btn.active {
+    box-shadow: var(--shadow-inset-combined); /* Inset shadows for pressed look */
     transform: translateY(0);
 }
 
-/* ========== Forms ========== */
+.btn-primary {
+    background: var(--neumorphism-base);
+    color: var(--text-dark);
+    box-shadow: var(--shadow-combined);
+}
+
+.btn-primary:hover {
+    box-shadow: var(--shadow-combined);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active,
+.btn-primary.active {
+    box-shadow: var(--shadow-inset-combined);
+}
+
+/* Button variants - all use neumorphism */
+.btn-purple {
+    background: var(--neumorphism-base);
+    color: var(--text-dark);
+    box-shadow: var(--shadow-combined);
+}
+
+.btn-purple:hover {
+    box-shadow: var(--shadow-combined);
+    transform: translateY(-2px);
+}
+
+.btn-purple:active,
+.btn-purple.active {
+    box-shadow: var(--shadow-inset-combined);
+}
+
+.btn-green {
+    background: var(--neumorphism-base);
+    color: var(--text-dark);
+    box-shadow: var(--shadow-combined);
+}
+
+.btn-green:hover {
+    box-shadow: var(--shadow-combined);
+    transform: translateY(-2px);
+}
+
+.btn-green:active,
+.btn-green.active {
+    box-shadow: var(--shadow-inset-combined);
+}
+
+.btn-orange {
+    background: var(--neumorphism-base);
+    color: var(--text-dark);
+    box-shadow: var(--shadow-combined);
+}
+
+.btn-orange:hover {
+    box-shadow: var(--shadow-combined);
+    transform: translateY(-2px);
+}
+
+.btn-orange:active,
+.btn-orange.active {
+    box-shadow: var(--shadow-inset-combined);
+}
+
+.btn-teal {
+    background: var(--neumorphism-base);
+    color: var(--text-dark);
+    box-shadow: var(--shadow-combined);
+}
+
+.btn-teal:hover {
+    box-shadow: var(--shadow-combined);
+    transform: translateY(-2px);
+}
+
+.btn-teal:active,
+.btn-teal.active {
+    box-shadow: var(--shadow-inset-combined);
+}
+
+.btn-secondary {
+    background: var(--neumorphism-base);
+    color: var(--text-dark);
+    box-shadow: var(--shadow-combined);
+    border: none; /* Remove harsh borders */
+}
+
+.btn-secondary:hover {
+    box-shadow: var(--shadow-combined);
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active,
+.btn-secondary.active {
+    box-shadow: var(--shadow-inset-combined);
+}
+
+.btn-success {
+    background: var(--neumorphism-base);
+    color: var(--text-dark);
+    box-shadow: var(--shadow-combined);
+}
+
+.btn-success:active,
+.btn-success.active {
+    box-shadow: var(--shadow-inset-combined);
+}
+
+.btn-danger {
+    background: var(--neumorphism-base);
+    color: var(--text-dark);
+    box-shadow: var(--shadow-combined);
+}
+
+.btn-danger:active,
+.btn-danger.active {
+    box-shadow: var(--shadow-inset-combined);
+}
+
+/* ========== Forms - Neumorphism Design ========== */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -270,7 +374,7 @@ p {
 .form-label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--text-dark);
+    color: var(--text-dark); /* Dark Blue-Grey text */
     font-weight: 500;
     font-size: 0.9rem;
 }
@@ -278,39 +382,39 @@ p {
 .form-input {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid var(--lighter-blue);
-    border-radius: var(--border-radius);
+    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
     font-size: 1rem;
-    background: var(--white);
-    color: var(--text-dark);
+    background: var(--neumorphism-base); /* Base color matching background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
     transition: var(--transition);
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
 }
 
 .form-input:focus {
     outline: none;
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.2);
+    box-shadow: var(--shadow-inset-combined); /* Inset shadows when focused (pressed look) */
 }
 
 .form-input::placeholder {
     color: var(--text-light);
 }
 
-/* ========== Bottom Navigation Bar ========== */
+/* ========== Bottom Navigation Bar - Neumorphism Design ========== */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--white);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    background: var(--neumorphism-base); /* Base color matching background */
+    box-shadow: 0 -6px 14px rgba(94, 104, 121, 0.288); /* Bottom shadow for neumorphism */
     padding: 0.75rem 0;
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     z-index: 1000;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-top: 1px solid rgba(0, 212, 255, 0.2);
+    border-top: none; /* Remove harsh borders */
     /* Safe area for devices with notch */
     padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
 }
@@ -321,7 +425,7 @@ p {
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    color: var(--text-light);
+    color: var(--text-dark); /* Dark Blue-Grey for consistency */
     padding: 0.5rem 0.75rem;
     border-radius: var(--border-radius);
     transition: var(--transition);
@@ -333,6 +437,8 @@ p {
     position: relative;
     /* Ensure icon and text are always visible */
     z-index: 1;
+    background: var(--neumorphism-base);
+    box-shadow: var(--shadow-combined); /* Extruded effect for inactive items */
 }
 
 .nav-item i {
@@ -345,8 +451,9 @@ p {
     /* Ensure icon is always visible */
     opacity: 1 !important;
     visibility: visible !important;
-    /* Prevent icon from disappearing */
-    -webkit-text-fill-color: initial !important;
+    /* Prevent icon from disappearing - use Dark Blue-Grey */
+    color: var(--text-dark) !important;
+    -webkit-text-fill-color: var(--text-dark) !important;
     background: none !important;
     -webkit-background-clip: unset !important;
     background-clip: unset !important;
@@ -359,10 +466,12 @@ p {
 }
 
 .nav-item.active {
-    color: var(--primary-start);
+    color: var(--text-dark);
     position: relative;
     /* Ensure child elements (icon and text) are visible */
     z-index: 1;
+    /* Active items have inset shadow (pressed effect) */
+    box-shadow: var(--shadow-inset-combined);
 }
 
 .nav-item.active * {
@@ -374,9 +483,9 @@ p {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--primary-blue-lightest);
+    background: var(--neumorphism-base);
     border-radius: var(--border-radius);
-    opacity: 0.5;
+    box-shadow: var(--shadow-inset-combined); /* Inset shadows for pressed/active look */
     z-index: 0;
     /* Ensure it doesn't cover icon */
     pointer-events: none;
@@ -386,8 +495,8 @@ p {
 a.nav-item.active i,
 .nav-item.active > i,
 a.nav-item.active > i {
-    /* Ensure icon is always visible with solid color */
-    color: var(--primary-blue) !important;
+    /* Ensure icon is always visible with solid color - Dark Blue-Grey */
+    color: var(--text-dark) !important;
     transform: scale(1.1) !important;
     display: inline-block !important;
     position: relative !important;
@@ -395,7 +504,7 @@ a.nav-item.active > i {
     opacity: 1 !important;
     visibility: visible !important;
     /* Reset any gradient text effects that might hide the icon */
-    -webkit-text-fill-color: var(--primary-blue) !important;
+    -webkit-text-fill-color: var(--text-dark) !important;
     background: transparent !important;
     -webkit-background-clip: unset !important;
     background-clip: unset !important;
@@ -416,6 +525,7 @@ a.nav-item.active > i {
     /* Force icon to render */
     line-height: 1 !important;
     vertical-align: middle !important;
+    /* No glow effect - consistent dark blue-grey color */
 }
 
 .nav-item:active {
@@ -426,9 +536,9 @@ a.nav-item.active > i {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--primary-blue-lightest);
+    background: var(--neumorphism-base);
     border-radius: var(--border-radius);
-    opacity: 0.4;
+    box-shadow: var(--shadow-inset-combined); /* Inset shadows for pressed look */
     z-index: 0;
     pointer-events: none;
 }
@@ -446,16 +556,16 @@ a.nav-item:active > i {
 }
 
 .nav-item:hover {
-    color: var(--primary-start);
+    color: var(--text-dark);
 }
 
 .nav-item:hover::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--primary-blue-lightest);
+    background: var(--neumorphism-base);
     border-radius: var(--border-radius);
-    opacity: 0.3;
+    box-shadow: var(--shadow-combined); /* Dual shadow on hover */
     z-index: 0;
     pointer-events: none;
 }
@@ -471,14 +581,14 @@ a[href="sensors.html"].nav-item.active:hover i,
 a[href="sensors.html"].nav-item.active:hover i.bi-activity,
 a[href="patient.html"].nav-item.active:hover i,
 a[href="patient.html"].nav-item.active:hover i.bi-person-heart {
-    color: var(--primary-blue-dark) !important;
+    color: var(--text-dark) !important;
     display: inline-block !important;
     visibility: visible !important;
     opacity: 1 !important;
     font-size: 1.5rem !important;
     z-index: 1001 !important;
     position: relative !important;
-    -webkit-text-fill-color: var(--primary-blue) !important;
+    -webkit-text-fill-color: var(--text-dark) !important;
     background: transparent !important;
     font-family: "bootstrap-icons" !important;
     transform: scale(1.1) !important;
@@ -539,17 +649,19 @@ a.nav-item:hover > i {
     }
 }
 
-/* ========== Progress Indicators ========== */
+/* ========== Progress Indicators - Neumorphism Design ========== */
 .progress-bar-container {
-    background: var(--lighter-blue);
+    background: var(--neumorphism-base);
     border-radius: 20px;
     height: 12px;
     margin: 1rem 0;
     overflow: hidden;
+    box-shadow: var(--shadow-inset-combined); /* Inset shadow for container */
+    border: none;
 }
 
 .progress-bar {
-    background: var(--gradient-primary);
+    background: var(--text-dark); /* Dark Blue-Grey for progress */
     height: 100%;
     border-radius: 20px;
     transition: width 0.5s ease;
@@ -560,7 +672,7 @@ a.nav-item:hover > i {
     color: var(--white);
     font-size: 0.7rem;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(91, 155, 213, 0.3);
+    box-shadow: var(--shadow-combined);
 }
 
 .progress-info {
@@ -578,10 +690,10 @@ a.nav-item:hover > i {
 .progress-value {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--primary-blue);
+    color: var(--text-dark); /* Dark Blue-Grey text */
 }
 
-/* ========== Stats Cards ========== */
+/* ========== Stats Cards - Neumorphism Design ========== */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -590,14 +702,22 @@ a.nav-item:hover > i {
 }
 
 .stat-card {
-    background: var(--gradient-primary);
-    color: var(--white);
+    color: var(--text-dark); /* Dark Blue-Grey text */
     padding: 1.5rem;
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
     text-align: center;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
     position: relative;
     overflow: hidden;
+    background: var(--neumorphism-base); /* Base color matching background */
+    border: none; /* Remove harsh borders */
+    transition: var(--transition);
+}
+
+/* All stat cards use neumorphism - no distinct background colors */
+.stat-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
 }
 
 .stat-card::before {
@@ -632,18 +752,19 @@ a.nav-item:hover > i {
     opacity: 0.9;
 }
 
-/* ========== Chart Container ========== */
+/* ========== Chart Container - Neumorphism Design ========== */
 .chart-container {
-    background: var(--white);
-    border-radius: var(--border-radius);
+    background: var(--neumorphism-base); /* Base color matching background */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
     padding: 1rem;
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
     height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-light);
+    border: none; /* Remove harsh borders */
 }
 
 /* ========== Sensor Data Display ========== */
@@ -652,9 +773,22 @@ a.nav-item:hover > i {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: var(--lighter-blue);
     border-radius: var(--border-radius);
     margin-bottom: 1rem;
+    transition: var(--transition);
+}
+
+/* Sensor data items - Neumorphism Design */
+.sensor-data {
+    background: var(--neumorphism-base); /* Base color matching background */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    border: none; /* Remove harsh borders */
+}
+
+.sensor-data:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
 }
 
 .sensor-info {
@@ -670,7 +804,11 @@ a.nav-item:hover > i {
 .sensor-value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--primary-blue);
+}
+
+/* Sensor values - all use Dark Blue-Grey text */
+.sensor-value {
+    color: var(--text-dark); /* Dark Blue-Grey text */
 }
 
 .sensor-unit {
@@ -696,36 +834,39 @@ a.nav-item:hover > i {
     color: var(--white);
 }
 
-/* ========== Exercise List ========== */
+/* ========== Exercise List - Neumorphism Design ========== */
 .exercise-item {
     display: flex;
     align-items: center;
     padding: 1rem;
-    background: var(--white);
-    border-radius: var(--border-radius);
+    background: var(--neumorphism-base); /* Base color matching background */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
     margin-bottom: 1rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
     transition: var(--transition);
+    border: none; /* Remove harsh borders */
 }
 
 .exercise-item:hover {
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
     transform: translateX(5px);
 }
 
+/* Exercise icons - Neumorphism Design */
 .exercise-icon {
     width: 50px;
     height: 50px;
-    background: var(--primary-blue);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--white);
+    color: var(--text-dark); /* Dark Blue-Grey text */
     font-size: 1.5rem;
     margin-right: 1rem;
     flex-shrink: 0;
-    box-shadow: var(--shadow-md);
+    background: var(--neumorphism-base); /* Base color matching background */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    border: none; /* Remove harsh borders */
 }
 
 .exercise-content {
@@ -764,7 +905,13 @@ a.nav-item:hover > i {
     top: 0;
     bottom: 0;
     width: 2px;
-    background: var(--lighter-blue);
+    background: linear-gradient(to bottom, 
+        var(--primary-blue) 0%,
+        var(--secondary-purple) 25%,
+        var(--accent-green) 50%,
+        var(--color-orange) 75%,
+        var(--color-teal) 100%
+    );
 }
 
 .timeline-item {
@@ -781,8 +928,48 @@ a.nav-item:hover > i {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: var(--primary-blue);
     border: 3px solid var(--white);
+    box-shadow: 0 0 0 2px;
+}
+
+/* Colorful timeline dots - different colors for each item */
+.timeline-item:nth-child(1)::before {
+    background: var(--primary-blue);
+    box-shadow: 0 0 0 2px var(--primary-blue);
+}
+
+.timeline-item:nth-child(2)::before {
+    background: var(--secondary-purple);
+    box-shadow: 0 0 0 2px var(--secondary-purple);
+}
+
+.timeline-item:nth-child(3)::before {
+    background: var(--accent-green);
+    box-shadow: 0 0 0 2px var(--accent-green);
+}
+
+.timeline-item:nth-child(4)::before {
+    background: var(--color-orange);
+    box-shadow: 0 0 0 2px var(--color-orange);
+}
+
+.timeline-item:nth-child(5)::before {
+    background: var(--color-teal);
+    box-shadow: 0 0 0 2px var(--color-teal);
+}
+
+.timeline-item:nth-child(6)::before {
+    background: var(--color-pink);
+    box-shadow: 0 0 0 2px var(--color-pink);
+}
+
+.timeline-item:nth-child(7)::before {
+    background: var(--color-yellow);
+    box-shadow: 0 0 0 2px var(--color-yellow);
+}
+
+.timeline-item:nth-child(8)::before {
+    background: var(--primary-blue);
     box-shadow: 0 0 0 2px var(--primary-blue);
 }
 
@@ -793,10 +980,11 @@ a.nav-item:hover > i {
 }
 
 .timeline-content {
-    background: var(--white);
+    background: var(--neumorphism-base); /* Base color matching background */
     padding: 1rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    border: none; /* Remove harsh borders */
 }
 
 /* ========== Alert Messages ========== */
@@ -809,22 +997,53 @@ a.nav-item:hover > i {
     gap: 0.75rem;
 }
 
+/* Alerts - Neumorphism Design */
 .alert-success {
-    background: rgba(76, 175, 80, 0.1);
-    color: var(--success-green);
-    border-left: 4px solid var(--success-green);
+    background: var(--neumorphism-base); /* Base color matching background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
+    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
 }
 
 .alert-info {
-    background: rgba(135, 206, 235, 0.1);
-    color: var(--primary-blue);
-    border-left: 4px solid var(--primary-blue);
+    background: var(--neumorphism-base); /* Base color matching background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
+    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
 }
 
 .alert-warning {
-    background: rgba(255, 152, 0, 0.1);
-    color: var(--warning-orange);
-    border-left: 4px solid var(--warning-orange);
+    background: var(--neumorphism-base); /* Base color matching background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
+    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+}
+
+.alert-purple {
+    background: var(--neumorphism-base); /* Base color matching background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
+    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+}
+
+.alert-orange {
+    background: var(--neumorphism-base); /* Base color matching background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
+    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+}
+
+.alert-teal {
+    background: var(--neumorphism-base); /* Base color matching background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
+    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
 }
 
 /* ========== Responsive Design ========== */
@@ -949,14 +1168,14 @@ a.nav-item.active i.bi-play-circle-fill,
 .nav-item.active i.bi-play-circle-fill,
 a.nav-item.active i.bi-person-fill,
 .nav-item.active i.bi-person-fill {
-    color: var(--primary-blue) !important;
+    color: var(--text-dark) !important;
     display: inline-block !important;
     visibility: visible !important;
     opacity: 1 !important;
     font-size: 1.5rem !important;
     z-index: 999 !important;
     position: relative !important;
-    -webkit-text-fill-color: var(--primary-blue) !important;
+    -webkit-text-fill-color: var(--text-dark) !important;
     background: transparent !important;
     font-family: "bootstrap-icons" !important;
     /* Force icon to be visible - remove any hiding effects */
@@ -1001,7 +1220,7 @@ a.nav-item.active i.bi-person-heart,
     font-size: 1.5rem !important;
     z-index: 1000 !important;
     position: relative !important;
-    -webkit-text-fill-color: var(--primary-blue) !important;
+    -webkit-text-fill-color: var(--text-dark) !important;
     background: transparent !important;
     font-family: "bootstrap-icons" !important;
     /* Remove any transform that might hide it */
@@ -1049,9 +1268,9 @@ a.nav-item.active i.bi-person-heart,
 
 .custom-modal-content {
     position: relative;
-    background: var(--white);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-lg);
+    background: var(--neumorphism-base); /* Base color matching background */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
     max-width: 90%;
     width: 100%;
     max-width: 400px;
@@ -1059,6 +1278,7 @@ a.nav-item.active i.bi-person-heart,
     overflow-y: auto;
     z-index: 10001;
     animation: modalSlideIn 0.3s ease;
+    border: none; /* Remove harsh borders */
 }
 
 @keyframes modalSlideIn {
@@ -1077,7 +1297,7 @@ a.nav-item.active i.bi-person-heart,
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--lighter-blue);
+    border-bottom: none; /* Remove harsh borders */
 }
 
 .custom-modal-title {
@@ -1116,7 +1336,7 @@ a.nav-item.active i.bi-person-heart,
     display: flex;
     gap: 0.75rem;
     padding: 1rem 1.5rem;
-    border-top: 1px solid var(--lighter-blue);
+    border-top: none; /* Remove harsh borders */
     justify-content: flex-end;
 }
 
@@ -1125,33 +1345,33 @@ a.nav-item.active i.bi-person-heart,
     min-width: 80px;
 }
 
-/* Form Control Styles */
+/* Form Control Styles - Neumorphism Design */
 .form-control {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid var(--border-blue);
-    border-radius: var(--border-radius);
-    background: var(--white);
-    color: var(--text-dark);
+    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    background: var(--neumorphism-base); /* Base color matching background */
+    color: var(--text-dark); /* Dark Blue-Grey text */
     font-size: 1rem;
     font-family: inherit;
     cursor: pointer;
     transition: var(--transition);
     outline: none;
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
 }
 
 .form-control:hover {
-    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-combined);
 }
 
 .form-control:focus {
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.1);
+    box-shadow: var(--shadow-inset-combined); /* Inset shadows when focused (pressed look) */
 }
 
 .form-control option {
     padding: 0.5rem;
-    background: var(--white);
+    background: var(--neumorphism-base);
     color: var(--text-dark);
 }
 
@@ -1177,15 +1397,16 @@ a.nav-item.active i.bi-person-heart,
 
 .modal-content {
     position: relative;
-    background: var(--white);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-lg);
+    background: var(--neumorphism-base); /* Base color matching background */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
     width: 100%;
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
     z-index: 10001;
     animation: modalSlideIn 0.3s ease;
+    border: none; /* Remove harsh borders */
 }
 
 .modal-header {
@@ -1193,7 +1414,7 @@ a.nav-item.active i.bi-person-heart,
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--lighter-blue);
+    border-bottom: none; /* Remove harsh borders */
 }
 
 .modal-header h3 {
@@ -1238,7 +1459,7 @@ a.nav-item.active i.bi-person-heart,
     justify-content: flex-end;
     gap: 0.75rem;
     padding: 1.25rem 1.5rem;
-    border-top: 1px solid var(--lighter-blue);
+    border-top: none; /* Remove harsh borders */
 }
 
 body.modal-open {
@@ -1324,15 +1545,16 @@ select::-webkit-scrollbar {
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: var(--lighter-blue);
-    border-radius: var(--border-radius);
+    background: var(--neumorphism-base); /* Base color matching background */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
     transition: var(--transition);
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    border: none; /* Remove harsh borders */
 }
 
 .contact-item:hover {
-    background: var(--primary-blue-lightest);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
 }
 
 .contact-avatar {
@@ -1345,6 +1567,13 @@ select::-webkit-scrollbar {
     font-size: 1.5rem;
     color: var(--white);
     flex-shrink: 0;
+}
+
+/* Contact avatars - Neumorphism Design */
+.contact-avatar {
+    background: var(--neumorphism-base); /* Base color matching background */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    border: none; /* Remove harsh borders */
 }
 
 .contact-info {
@@ -1397,9 +1626,22 @@ select::-webkit-scrollbar {
     flex-direction: column;
     gap: 0.5rem;
     padding: 1rem;
-    background: var(--lighter-blue);
     border-radius: var(--border-radius);
     text-align: center;
+    transition: var(--transition);
+}
+
+/* Rehab status items - Neumorphism Design */
+.rehab-status-item {
+    background: var(--neumorphism-base); /* Base color matching background */
+    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    border: none; /* Remove harsh borders */
+}
+
+.rehab-status-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
 }
 
 .rehab-status-label {
@@ -1420,7 +1662,11 @@ select::-webkit-scrollbar {
 .rehab-status-value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--primary-blue);
+}
+
+/* Rehab status values - all use Dark Blue-Grey text */
+.rehab-status-value {
+    color: var(--text-dark); /* Dark Blue-Grey text */
 }
 
 /* Status Badge Styles */
@@ -1524,7 +1770,7 @@ select::-webkit-scrollbar {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 3px solid rgba(91, 155, 213, 0.3);
+    border: 3px solid rgba(0, 212, 255, 0.4);
     border-radius: 50%;
     border-top-color: var(--primary-blue);
     animation: spin 0.8s linear infinite;

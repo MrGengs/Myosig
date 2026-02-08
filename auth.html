@@ -16,6 +16,7 @@
             justify-content: center;
             padding: 1rem;
             padding-bottom: 2rem;
+            background: var(--neumorphism-bg);
         }
 
         .auth-header {
@@ -46,7 +47,7 @@
         .auth-title {
             font-size: 2rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            background: linear-gradient(135deg, #6C9BD5 0%, #8BB5E8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -61,14 +62,17 @@
         }
 
         .auth-card {
-            background: var(--white);
-            border-radius: 24px;
+            background: var(--neumorphism-base);
+            border-radius: var(--border-radius);
             padding: 2rem 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-combined);
             max-width: 450px;
             margin: 0 auto;
             width: 100%;
             animation: slideUp 0.6s ease-out;
+            border: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .auth-card-header {
@@ -88,7 +92,7 @@
         }
 
         .auth-card-title i {
-            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            background: linear-gradient(135deg, #6C9BD5 0%, #8BB5E8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -116,11 +120,47 @@
         }
 
         .auth-form-label i {
-            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            background: linear-gradient(135deg, #00D4FF 0%, #9D50FF 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-size: 1.1rem;
+        }
+
+        /* Colorful input icons - different colors for each field */
+        .auth-form-group:nth-child(1) .auth-form-label i {
+            background: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-form-group:nth-child(2) .auth-form-label i {
+            background: linear-gradient(135deg, #9D50FF 0%, #7C3AED 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-form-group:nth-child(3) .auth-form-label i {
+            background: linear-gradient(135deg, #10E98C 0%, #00C853 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-form-group:nth-child(4) .auth-form-label i {
+            background: linear-gradient(135deg, #FF8A65 0%, #FF7043 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-form-group:nth-child(5) .auth-form-label i {
+            background: linear-gradient(135deg, #4DB6AC 0%, #26A69A 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .auth-input-wrapper {
@@ -130,21 +170,20 @@
         .auth-form-input {
             width: 100%;
             padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid var(--lighter-blue);
-            border-radius: 12px;
+            border: none;
+            border-radius: var(--border-radius);
             font-size: 1rem;
-            background: var(--white);
+            background: var(--neumorphism-base);
             color: var(--text-dark);
             transition: var(--transition);
             -webkit-appearance: none;
             appearance: none;
+            box-shadow: var(--shadow-combined);
         }
 
         .auth-form-input:focus {
             outline: none;
-            border-color: #5B8DEF;
-            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15);
-            background: var(--milky-white);
+            box-shadow: var(--shadow-inset-combined);
         }
 
         .auth-form-input::placeholder {
@@ -180,7 +219,7 @@
         }
 
         .auth-password-toggle:hover {
-            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            background: linear-gradient(135deg, #6C9BD5 0%, #8BB5E8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -212,7 +251,7 @@
         }
 
         .auth-forgot-link {
-            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            background: linear-gradient(135deg, #6C9BD5 0%, #8BB5E8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -229,10 +268,10 @@
         .auth-submit-btn {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
-            color: var(--white);
+            background: var(--neumorphism-base);
+            color: var(--text-dark);
             border: none;
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             font-size: 1.05rem;
             font-weight: 600;
             cursor: pointer;
@@ -241,17 +280,18 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+            box-shadow: var(--shadow-combined);
             margin-bottom: 1.5rem;
         }
 
         .auth-submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(91, 141, 239, 0.4), 0 0 20px rgba(157, 80, 255, 0.3);
+            box-shadow: var(--shadow-combined);
         }
 
         .auth-submit-btn:active {
             transform: translateY(0);
+            box-shadow: var(--shadow-inset-combined);
         }
 
         .auth-submit-btn:disabled {
@@ -316,10 +356,10 @@
         .auth-google-btn {
             width: 100%;
             padding: 0.875rem;
-            background: var(--white);
+            background: var(--neumorphism-base);
             color: var(--text-dark);
-            border: 2px solid #E0E0E0;
-            border-radius: 12px;
+            border: none;
+            border-radius: var(--border-radius);
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
@@ -328,18 +368,17 @@
             align-items: center;
             justify-content: center;
             gap: 0.75rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-combined);
             margin-bottom: 1rem;
         }
 
         .auth-google-btn:hover {
-            background: #FAFAFA;
-            border-color: #D0D0D0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-combined);
         }
 
         .auth-google-btn:active {
             transform: scale(0.98);
+            box-shadow: var(--shadow-inset-combined);
         }
 
         .auth-google-btn:disabled {
@@ -361,7 +400,7 @@
         }
 
         .auth-terms a {
-            background: linear-gradient(135deg, #87CEEB 0%, #5B9BD5 100%);
+            background: linear-gradient(135deg, #00D4FF 0%, #9D50FF 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -474,8 +513,7 @@
         <div class="auth-header">
             <div class="auth-logo">
                 <img src="assets/image/logo.png" alt="Myosig Logo">
-            </div>
-            <h1 class="auth-title">Myosig</h1>
+            </div>  
             <p class="auth-subtitle">Smart Wearable Device for<br>Rehabilitation Stroke Patient</p>
         </div>
 

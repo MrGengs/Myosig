@@ -15,17 +15,17 @@
             right: 20px;
             width: 60px;
             height: 60px;
-            background: transparent;
+            background: var(--neumorphism-base);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-combined);
             cursor: pointer;
             transition: var(--transition);
             z-index: 1000;
             text-decoration: none;
-            border: 3px solid var(--white);
+            border: none;
             overflow: hidden;
         }
 
@@ -42,23 +42,24 @@
 
         .floating-ai-button:hover {
             transform: scale(1.1);
-            box-shadow: var(--shadow-glow);
+            box-shadow: var(--shadow-combined);
         }
 
         .floating-ai-button:active {
             transform: scale(0.95);
+            box-shadow: var(--shadow-inset-combined);
         }
 
         /* Pulse animation */
         @keyframes pulse {
             0% {
-                box-shadow: 0 0 0 0 rgba(91, 155, 213, 0.7);
+                box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(91, 155, 213, 0);
+                box-shadow: 0 0 0 10px rgba(0, 212, 255, 0);
             }
             100% {
-                box-shadow: 0 0 0 0 rgba(91, 155, 213, 0);
+                box-shadow: 0 0 0 0 rgba(0, 212, 255, 0);
             }
         }
 
@@ -146,11 +147,11 @@
             </div>
             
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-                <a href="sensors.html" class="btn btn-primary" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                <a href="sensors.html" class="btn btn-green" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                     <i class="bi bi-record-circle" style="font-size: 2rem;"></i>
                     <span>Mulai Monitoring</span>
                 </a>
-                <a href="patient.html" class="btn btn-secondary" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                <a href="patient.html" class="btn btn-purple" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                     <i class="bi bi-person-heart" style="font-size: 2rem;"></i>
                     <span>Kelola Pasien</span>
                 </a>
@@ -210,7 +211,7 @@
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item active">
-            <i class="bi bi-house-door-fill" style="color: #5B9BD5 !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #5B9BD5 !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <i class="bi bi-house-door-fill" style="color: #31456A !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #31456A !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
             <span>Beranda</span>
         </a>
         <a href="sensors.html" class="nav-item">

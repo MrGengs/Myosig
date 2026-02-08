@@ -1023,7 +1023,7 @@ async function getAIRecommendation() {
     aiContent.innerHTML = `
         <div class="ai-loading">
             <i class="bi bi-arrow-repeat" style="font-size: 2rem;"></i>
-            <p style="margin-top: 1rem;">AI sedang menganalisis data pasien dan memberikan rekomendasi...</p>
+            <p style="margin-top: 1rem;">AI sedang menganalisis perkembangan pasien dan menyiapkan rekomendasi untuk dokter...</p>
             <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-light);">Mohon tunggu sebentar...</p>
         </div>
     `;
@@ -1107,11 +1107,22 @@ function preparePatientSummary() {
     let summary = `DATA PASIEN REHABILITASI STROKE:\n\n`;
     
     // Patient basic info
-    summary += `Informasi Pasien:\n`;
+    summary += `INFORMASI PASIEN:\n`;
     summary += `- Nama: ${patientData.name || 'Tidak diketahui'}\n`;
     summary += `- Usia: ${patientData.birthDate ? calculateAge(patientData.birthDate) + ' tahun' : 'Tidak diketahui'}\n`;
     summary += `- Jenis Kelamin: ${patientData.gender || 'Tidak diketahui'}\n`;
-    summary += `- Tanggal Stroke: ${patientData.strokeDate ? formatDate(new Date(patientData.strokeDate)) : 'Tidak diketahui'}\n`;
+    
+    // Calculate time since stroke
+    if (patientData.strokeDate) {
+        const strokeDate = new Date(patientData.strokeDate);
+        const now = new Date();
+        const daysSinceStroke = Math.floor((now - strokeDate) / (1000 * 60 * 60 * 24));
+        const monthsSinceStroke = Math.floor(daysSinceStroke / 30);
+        summary += `- Tanggal Stroke: ${formatDate(strokeDate)}\n`;
+        summary += `- Waktu Setelah Stroke: ${monthsSinceStroke > 0 ? monthsSinceStroke + ' bulan' : daysSinceStroke + ' hari'}\n`;
+    } else {
+        summary += `- Tanggal Stroke: Tidak diketahui\n`;
+    }
     
     if (patientData.medicalNotes) {
         summary += `- Catatan Medis: ${patientData.medicalNotes}\n`;
@@ -1158,13 +1169,53 @@ function preparePatientSummary() {
             summary += `${index + 1}. ${formatDate(date)} - Aktivitas: ${record.avgMuscleActivity}%, Gerakan: ${record.movementCount}, Durasi: ${Math.floor(record.duration / 60)}:${String(record.duration % 60).padStart(2, '0')}\n`;
         });
         
-        // Trend analysis
+        // Detailed trend analysis
         if (recentRecords.length >= 2) {
             const firstActivity = parseFloat(recentRecords[recentRecords.length - 1].avgMuscleActivity) || 0;
             const lastActivity = parseFloat(recentRecords[0].avgMuscleActivity) || 0;
-            const activityTrend = lastActivity > firstActivity ? 'Meningkat' : lastActivity < firstActivity ? 'Menurun' : 'Stabil';
+            const activityChange = lastActivity - firstActivity;
+            const activityTrend = activityChange > 5 ? 'Meningkat Signifikan' : 
+                                 activityChange > 0 ? 'Meningkat' : 
+                                 activityChange < -5 ? 'Menurun Signifikan' : 
+                                 activityChange < 0 ? 'Menurun' : 'Stabil';
             
-            summary += `\nTren Aktivitas: ${activityTrend} (dari ${firstActivity.toFixed(1)}% ke ${lastActivity.toFixed(1)}%)\n`;
+            const firstMovement = parseFloat(recentRecords[recentRecords.length - 1].movementCount) || 0;
+            const lastMovement = parseFloat(recentRecords[0].movementCount) || 0;
+            const movementChange = lastMovement - firstMovement;
+            const movementTrend = movementChange > 10 ? 'Meningkat Signifikan' : 
+                                 movementChange > 0 ? 'Meningkat' : 
+                                 movementChange < -10 ? 'Menurun Signifikan' : 
+                                 movementChange < 0 ? 'Menurun' : 'Stabil';
+            
+            summary += `\nANALISIS TREN PERKEMBANGAN:\n`;
+            summary += `- Tren Aktivitas Otot: ${activityTrend} (${firstActivity.toFixed(1)}% → ${lastActivity.toFixed(1)}%, perubahan: ${activityChange > 0 ? '+' : ''}${activityChange.toFixed(1)}%)\n`;
+            summary += `- Tren Jumlah Gerakan: ${movementTrend} (${firstMovement.toFixed(0)} → ${lastMovement.toFixed(0)}, perubahan: ${movementChange > 0 ? '+' : ''}${movementChange.toFixed(0)} gerakan)\n`;
+            
+            // Calculate improvement rate
+            if (recentRecords.length >= 3) {
+                const improvementRate = ((lastActivity - firstActivity) / firstActivity * 100).toFixed(1);
+                summary += `- Tingkat Perbaikan: ${improvementRate}% dalam ${recentRecords.length} sesi terakhir\n`;
+            }
+            
+            // Assessment based on current level
+            let activityLevel = 'Sangat Rendah';
+            if (lastActivity >= 70) activityLevel = 'Sangat Baik';
+            else if (lastActivity >= 50) activityLevel = 'Baik';
+            else if (lastActivity >= 30) activityLevel = 'Sedang';
+            else if (lastActivity >= 15) activityLevel = 'Rendah';
+            
+            summary += `- Level Aktivitas Saat Ini: ${activityLevel} (${lastActivity.toFixed(1)}%)\n`;
+        }
+        
+        // Calculate consistency
+        if (patientRecords.length >= 3) {
+            const activities = patientRecords.map(r => parseFloat(r.avgMuscleActivity) || 0);
+            const mean = activities.reduce((a, b) => a + b, 0) / activities.length;
+            const variance = activities.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / activities.length;
+            const stdDev = Math.sqrt(variance);
+            const consistency = stdDev < 10 ? 'Konsisten' : stdDev < 20 ? 'Cukup Konsisten' : 'Tidak Konsisten';
+            
+            summary += `- Konsistensi Data: ${consistency} (standar deviasi: ${stdDev.toFixed(1)}%)\n`;
         }
     } else {
         summary += `RIWAYAT MONITORING: Belum ada data monitoring.\n`;
@@ -1202,18 +1253,41 @@ async function callGeminiAPI(patientSummary) {
         throw new Error('API key tidak valid');
     }
     
-    const prompt = `Anda adalah seorang ahli fisioterapi dan rehabilitasi stroke. Berdasarkan data pasien berikut, berikan rekomendasi yang spesifik dan praktis untuk program rehabilitasi:
+    const prompt = `Anda adalah AI Assistant khusus untuk membantu DOKTER dalam menangani pasien rehabilitasi stroke. Berdasarkan data pasien berikut, berikan analisis dan rekomendasi profesional untuk DOKTER:
 
 ${patientSummary}
 
-Berikan rekomendasi dalam format berikut:
-1. Analisis singkat kondisi pasien berdasarkan data monitoring
-2. Rekomendasi latihan yang sesuai (3-5 latihan spesifik)
-3. Tips untuk meningkatkan aktivitas otot
-4. Saran frekuensi dan durasi latihan
-5. Peringatan atau hal yang perlu diperhatikan
+Sebagai AI Assistant untuk dokter, berikan rekomendasi dalam format berikut:
 
-Gunakan bahasa Indonesia yang mudah dipahami. Fokus pada rehabilitasi stroke dan peningkatan aktivitas otot lengan.`;
+1. ANALISIS PERKEMBANGAN PASIEN
+   - Analisis kondisi pasien berdasarkan data monitoring (aktivitas otot, gerakan, akselerasi)
+   - Evaluasi tren perkembangan (meningkat, menurun, atau stabil)
+   - Identifikasi area yang perlu perhatian khusus
+   - Perbandingan dengan baseline atau target rehabilitasi
+
+2. REKOMENDASI PROGRAM LATIHAN/OLAHRAGA UNTUK PASIEN
+   - Rekomendasi 5-7 latihan spesifik yang sesuai dengan kondisi pasien
+   - Setiap latihan harus mencakup: nama latihan, cara melakukan, target otot yang dilatih
+   - Latihan harus disesuaikan dengan tingkat aktivitas otot pasien saat ini
+   - Fokus pada rehabilitasi stroke untuk lengan dan koordinasi gerakan
+
+3. REKOMENDASI UNTUK DOKTER
+   - Tindakan medis atau intervensi yang perlu dilakukan dokter
+   - Frekuensi dan durasi sesi latihan yang direkomendasikan
+   - Modifikasi program rehabilitasi jika diperlukan
+   - Monitoring dan evaluasi yang perlu dilakukan dokter
+
+4. PARAMETER MONITORING
+   - Target aktivitas otot yang diharapkan untuk sesi berikutnya
+   - Indikator keberhasilan yang perlu dipantau
+   - Tanda-tanda yang perlu diwaspadai
+
+5. CATATAN PENTING
+   - Peringatan atau hal-hal yang perlu diperhatikan dokter
+   - Kontraindikasi atau batasan latihan jika ada
+   - Saran konsultasi dengan spesialis jika diperlukan
+
+Gunakan bahasa Indonesia yang profesional dan medis. Fokus pada memberikan panduan yang jelas untuk DOKTER dalam merencanakan dan mengevaluasi program rehabilitasi stroke pasien.`;
 
     const requestBody = {
         contents: [{
@@ -1275,33 +1349,128 @@ function displayAIRecommendation(recommendation) {
     // Format the recommendation text properly
     let formattedRecommendation = recommendation;
     
-    // Escape HTML to prevent XSS
+    // First, escape HTML to prevent XSS
     formattedRecommendation = formattedRecommendation
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
     
-    // Convert double newlines to paragraph breaks
-    formattedRecommendation = formattedRecommendation.replace(/\n\n+/g, '</p><p>');
+    // Remove markdown bold/italic markers (**text**, *text*, __text__, _text_)
+    formattedRecommendation = formattedRecommendation
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')  // **bold**
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')            // *italic*
+        .replace(/__([^_]+)__/g, '<strong>$1</strong>')   // __bold__
+        .replace(/_([^_]+)_/g, '<em>$1</em>');             // _italic_
     
-    // Convert single newlines to line breaks
-    formattedRecommendation = formattedRecommendation.replace(/\n/g, '<br>');
+    // Remove standalone asterisks and dashes used as bullets
+    formattedRecommendation = formattedRecommendation
+        .replace(/^\s*[\*\-\•]\s+/gm, '')  // Remove bullet markers at start of line
+        .replace(/\s*[\*\-\•]\s*$/gm, ''); // Remove bullet markers at end of line
     
-    // Highlight numbered sections (1., 2., etc.)
-    formattedRecommendation = formattedRecommendation.replace(/(\d+\.\s+[^<]+?)(?=<br>|<\/p>|$)/g, '<strong>$1</strong>');
+    // Convert numbered lists (1. item, 2. item, etc.)
+    const lines = formattedRecommendation.split('\n');
+    let htmlOutput = '';
+    let inNumberedList = false;
+    let inBulletList = false;
+    let listItems = [];
     
-    // Wrap in paragraph tags
-    if (!formattedRecommendation.startsWith('<p>')) {
-        formattedRecommendation = '<p>' + formattedRecommendation + '</p>';
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        
+        // Skip empty lines
+        if (!line) {
+            if (inNumberedList && listItems.length > 0) {
+                htmlOutput += '<ol>' + listItems.join('') + '</ol>';
+                listItems = [];
+                inNumberedList = false;
+            }
+            if (inBulletList && listItems.length > 0) {
+                htmlOutput += '<ul>' + listItems.join('') + '</ul>';
+                listItems = [];
+                inBulletList = false;
+            }
+            continue;
+        }
+        
+        // Check for numbered list item (1., 2., etc.)
+        const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
+        if (numberedMatch) {
+            if (inBulletList) {
+                htmlOutput += '<ul>' + listItems.join('') + '</ul>';
+                listItems = [];
+                inBulletList = false;
+            }
+            inNumberedList = true;
+            listItems.push('<li>' + numberedMatch[2] + '</li>');
+            continue;
+        }
+        
+        // Check for bullet list item (starts with -, •, or *)
+        const bulletMatch = line.match(/^[\-\•\*]\s+(.+)$/);
+        if (bulletMatch) {
+            if (inNumberedList) {
+                htmlOutput += '<ol>' + listItems.join('') + '</ol>';
+                listItems = [];
+                inNumberedList = false;
+            }
+            inBulletList = true;
+            listItems.push('<li>' + bulletMatch[1] + '</li>');
+            continue;
+        }
+        
+        // Close any open lists
+        if (inNumberedList && listItems.length > 0) {
+            htmlOutput += '<ol>' + listItems.join('') + '</ol>';
+            listItems = [];
+            inNumberedList = false;
+        }
+        if (inBulletList && listItems.length > 0) {
+            htmlOutput += '<ul>' + listItems.join('') + '</ul>';
+            listItems = [];
+            inBulletList = false;
+        }
+        
+        // Check for headings (# Heading, ## Heading, etc.)
+        const headingMatch = line.match(/^(#{1,3})\s+(.+)$/);
+        if (headingMatch) {
+            const level = headingMatch[1].length;
+            const text = headingMatch[2];
+            htmlOutput += `<h${Math.min(level + 2, 4)} style="color: var(--primary-blue); margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: ${level === 1 ? '1.3rem' : level === 2 ? '1.15rem' : '1rem'}; font-weight: 600;">${text}</h${Math.min(level + 2, 4)}>`;
+            continue;
+        }
+        
+        // Regular paragraph
+        // Check if line looks like a title/heading (all caps or starts with capital and ends with colon)
+        if (line.match(/^[A-Z][^:]+:$/) || line.match(/^[A-Z\s]{10,}$/)) {
+            htmlOutput += `<h4 style="color: var(--primary-blue); margin-top: 1.25rem; margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 600;">${line.replace(/:$/, '')}</h4>`;
+        } else {
+            htmlOutput += `<p style="margin-bottom: 0.75rem;">${line}</p>`;
+        }
+    }
+    
+    // Close any remaining open lists
+    if (inNumberedList && listItems.length > 0) {
+        htmlOutput += '<ol>' + listItems.join('') + '</ol>';
+    }
+    if (inBulletList && listItems.length > 0) {
+        htmlOutput += '<ul>' + listItems.join('') + '</ul>';
+    }
+    
+    // Clean up multiple consecutive paragraph tags
+    htmlOutput = htmlOutput.replace(/<\/p>\s*<p>/g, '</p><p>');
+    
+    // If output is empty, use original text as fallback
+    if (!htmlOutput.trim()) {
+        htmlOutput = '<p>' + formattedRecommendation.replace(/\n/g, '</p><p>') + '</p>';
     }
     
     aiContent.innerHTML = `
         <div class="ai-recommendation">
             <div style="color: var(--text-dark); line-height: 1.8;">
-                ${formattedRecommendation}
+                ${htmlOutput}
             </div>
             <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: var(--text-light); display: flex; align-items: start; gap: 0.5rem;">
-                <i class="bi bi-info-circle" style="font-size: 1.1rem; margin-top: 0.1rem;"></i>
+                <i class="bi bi-info-circle" style="font-size: 1.1rem; margin-top: 0.1rem; color: var(--primary-blue);"></i>
                 <em>Rekomendasi ini dihasilkan oleh AI dan hanya sebagai panduan. Selalu konsultasikan dengan dokter atau fisioterapis sebelum mengikuti program rehabilitasi.</em>
             </div>
         </div>
