@@ -137,6 +137,20 @@ p {
     margin-bottom: 1.5rem;
     box-shadow: var(--shadow-combined); /* Dual shadow for neumorphism */
     border: none; /* Remove harsh borders */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add subtle colorful gradient overlay to page header */
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 .page-header h1 {
@@ -172,6 +186,19 @@ p {
     margin-bottom: 1rem;
     padding-bottom: 1rem;
     border-bottom: none; /* Remove harsh borders - use subtle shadow instead */
+    position: relative;
+}
+
+/* Add subtle colorful accent line to card headers */
+.card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
 }
 
 .card-title {
@@ -247,14 +274,15 @@ p {
 }
 
 .btn-primary {
-    background: var(--neumorphism-base);
-    color: var(--text-dark);
+    background: var(--gradient-primary); /* Colorful gradient for primary button */
+    color: var(--white); /* White text for better contrast */
     box-shadow: var(--shadow-combined);
 }
 
 .btn-primary:hover {
     box-shadow: var(--shadow-combined);
     transform: translateY(-2px);
+    opacity: 0.9;
 }
 
 .btn-primary:active,
@@ -262,16 +290,17 @@ p {
     box-shadow: var(--shadow-inset-combined);
 }
 
-/* Button variants - all use neumorphism */
+/* Button variants - colorful gradients for better visual appeal */
 .btn-purple {
-    background: var(--neumorphism-base);
-    color: var(--text-dark);
+    background: var(--gradient-purple); /* Purple gradient */
+    color: var(--white); /* White text for better contrast */
     box-shadow: var(--shadow-combined);
 }
 
 .btn-purple:hover {
     box-shadow: var(--shadow-combined);
     transform: translateY(-2px);
+    opacity: 0.9;
 }
 
 .btn-purple:active,
@@ -280,14 +309,15 @@ p {
 }
 
 .btn-green {
-    background: var(--neumorphism-base);
-    color: var(--text-dark);
+    background: var(--gradient-green); /* Green gradient */
+    color: var(--white); /* White text for better contrast */
     box-shadow: var(--shadow-combined);
 }
 
 .btn-green:hover {
     box-shadow: var(--shadow-combined);
     transform: translateY(-2px);
+    opacity: 0.9;
 }
 
 .btn-green:active,
@@ -296,14 +326,15 @@ p {
 }
 
 .btn-orange {
-    background: var(--neumorphism-base);
-    color: var(--text-dark);
+    background: linear-gradient(135deg, var(--color-orange) 0%, #C88A6A 100%); /* Orange gradient */
+    color: var(--white); /* White text for better contrast */
     box-shadow: var(--shadow-combined);
 }
 
 .btn-orange:hover {
     box-shadow: var(--shadow-combined);
     transform: translateY(-2px);
+    opacity: 0.9;
 }
 
 .btn-orange:active,
@@ -312,14 +343,15 @@ p {
 }
 
 .btn-teal {
-    background: var(--neumorphism-base);
-    color: var(--text-dark);
+    background: linear-gradient(135deg, var(--color-teal) 0%, #4A7A7A 100%); /* Teal gradient */
+    color: var(--white); /* White text for better contrast */
     box-shadow: var(--shadow-combined);
 }
 
 .btn-teal:hover {
     box-shadow: var(--shadow-combined);
     transform: translateY(-2px);
+    opacity: 0.9;
 }
 
 .btn-teal:active,
@@ -345,9 +377,14 @@ p {
 }
 
 .btn-success {
-    background: var(--neumorphism-base);
-    color: var(--text-dark);
+    background: var(--gradient-green); /* Green gradient for success */
+    color: var(--white); /* White text for better contrast */
     box-shadow: var(--shadow-combined);
+}
+
+.btn-success:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
 }
 
 .btn-success:active,
@@ -356,9 +393,14 @@ p {
 }
 
 .btn-danger {
-    background: var(--neumorphism-base);
-    color: var(--text-dark);
+    background: linear-gradient(135deg, var(--danger-red) 0%, #A84A4A 100%); /* Red gradient for danger */
+    color: var(--white); /* White text for better contrast */
     box-shadow: var(--shadow-combined);
+}
+
+.btn-danger:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
 }
 
 .btn-danger:active,
@@ -466,12 +508,14 @@ p {
 }
 
 .nav-item.active {
-    color: var(--text-dark);
+    color: var(--primary-blue); /* Blue color for active nav item */
     position: relative;
     /* Ensure child elements (icon and text) are visible */
     z-index: 1;
     /* Active items have inset shadow (pressed effect) */
     box-shadow: var(--shadow-inset-combined);
+    /* Add subtle background color for active state */
+    background: linear-gradient(135deg, rgba(49, 69, 106, 0.1) 0%, rgba(90, 107, 138, 0.05) 100%);
 }
 
 .nav-item.active * {
@@ -495,8 +539,8 @@ p {
 a.nav-item.active i,
 .nav-item.active > i,
 a.nav-item.active > i {
-    /* Ensure icon is always visible with solid color - Dark Blue-Grey */
-    color: var(--text-dark) !important;
+    /* Ensure icon is always visible with colorful blue */
+    color: var(--primary-blue) !important;
     transform: scale(1.1) !important;
     display: inline-block !important;
     position: relative !important;
@@ -661,7 +705,7 @@ a.nav-item:hover > i {
 }
 
 .progress-bar {
-    background: var(--text-dark); /* Dark Blue-Grey for progress */
+    background: var(--gradient-primary); /* Colorful gradient for progress */
     height: 100%;
     border-radius: 20px;
     transition: width 0.5s ease;
@@ -727,8 +771,53 @@ a.nav-item:hover > i {
     right: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
     animation: shimmer 3s infinite;
+}
+
+/* Add subtle colorful overlay to stat cards */
+.stat-card:nth-of-type(1)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.stat-card:nth-of-type(2)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-purple);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.stat-card:nth-of-type(3)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-green);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.stat-card:nth-of-type(4)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, var(--color-orange) 0%, #C88A6A 100%);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 @keyframes shimmer {
@@ -739,6 +828,39 @@ a.nav-item:hover > i {
 .stat-card .stat-icon {
     font-size: 2rem;
     margin-bottom: 0.5rem;
+}
+
+/* Colorful stat card icons - different colors for each stat card */
+.stat-card:nth-of-type(1) .stat-icon {
+    color: var(--primary-blue);
+}
+
+.stat-card:nth-of-type(2) .stat-icon {
+    color: var(--secondary-purple);
+}
+
+.stat-card:nth-of-type(3) .stat-icon {
+    color: var(--accent-green);
+}
+
+.stat-card:nth-of-type(4) .stat-icon {
+    color: var(--color-orange);
+}
+
+.stat-card:nth-of-type(5) .stat-icon {
+    color: var(--color-teal);
+}
+
+.stat-card:nth-of-type(6) .stat-icon {
+    color: var(--color-pink);
+}
+
+.stat-card:nth-of-type(7) .stat-icon {
+    color: var(--color-yellow);
+}
+
+.stat-card:nth-of-type(8) .stat-icon {
+    color: var(--primary-blue);
 }
 
 .stat-card .stat-value {
@@ -825,8 +947,9 @@ a.nav-item:hover > i {
 }
 
 .sensor-status.active {
-    background: var(--success-green);
+    background: var(--gradient-green); /* Colorful green gradient */
     color: var(--white);
+    box-shadow: var(--shadow-combined);
 }
 
 .sensor-status.inactive {
@@ -860,13 +983,38 @@ a.nav-item:hover > i {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-dark); /* Dark Blue-Grey text */
+    color: var(--white); /* White text for better contrast */
     font-size: 1.5rem;
     margin-right: 1rem;
     flex-shrink: 0;
-    background: var(--neumorphism-base); /* Base color matching background */
+    background: var(--gradient-primary); /* Colorful gradient background */
     box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
     border: none; /* Remove harsh borders */
+}
+
+/* Different colors for different exercise icons */
+.exercise-item:nth-of-type(1) .exercise-icon {
+    background: var(--gradient-primary);
+}
+
+.exercise-item:nth-of-type(2) .exercise-icon {
+    background: var(--gradient-purple);
+}
+
+.exercise-item:nth-of-type(3) .exercise-icon {
+    background: var(--gradient-green);
+}
+
+.exercise-item:nth-of-type(4) .exercise-icon {
+    background: linear-gradient(135deg, var(--color-orange) 0%, #C88A6A 100%);
+}
+
+.exercise-item:nth-of-type(5) .exercise-icon {
+    background: linear-gradient(135deg, var(--color-teal) 0%, #4A7A7A 100%);
+}
+
+.exercise-item:nth-of-type(6) .exercise-icon {
+    background: linear-gradient(135deg, var(--color-pink) 0%, #A86A7A 100%);
 }
 
 .exercise-content {
@@ -1532,6 +1680,23 @@ select::-webkit-scrollbar {
     font-size: 1rem;
 }
 
+/* Colorful patient info icons - different colors for variety */
+.patient-info-item:nth-of-type(1) .patient-info-label i {
+    color: var(--primary-blue);
+}
+
+.patient-info-item:nth-of-type(2) .patient-info-label i {
+    color: var(--secondary-purple);
+}
+
+.patient-info-item:nth-of-type(3) .patient-info-label i {
+    color: var(--accent-green);
+}
+
+.patient-info-item:nth-of-type(4) .patient-info-label i {
+    color: var(--color-orange);
+}
+
 .patient-info-value {
     font-size: 1rem;
     color: var(--text-dark);
@@ -1567,13 +1732,30 @@ select::-webkit-scrollbar {
     font-size: 1.5rem;
     color: var(--white);
     flex-shrink: 0;
-}
-
-/* Contact avatars - Neumorphism Design */
-.contact-avatar {
-    background: var(--neumorphism-base); /* Base color matching background */
+    background: var(--gradient-primary); /* Colorful gradient background */
     box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
     border: none; /* Remove harsh borders */
+}
+
+/* Different colors for different contact avatars */
+.contact-item:nth-of-type(1) .contact-avatar {
+    background: var(--gradient-primary);
+}
+
+.contact-item:nth-of-type(2) .contact-avatar {
+    background: var(--gradient-purple);
+}
+
+.contact-item:nth-of-type(3) .contact-avatar {
+    background: var(--gradient-green);
+}
+
+.contact-item:nth-of-type(4) .contact-avatar {
+    background: linear-gradient(135deg, var(--color-orange) 0%, #C88A6A 100%);
+}
+
+.contact-item:nth-of-type(5) .contact-avatar {
+    background: linear-gradient(135deg, var(--color-teal) 0%, #4A7A7A 100%);
 }
 
 .contact-info {
@@ -1611,6 +1793,19 @@ select::-webkit-scrollbar {
 
 .contact-details i {
     color: var(--primary-blue);
+}
+
+/* Colorful contact detail icons */
+.contact-item:nth-of-type(1) .contact-details i {
+    color: var(--primary-blue);
+}
+
+.contact-item:nth-of-type(2) .contact-details i {
+    color: var(--secondary-purple);
+}
+
+.contact-item:nth-of-type(3) .contact-details i {
+    color: var(--accent-green);
 }
 
 /* Rehabilitation Status Styles */
@@ -1659,6 +1854,23 @@ select::-webkit-scrollbar {
     font-size: 1rem;
 }
 
+/* Colorful rehab status icons - different colors for each status */
+.rehab-status-item:nth-of-type(1) .rehab-status-label i {
+    color: var(--primary-blue);
+}
+
+.rehab-status-item:nth-of-type(2) .rehab-status-label i {
+    color: var(--accent-green);
+}
+
+.rehab-status-item:nth-of-type(3) .rehab-status-label i {
+    color: var(--color-orange);
+}
+
+.rehab-status-item:nth-of-type(4) .rehab-status-label i {
+    color: var(--secondary-purple);
+}
+
 .rehab-status-value {
     font-size: 1.5rem;
     font-weight: 700;
@@ -1679,18 +1891,21 @@ select::-webkit-scrollbar {
 }
 
 .status-active {
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(74, 139, 106, 0.15); /* Slightly more visible green background */
     color: var(--success-green);
+    border: 1px solid rgba(74, 139, 106, 0.3); /* Subtle border for definition */
 }
 
 .status-warning {
-    background: rgba(245, 158, 11, 0.1);
+    background: rgba(184, 122, 90, 0.15); /* Slightly more visible orange background */
     color: var(--warning-orange);
+    border: 1px solid rgba(184, 122, 90, 0.3); /* Subtle border for definition */
 }
 
 .status-danger {
-    background: rgba(239, 68, 68, 0.1);
+    background: rgba(184, 90, 90, 0.15); /* Slightly more visible red background */
     color: var(--danger-red);
+    border: 1px solid rgba(184, 90, 90, 0.3); /* Subtle border for definition */
 }
 
 /* Button Small Variant */
