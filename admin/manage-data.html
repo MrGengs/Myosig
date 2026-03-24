@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Myosig - Manage Data</title>
+    <link rel="icon" href="../assets/image/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .dummy-form-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .dummy-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .dummy-form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dummy-form-label i {
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+        }
+
+        .dummy-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--lighter-blue);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background: var(--white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .dummy-select:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .dummy-select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Record Item Styles */
+        .record-item-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-blue);
+            transition: var(--transition);
+        }
+
+        .record-item-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .record-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+
+        .record-item-info {
+            flex: 1;
+        }
+
+        .record-item-date {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .record-item-time {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .record-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .record-item-actions button {
+            padding: 0.5rem;
+            min-width: auto;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .record-item-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .record-item-stat {
+            padding: 0.5rem;
+            background: var(--lighter-blue);
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .record-item-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .record-item-stat-value {
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 0.95rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--lighter-blue);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: var(--text-dark);
+            font-size: 1.25rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--lighter-blue);
+            color: var(--text-dark);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .dummy-status {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .dummy-status.success {
+            background: linear-gradient(135deg, rgba(16, 233, 140, 0.1) 0%, rgba(16, 233, 140, 0.05) 100%);
+            border-left: 4px solid var(--accent-green);
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .dummy-status.error {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
+            border-left: 4px solid var(--danger-red);
+            color: var(--text-dark);
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding-bottom: 100px;">
+        <!-- Page Header -->
+        <div class="page-header fade-in">
+            <h1>
+                <i class="bi bi-pencil-square" style="color: var(--primary-blue);"></i>
+                Manage Data
+            </h1>
+            <p>Kelola data pasien dan record monitoring</p>
+        </div>
+
+        <!-- User Selection Card -->
+        <div class="dummy-form-card fade-in">
+            <div class="dummy-form-group">
+                <label class="dummy-form-label">
+                    <i class="bi bi-person-badge"></i>
+                    Pilih User (Dokter)
+                </label>
+                <select id="userSelect" class="dummy-select" onchange="loadUserPatients()">
+                    <option value="">Memuat daftar user...</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Patient Selection Card -->
+        <div class="dummy-form-card fade-in" id="managePatientCard" style="display: none;">
+            <div class="dummy-form-group">
+                <label class="dummy-form-label">
+                    <i class="bi bi-person-heart"></i>
+                    Pilih Pasien
+                </label>
+                <select id="managePatientSelect" class="dummy-select" onchange="loadPatientRecords()">
+                    <option value="">Pilih pasien...</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Records List Card -->
+        <div class="dummy-form-card fade-in" id="recordsCard" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-clock-history" style="color: var(--primary-blue);"></i>
+                    Daftar Record
+                </h3>
+                <button class="btn btn-primary btn-sm" onclick="showAddRecordModal()" style="padding: 0.5rem 1rem; min-width: auto;">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Tambah Record</span>
+                </button>
+            </div>
+            <div id="statusMessage" class="dummy-status"></div>
+            <div id="recordsList" style="max-height: 500px; overflow-y: auto;">
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 1rem;">Memuat record...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Record Modal -->
+    <div id="recordModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="modalTitle">Tambah Record Baru</h2>
+                <button class="modal-close" onclick="closeRecordModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="recordForm" onsubmit="saveRecord(event)">
+                    <div class="dummy-form-group">
+                        <label class="dummy-form-label">
+                            <i class="bi bi-calendar"></i>
+                            Tanggal
+                        </label>
+                        <input type="date" id="recordDate" class="dummy-select" required>
+                    </div>
+                    <div class="dummy-form-group">
+                        <label class="dummy-form-label">
+                            <i class="bi bi-clock"></i>
+                            Waktu
+                        </label>
+                        <input type="time" id="recordTime" class="dummy-select" required>
+                    </div>
+                    <div class="dummy-form-group">
+                        <label class="dummy-form-label">
+                            <i class="bi bi-activity"></i>
+                            Rata-rata Aktivitas Otot (%)
+                        </label>
+                        <input type="number" id="recordAvgMuscleActivity" class="dummy-select" min="0" max="100" step="0.1" required>
+                    </div>
+                    <div class="dummy-form-group">
+                        <label class="dummy-form-label">
+                            <i class="bi bi-arrow-repeat"></i>
+                            Jumlah Gerakan
+                        </label>
+                        <input type="number" id="recordMovementCount" class="dummy-select" min="0" required>
+                    </div>
+                    <div class="dummy-form-group">
+                        <label class="dummy-form-label">
+                            <i class="bi bi-speedometer2"></i>
+                            Akselerasi Maksimum (g)
+                        </label>
+                        <input type="number" id="recordMaxAcceleration" class="dummy-select" min="0" step="0.01" required>
+                    </div>
+                    <div class="dummy-form-group">
+                        <label class="dummy-form-label">
+                            <i class="bi bi-hourglass-split"></i>
+                            Durasi (detik)
+                        </label>
+                        <input type="number" id="recordDuration" class="dummy-select" min="0" required>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <button type="button" class="btn btn-secondary" onclick="closeRecordModal()" style="flex: 1;">Batal</button>
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="generate-dummy.html" class="nav-item">
+            <i class="bi bi-magic"></i>
+            <span>Generate</span>
+        </a>
+        <a href="manage-data.html" class="nav-item active">
+            <i class="bi bi-pencil-square" style="color: #31456A !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #31456A !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <span>Manage</span>
+        </a>
+    </nav>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    
+    <script src="../js/config.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/admin/manage-data.js"></script>
+    <script src="../js/navigation.js"></script>
+</body>
+</html>

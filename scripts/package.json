@@ -1,0 +1,23 @@
+{
+  "name": "myosig-batch-insert",
+  "version": "1.0.0",
+  "description": "Script untuk batch insert data ke Firestore menggunakan Firebase Admin SDK",
+  "main": "add-records-to-patient.js",
+  "scripts": {
+    "start": "node add-records-to-patient.js",
+    "add-records": "node add-records-to-patient.js",
+    "import-txt": "node import-from-txt.js",
+    "update-txt": "node update-from-txt.js"
+  },
+  "keywords": [
+    "firebase",
+    "firestore",
+    "batch-insert",
+    "admin-sdk"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

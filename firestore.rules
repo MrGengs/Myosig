@@ -6,51 +6,60 @@ service cloud.firestore {
       return request.auth != null;
     }
     
+    // Helper function to check if user is admin
+    // Admin email: admin@myosig.com
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.email == 'admin@myosig.com';
+    }
+    
     // Users collection - for storing doctor accounts only
     // Doctors can only read/update their own user document
+    // Admin can read all users
     match /users/{userId} {
-      // Allow read if user is authenticated and reading their own document
-      allow read: if isAuthenticated() && request.auth.uid == userId;
+      // Allow read if user is authenticated and reading their own document OR if admin
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
       
       // Allow create if user is authenticated and creating their own document
       allow create: if isAuthenticated() && request.auth.uid == userId;
       
-      // Allow update if user is authenticated and updating their own document
-      allow update: if isAuthenticated() && request.auth.uid == userId;
+      // Allow update if user is authenticated and updating their own document OR if admin
+      allow update: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
       
-      // Allow delete if user is authenticated and deleting their own document
-      allow delete: if isAuthenticated() && request.auth.uid == userId;
+      // Allow delete if user is authenticated and deleting their own document OR if admin
+      allow delete: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
       
       // Patients subcollection - nested under each doctor's document
       // Doctors can only read/write patients in their own subcollection
+      // Admin can read/write all patients
       match /patients/{patientId} {
-        // Allow read if user is authenticated and accessing their own patients subcollection
-        allow read: if isAuthenticated() && request.auth.uid == userId;
+        // Allow read if user is authenticated and accessing their own patients subcollection OR if admin
+        allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
         
-        // Allow create if user is authenticated and creating in their own subcollection
-        allow create: if isAuthenticated() && request.auth.uid == userId;
+        // Allow create if user is authenticated and creating in their own subcollection OR if admin
+        allow create: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
         
-        // Allow update if user is authenticated and updating in their own subcollection
-        allow update: if isAuthenticated() && request.auth.uid == userId;
+        // Allow update if user is authenticated and updating in their own subcollection OR if admin
+        allow update: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
         
-        // Allow delete if user is authenticated and deleting from their own subcollection
-        allow delete: if isAuthenticated() && request.auth.uid == userId;
+        // Allow delete if user is authenticated and deleting from their own subcollection OR if admin
+        allow delete: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
         
         // Monitoring Records subcollection - nested under each patient's document
         // Structure: users/{userId}/patients/{patientId}/monitoringRecords/{recordId}
         // Doctors can only read/write records in their own patients' subcollections
+        // Admin can read/write all records
         match /monitoringRecords/{recordId} {
-          // Allow read if user is authenticated and accessing their own patient's monitoring records
-          allow read: if isAuthenticated() && request.auth.uid == userId;
+          // Allow read if user is authenticated and accessing their own patient's monitoring records OR if admin
+          allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
           
-          // Allow create if user is authenticated and creating in their own patient's subcollection
-          allow create: if isAuthenticated() && request.auth.uid == userId;
+          // Allow create if user is authenticated and creating in their own patient's subcollection OR if admin
+          allow create: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
           
-          // Allow update if user is authenticated and updating in their own patient's subcollection
-          allow update: if isAuthenticated() && request.auth.uid == userId;
+          // Allow update if user is authenticated and updating in their own patient's subcollection OR if admin
+          allow update: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
           
-          // Allow delete if user is authenticated and deleting from their own patient's subcollection
-          allow delete: if isAuthenticated() && request.auth.uid == userId;
+          // Allow delete if user is authenticated and deleting from their own patient's subcollection OR if admin
+          allow delete: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
         }
       }
     }

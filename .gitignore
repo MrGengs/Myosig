@@ -70,3 +70,8 @@ node_modules/
 
 # API Keys Configuration (DO NOT COMMIT)
 js/config.js
+
+# Firebase Service Account Key (DO NOT COMMIT)
+scripts/serviceAccountKey.json
+scripts/*.json
+!scripts/package.json

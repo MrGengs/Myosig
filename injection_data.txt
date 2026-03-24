@@ -1,0 +1,335 @@
+1. Dyah Kusumawati
+	1. Tanggal: 04/02/2026
+	   Waktu: 16:28
+	   Rata-rata Aktivitas Otot (%): Sedang
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	2. Tanggal: 04/02/2026
+	   Waktu: 16:30
+	   Rata-rata Aktivitas Otot (%): Sedang
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	3. Tanggal: 04/02/2026
+	   Waktu: 16:32
+	   Rata-rata Aktivitas Otot (%): Sedang
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	4. Tanggal: 04/02/2026
+	   Waktu: 18:16
+	   Rata-rata Aktivitas Otot (%): Sedang
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	5. Tanggal: 04/02/2026
+	   Waktu: 18:17
+	   Rata-rata Aktivitas Otot (%): Sedang
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	6. Tanggal: 04/02/2026
+	   Waktu: 18:19
+	   Rata-rata Aktivitas Otot (%): Sedang
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	7. Tanggal: 18/02/2026
+	   Waktu: 16:15
+	   Rata-rata Aktivitas Otot (%): Sedang
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	8. Tanggal: 18/02/2026
+	   Waktu: 16:16
+	   Rata-rata Aktivitas Otot (%): Sedang
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	9. Tanggal: 18/02/2026
+	   Waktu: 16:18
+	   Rata-rata Aktivitas Otot (%): Sedang
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+
+
+2. Rahmat Priyanto V
+	1. Tanggal: 04/02/2026
+	   Waktu: 17:56
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	2. Tanggal: 04/02/2026
+	   Waktu: 17:58
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	3. Tanggal: 04/02/2026
+	   Waktu: 17:59
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+
+
+3. Febriani Erlinda
+	1. Tanggal: 04/02/2026
+	   Waktu: 18:06
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	2. Tanggal: 04/02/2026
+	   Waktu: 18:07
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	3. Tanggal: 04/02/2026
+	   Waktu: 18:09
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	4. Tanggal: 04/02/2026
+	   Waktu: 19:14
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	5. Tanggal: 04/02/2026
+	   Waktu: 19:16
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	6. Tanggal: 04/02/2026
+	   Waktu: 19:18
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	7. Tanggal: 18/02/2026
+	   Waktu: 18:56
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	8. Tanggal: 18/02/2026
+	   Waktu: 18:57
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	9. Tanggal: 18/02/2026
+	   Waktu: 18:59
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	10. Tanggal: 18/02/2026
+	   Waktu: 20:36
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	11. Tanggal: 18/02/2026
+	   Waktu: 20:37
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	12. Tanggal: 18/02/2026
+	   Waktu: 20:39
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+
+
+
+4. Indrayanto
+	1. Tanggal: 05/02/2026
+	   Waktu: 17:35
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	2. Tanggal: 05/02/2026
+	   Waktu: 17:38
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	3. Tanggal: 05/02/2026
+	   Waktu: 17:39
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	4. Tanggal: 05/02/2026
+	   Waktu: 18:16
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	5. Tanggal: 05/02/2026
+	   Waktu: 18:17
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	6. Tanggal: 05/02/2026
+	   Waktu: 18:19
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+
+
+5. Ike Surtika
+	1. Tanggal: 05/02/2026
+	   Waktu: 18:14
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	2. Tanggal: 05/02/2026
+	   Waktu: 18:16
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	3. Tanggal: 05/02/2026
+	   Waktu: 18:18
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+
+
+6. Sari Mutia Timur
+	1. Tanggal: 09/02/2026
+	   Waktu: 16:45
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	2. Tanggal: 09/02/2026
+	   Waktu: 16:47
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+	3. Tanggal: 09/02/2026
+	   Waktu: 16:48
+	   Rata-rata Aktivitas Otot (%): Tinggi
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.02
+	   Durasi (detik): 60
+
+
+7. Wibowo
+	1. Tanggal: 09/02/2026
+	   Waktu: 19:04
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	2. Tanggal: 09/02/2026
+	   Waktu: 19:06
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	3. Tanggal: 09/02/2026
+	   Waktu: 19:07
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	4. Tanggal: 09/02/2026
+	   Waktu: 20:23
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	5. Tanggal: 09/02/2026
+	   Waktu: 20:24
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+	6. Tanggal: 09/02/2026
+	   Waktu: 20:26
+	   Rata-rata Aktivitas Otot (%): Rendah
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0.01
+	   Durasi (detik): 60
+
+
+8. Mulyati
+	1. Tanggal: 10/02/2026
+	   Waktu: 16:23
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 0
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
+	2. Tanggal: 10/02/2026
+	   Waktu: 17:31
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 0
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
+	3. Tanggal: 10/02/2026
+	   Waktu: 17:33
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 0
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
+	4. Tanggal: 10/02/2026
+	   Waktu: 17:35
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 0
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
+	5. Tanggal: 18/02/2026
+	   Waktu: 16:20
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
+	6. Tanggal: 18/02/2026
+	   Waktu: 16:21
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
+	7. Tanggal: 18/02/2026
+	   Waktu: 16:23
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
+	8. Tanggal: 18/02/2026
+	   Waktu: 17:37
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
+	9. Tanggal: 18/02/2026
+	   Waktu: 17:38
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
+	10. Tanggal: 18/02/2026
+	   Waktu: 17:40
+	   Rata-rata Aktivitas Otot (%): Tidak Bergerak
+	   Jumlah Gerakan: 10
+	   Akselerasi Maksimum (g): 0
+	   Durasi (detik): 60
