@@ -19,6 +19,11 @@ let currentUser = null; // Current logged in doctor
 let isRecording = false;
 let recordingStartTime = null;
 let recordedData = []; // Array to store recorded sensor data
+// Camera state
+let cameraStream = null;
+let capturedBlob = null;
+let facingMode = 'environment'; // 'environment' = back camera, 'user' = front camera
+let todayPhotoTaken = false; // Track if photo already taken today
 
 // Check if user is logged in
 window.addEventListener('DOMContentLoaded', function() {
@@ -56,6 +61,14 @@ window.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
+            // Setup patient selector change listener for daily photo
+            const patientSelect = document.getElementById('patientSelect');
+            if (patientSelect) {
+                patientSelect.addEventListener('change', function() {
+                    updatePhotoButtonState();
+                });
+            }
+
             // User is logged in, setup sensors (but don't auto-record)
             setupRealtimeSensorListener();
             // Don't start monitoring time here - it will start when recording begins
@@ -133,11 +146,19 @@ function startRecording() {
     isRecording = true;
     recordingStartTime = Date.now();
     recordedData = []; // Reset recorded data
-    
+
     // Reset all monitoring stats for new recording session
     movementCount = 0;
     maxAcceleration = 0;
     emgReadings = []; // Clear previous readings
+
+    // Reset zone tracker and fatigue tracker for new recording
+    if (typeof resetZoneTracker === 'function') resetZoneTracker();
+    if (typeof resetFatigueTracker === 'function') resetFatigueTracker();
+
+    // Show zone distribution section
+    const zoneDist = document.getElementById('zoneDistribution');
+    if (zoneDist) zoneDist.style.display = 'block';
     
     // Reset monitoring time - start from 0 when recording starts
     monitoringStartTime = Date.now();
@@ -227,6 +248,12 @@ async function stopRecording() {
         ? Math.round(emgReadings.reduce((a, b) => a + b, 0) / emgReadings.length)
         : 0;
     
+    // Get zone distribution data
+    const zoneData = typeof getZoneDistribution === 'function' ? getZoneDistribution() : [];
+
+    // Get fatigue data
+    const fatigueData = typeof getFatigueState === 'function' ? getFatigueState() : {};
+
     // Prepare record data
     const recordData = {
         patientId: selectedPatientId,
@@ -240,6 +267,11 @@ async function stopRecording() {
         movementCount: movementCount,
         maxAcceleration: maxAcceleration,
         recordedData: recordedData, // Store all recorded sensor data
+        zoneDistribution: zoneData.map(z => ({ name: z.name, percent: z.percent, time: z.time })),
+        fatigueIndex: fatigueData.currentFatigue || 0,
+        peakFatigue: fatigueData.peakFatigue || 0,
+        fatigueOnset: fatigueData.onsetDetected || false,
+        notes: '', // Session notes - can be edited later
         createdAt: firebase && firebase.firestore ? firebase.firestore.FieldValue.serverTimestamp() : new Date()
     };
     
@@ -258,12 +290,13 @@ async function stopRecording() {
                 .doc(selectedPatientId)
                 .collection('monitoringRecords')
                 .add(recordData);
-            
+
             if (typeof showAlert === 'function') {
                 showAlert(`Data berhasil disimpan! Waktu: ${time}, Tanggal: ${dateMonthYear}`, 'Berhasil');
-            } else {
-                alert(`Data berhasil disimpan! Waktu: ${time}, Tanggal: ${dateMonthYear}`);
             }
+
+            // Reset stats after saving
+            resetMonitoringStatsAfterSave();
         } else {
             // Fallback: save to localStorage
             const records = JSON.parse(localStorage.getItem('monitoringRecords') || '[]');
@@ -276,10 +309,9 @@ async function stopRecording() {
             if (typeof showAlert === 'function') {
                 showAlert('Data disimpan ke localStorage (Firestore tidak tersedia)', 'Info');
             }
+            // Reset stats (no camera flow for localStorage fallback)
+            resetMonitoringStatsAfterSave();
         }
-        
-        // Reset stats after saving (prepare for next recording)
-        resetMonitoringStatsAfterSave();
         
     } catch (error) {
         console.error('Error saving record:', error);
@@ -435,20 +467,45 @@ function updateMonitoringDataFromRealtime(data) {
         emgIntensityElement.textContent = Math.round(emgIntensity) + '%';
     }
     
+    // Update EMG Zone indicator (always, even when not recording)
+    if (typeof renderZoneIndicator === 'function') {
+        renderZoneIndicator('zoneIndicator', emgIntensity);
+    }
+
     // Store EMG readings for average calculation - ONLY during recording
     if (isRecording) {
         emgReadings.push(emgIntensity);
         if (emgReadings.length > 100) {
             emgReadings.shift(); // Keep last 100 readings
         }
-        
+
         // Calculate average muscle activity - ONLY from recording session
-        const avgMuscleActivity = emgReadings.length > 0 
+        const avgMuscleActivity = emgReadings.length > 0
             ? Math.round(emgReadings.reduce((a, b) => a + b, 0) / emgReadings.length)
             : 0;
         const avgMuscleActivityElement = document.getElementById('avgMuscleActivity');
         if (avgMuscleActivityElement) {
             avgMuscleActivityElement.textContent = avgMuscleActivity + '%';
+        }
+
+        // Update zone time tracking during recording
+        if (typeof updateZoneTime === 'function') {
+            updateZoneTime(emgIntensity);
+        }
+
+        // Update fatigue tracking during recording
+        if (typeof updateFatigue === 'function') {
+            updateFatigue(emgIntensity);
+        }
+
+        // Render fatigue indicator
+        if (typeof renderFatigueIndicator === 'function') {
+            renderFatigueIndicator('fatigueIndicator');
+        }
+
+        // Update zone distribution every 5 readings
+        if (emgReadings.length % 5 === 0 && typeof getZoneDistribution === 'function' && typeof renderZoneDistribution === 'function') {
+            renderZoneDistribution('zoneDistribution', getZoneDistribution());
         }
     }
     
@@ -854,6 +911,315 @@ function reconnectSensors() {
     }
 }
 
+// ==========================================
+// Camera & Supabase Daily Photo Functions
+// ==========================================
+
+// Get today's date string (YYYY-MM-DD)
+function getTodayDateString() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
+// Check if today's photo already exists for selected patient
+async function checkTodayPhoto(patientId) {
+    if (!firestore || !currentUser || !patientId) return false;
+
+    const todayStr = getTodayDateString();
+    try {
+        const doc = await firestore.collection('users')
+            .doc(currentUser.uid)
+            .collection('patients')
+            .doc(patientId)
+            .collection('dailyPhotos')
+            .doc(todayStr)
+            .get();
+
+        return doc.exists;
+    } catch (error) {
+        console.error('Error checking today photo:', error);
+        return false;
+    }
+}
+
+// Update photo button state based on patient selection and existing photo
+async function updatePhotoButtonState() {
+    const btn = document.getElementById('btnDailyPhoto');
+    const statusText = document.getElementById('dailyPhotoStatus');
+    if (!btn) return;
+
+    const patientSelect = document.getElementById('patientSelect');
+    const selectedPatientId = patientSelect ? patientSelect.value : null;
+
+    if (!selectedPatientId) {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        if (statusText) statusText.textContent = 'Pilih pasien terlebih dahulu';
+        todayPhotoTaken = false;
+        return;
+    }
+
+    // Check if photo already taken today
+    const exists = await checkTodayPhoto(selectedPatientId);
+    todayPhotoTaken = exists;
+
+    if (exists) {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        if (statusText) statusText.textContent = 'Foto hari ini sudah diambil';
+    } else {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        if (statusText) statusText.textContent = 'Belum ada foto hari ini';
+    }
+}
+
+// Handle daily photo button click
+async function takeDailyPhoto() {
+    const patientSelect = document.getElementById('patientSelect');
+    const selectedPatientId = patientSelect ? patientSelect.value : null;
+
+    if (!selectedPatientId) {
+        if (typeof showAlert === 'function') {
+            showAlert('Silakan pilih pasien terlebih dahulu!', 'Peringatan');
+        }
+        return;
+    }
+
+    // Double-check if photo already taken today
+    const exists = await checkTodayPhoto(selectedPatientId);
+    if (exists) {
+        todayPhotoTaken = true;
+        updatePhotoButtonState();
+        if (typeof showAlert === 'function') {
+            showAlert('Foto dokumentasi hari ini sudah diambil untuk pasien ini.', 'Info');
+        }
+        return;
+    }
+
+    openCameraModal();
+}
+
+// Open camera modal
+async function openCameraModal() {
+    const modal = document.getElementById('cameraModal');
+    if (!modal) return;
+
+    modal.style.display = 'flex';
+
+    // Reset UI state
+    document.getElementById('capturedPhoto').style.display = 'none';
+    document.getElementById('cameraPreview').style.display = 'block';
+    document.getElementById('btnCapture').style.display = 'flex';
+    document.getElementById('btnRetake').style.display = 'none';
+    document.getElementById('btnUploadPhoto').style.display = 'none';
+    document.getElementById('uploadProgress').style.display = 'none';
+    capturedBlob = null;
+
+    await startCamera();
+}
+
+// Start camera stream
+async function startCamera() {
+    try {
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+        }
+
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: facingMode,
+                width: { ideal: 1280 },
+                height: { ideal: 1920 }
+            },
+            audio: false
+        });
+
+        const video = document.getElementById('cameraPreview');
+        if (video) {
+            video.srcObject = cameraStream;
+        }
+    } catch (error) {
+        console.error('Error accessing camera:', error);
+        if (typeof showAlert === 'function') {
+            showAlert('Tidak dapat mengakses kamera: ' + error.message, 'Kesalahan');
+        }
+    }
+}
+
+// Switch between front and back camera
+async function switchCamera() {
+    facingMode = facingMode === 'environment' ? 'user' : 'environment';
+    await startCamera();
+}
+
+// Capture photo from camera
+function capturePhoto() {
+    const video = document.getElementById('cameraPreview');
+    const canvas = document.getElementById('cameraCanvas');
+    const capturedImg = document.getElementById('capturedPhoto');
+
+    if (!video || !canvas) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob(function(blob) {
+        capturedBlob = blob;
+
+        capturedImg.src = URL.createObjectURL(blob);
+        capturedImg.style.display = 'block';
+        video.style.display = 'none';
+
+        document.getElementById('btnCapture').style.display = 'none';
+        document.getElementById('btnRetake').style.display = 'flex';
+        document.getElementById('btnUploadPhoto').style.display = 'flex';
+    }, 'image/jpeg', 0.85);
+}
+
+// Retake photo
+function retakePhoto() {
+    const video = document.getElementById('cameraPreview');
+    const capturedImg = document.getElementById('capturedPhoto');
+
+    capturedImg.style.display = 'none';
+    video.style.display = 'block';
+    capturedBlob = null;
+
+    document.getElementById('btnCapture').style.display = 'flex';
+    document.getElementById('btnRetake').style.display = 'none';
+    document.getElementById('btnUploadPhoto').style.display = 'none';
+}
+
+// Upload daily photo to Supabase Storage and save to Firestore
+async function uploadDocumentationPhoto() {
+    if (!capturedBlob) {
+        if (typeof showAlert === 'function') {
+            showAlert('Belum ada foto yang diambil!', 'Peringatan');
+        }
+        return;
+    }
+
+    const patientSelect = document.getElementById('patientSelect');
+    const selectedPatientId = patientSelect ? patientSelect.value : null;
+
+    if (!selectedPatientId || !currentUser) {
+        if (typeof showAlert === 'function') {
+            showAlert('Pasien atau user tidak valid!', 'Kesalahan');
+        }
+        return;
+    }
+
+    const uploadProgress = document.getElementById('uploadProgress');
+    const uploadProgressBar = document.getElementById('uploadProgressBar');
+    const uploadProgressText = document.getElementById('uploadProgressText');
+    const btnUpload = document.getElementById('btnUploadPhoto');
+    const btnClose = document.getElementById('btnCloseCamera');
+    const btnRetake = document.getElementById('btnRetake');
+
+    uploadProgress.style.display = 'block';
+    btnUpload.disabled = true;
+    btnUpload.style.opacity = '0.6';
+    if (btnClose) btnClose.style.display = 'none';
+    btnRetake.style.display = 'none';
+    uploadProgressBar.style.width = '30%';
+    uploadProgressText.textContent = 'Mengupload foto...';
+
+    try {
+        const doctorId = currentUser.uid;
+        const todayStr = getTodayDateString();
+        const filePath = `${doctorId}/${selectedPatientId}/${todayStr}.jpg`;
+
+        // Upload to Supabase Storage via REST API
+        const uploadUrl = `${window.SUPABASE_URL}/storage/v1/object/${window.SUPABASE_BUCKET}/${filePath}`;
+
+        uploadProgressBar.style.width = '50%';
+
+        const response = await fetch(uploadUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${window.SUPABASE_ANON_KEY}`,
+                'apikey': window.SUPABASE_ANON_KEY,
+                'Content-Type': 'image/jpeg',
+                'x-upsert': 'true'
+            },
+            body: capturedBlob
+        });
+
+        uploadProgressBar.style.width = '75%';
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Upload gagal (${response.status})`);
+        }
+
+        // Build public URL
+        const publicUrl = `${window.SUPABASE_URL}/storage/v1/object/public/${window.SUPABASE_BUCKET}/${filePath}`;
+
+        uploadProgressBar.style.width = '90%';
+        uploadProgressText.textContent = 'Menyimpan URL foto...';
+
+        // Save daily photo record to Firestore
+        // Structure: users/{doctorId}/patients/{patientId}/dailyPhotos/{YYYY-MM-DD}
+        await firestore.collection('users')
+            .doc(doctorId)
+            .collection('patients')
+            .doc(selectedPatientId)
+            .collection('dailyPhotos')
+            .doc(todayStr)
+            .set({
+                photoUrl: publicUrl,
+                date: todayStr,
+                uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+        uploadProgressBar.style.width = '100%';
+        uploadProgressText.textContent = 'Foto berhasil disimpan!';
+
+        todayPhotoTaken = true;
+
+        // Close modal after short delay
+        setTimeout(() => {
+            closeCameraModal();
+            updatePhotoButtonState();
+            if (typeof showAlert === 'function') {
+                showAlert('Foto dokumentasi hari ini berhasil disimpan!', 'Berhasil');
+            }
+        }, 1000);
+
+    } catch (error) {
+        console.error('Error uploading photo:', error);
+        uploadProgressBar.style.width = '0%';
+        uploadProgressText.textContent = 'Gagal upload: ' + error.message;
+        btnUpload.disabled = false;
+        btnUpload.style.opacity = '1';
+        if (btnClose) btnClose.style.display = 'flex';
+        btnRetake.style.display = 'flex';
+
+        if (typeof showAlert === 'function') {
+            showAlert('Gagal mengupload foto: ' + error.message, 'Kesalahan');
+        }
+    }
+}
+
+// Close camera modal and stop stream
+function closeCameraModal() {
+    const modal = document.getElementById('cameraModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+
+    capturedBlob = null;
+}
+
 // Cleanup on page unload
 window.addEventListener('beforeunload', function() {
     stopSensorUpdates();
@@ -862,5 +1228,9 @@ window.addEventListener('beforeunload', function() {
     }
     if (monitoringTimeInterval) {
         clearInterval(monitoringTimeInterval);
+    }
+    // Stop camera if open
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
     }
 });

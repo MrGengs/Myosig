@@ -155,6 +155,14 @@
                     <i class="bi bi-person-heart" style="font-size: 2rem;"></i>
                     <span>Kelola Pasien</span>
                 </a>
+                <a href="session-compare.html" class="btn btn-teal" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-arrow-left-right" style="font-size: 2rem;"></i>
+                    <span>Bandingkan Sesi</span>
+                </a>
+                <a href="ai-chat.html" class="btn btn-orange" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-robot" style="font-size: 2rem;"></i>
+                    <span>AI Assistant</span>
+                </a>
             </div>
         </div>
 
@@ -179,6 +187,34 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Encyclopedia Highlight Card -->
+        <div class="card fade-in" style="cursor: pointer;" onclick="window.location.href='encyclopedia.html'">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="card-title">
+                    <i class="bi bi-book card-icon"></i>
+                    Ensiklopedia Stroke
+                </h2>
+                <a href="encyclopedia.html" class="btn btn-sm btn-primary" style="padding: 0.5rem; min-width: auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; flex-shrink: 0;" title="Buka Ensiklopedia">
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; text-align: center;">
+                <div style="padding: 0.75rem; background: rgba(49, 69, 106, 0.08); border-radius: var(--border-radius);">
+                    <i class="bi bi-heart-pulse" style="font-size: 1.5rem; color: #31456A;"></i>
+                    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-gray); margin-bottom: 0;">Dasar Stroke</p>
+                </div>
+                <div style="padding: 0.75rem; background: rgba(74, 139, 106, 0.08); border-radius: var(--border-radius);">
+                    <i class="bi bi-bandaid" style="font-size: 1.5rem; color: #4A8B6A;"></i>
+                    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-gray); margin-bottom: 0;">Rehabilitasi</p>
+                </div>
+                <div style="padding: 0.75rem; background: rgba(184, 168, 90, 0.08); border-radius: var(--border-radius);">
+                    <i class="bi bi-cup-hot" style="font-size: 1.5rem; color: #B8A85A;"></i>
+                    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-gray); margin-bottom: 0;">Nutrisi</p>
+                </div>
+            </div>
+            <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-light); text-align: center; margin-bottom: 0;">12 artikel medis seputar stroke dan pemulihan</p>
         </div>
 
         <!-- Patient Summary Card -->
@@ -217,6 +253,10 @@
         <a href="sensors.html" class="nav-item">
             <i class="bi bi-activity"></i>
             <span>Monitoring</span>
+        </a>
+        <a href="encyclopedia.html" class="nav-item">
+            <i class="bi bi-book"></i>
+            <span>Ensiklopedia</span>
         </a>
         <a href="patient.html" class="nav-item">
             <i class="bi bi-person-heart"></i>

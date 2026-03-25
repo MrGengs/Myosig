@@ -389,6 +389,80 @@
             </div>
         </div>
         
+        <!-- Progress Goals Card -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="bi bi-bullseye card-icon"></i>
+                    Target & Progress Rehabilitasi
+                </h2>
+            </div>
+            <div id="progressGoalsContainer">
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 1rem;">Memuat target rehabilitasi...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMG Zones Analysis Card -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="bi bi-speedometer card-icon"></i>
+                    Analisis Zona EMG
+                </h2>
+            </div>
+            <div id="zonesAnalysisContainer">
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 1rem;">Memuat analisis zona...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fatigue Trend Card -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="bi bi-battery-half card-icon"></i>
+                    Tren Kelelahan Otot
+                </h2>
+            </div>
+            <div class="chart-container" style="height: 250px;">
+                <canvas id="fatigueChart"></canvas>
+            </div>
+            <div id="fatigueSummary" style="margin-top: 0.5rem;"></div>
+        </div>
+
+        <!-- Export & Actions Card -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="bi bi-download card-icon"></i>
+                    Export & Aksi
+                </h2>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <button onclick="handleExportCSV()" class="btn btn-secondary" style="padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;">
+                    <i class="bi bi-filetype-csv" style="font-size: 1.5rem;"></i>
+                    <span style="font-size: 0.85rem;">Export CSV</span>
+                </button>
+                <button onclick="handleExportPDF()" class="btn btn-secondary" style="padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;">
+                    <i class="bi bi-filetype-pdf" style="font-size: 1.5rem;"></i>
+                    <span style="font-size: 0.85rem;">Laporan PDF</span>
+                </button>
+                <button onclick="goToSessionCompare()" class="btn btn-secondary" style="padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;">
+                    <i class="bi bi-arrow-left-right" style="font-size: 1.5rem;"></i>
+                    <span style="font-size: 0.85rem;">Bandingkan Sesi</span>
+                </button>
+                <button onclick="handleExportSingleCSV()" class="btn btn-secondary" style="padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;">
+                    <i class="bi bi-file-earmark-arrow-down" style="font-size: 1.5rem;"></i>
+                    <span style="font-size: 0.85rem;">Export Sesi Terakhir</span>
+                </button>
+            </div>
+        </div>
+
         <!-- AI Recommendation Card -->
         <div class="card fade-in">
             <div class="card-header">
@@ -434,6 +508,10 @@
             <i class="bi bi-activity"></i>
             <span>Monitoring</span>
         </a>
+        <a href="encyclopedia.html" class="nav-item">
+            <i class="bi bi-book"></i>
+            <span>Ensiklopedia</span>
+        </a>
         <a href="patient.html" class="nav-item active">
             <i class="bi bi-person-heart" style="color: #31456A !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #31456A !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
             <span>Pasien</span>
@@ -454,6 +532,10 @@
     <script src="js/config.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/modal.js"></script>
+    <script src="js/emg-zones.js"></script>
+    <script src="js/fatigue-monitor.js"></script>
+    <script src="js/export-data.js"></script>
+    <script src="js/progress-goals.js"></script>
     <script src="js/patient-detail.js"></script>
     <script src="js/navigation.js"></script>
 </body>

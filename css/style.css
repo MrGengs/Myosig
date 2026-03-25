@@ -468,10 +468,10 @@ p {
     justify-content: center;
     text-decoration: none;
     color: var(--text-dark); /* Dark Blue-Grey for consistency */
-    padding: 0.5rem 0.75rem;
+    padding: 0.4rem 0.35rem;
     border-radius: var(--border-radius);
     transition: var(--transition);
-    min-width: 60px;
+    min-width: 50px;
     flex: 1;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
@@ -502,9 +502,10 @@ p {
 }
 
 .nav-item span {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 500;
     line-height: 1.2;
+    text-align: center;
 }
 
 .nav-item.active {

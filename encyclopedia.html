@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Myosig - Ensiklopedia Stroke</title>
+    <link rel="icon" href="assets/image/logo.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+        .search-container i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.75rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background: var(--neumorphism-base);
+            color: var(--text-dark);
+            box-shadow: var(--shadow-inset-combined);
+            transition: var(--transition);
+        }
+        .search-input:focus {
+            outline: none;
+            box-shadow: var(--shadow-inset-combined), 0 0 0 2px rgba(49, 69, 106, 0.15);
+        }
+        .search-input::placeholder { color: var(--text-light); }
+
+        /* Category Pills */
+        .category-scroll {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.25rem;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .category-pill {
+            flex-shrink: 0;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--neumorphism-base);
+            color: var(--text-dark);
+            box-shadow: var(--shadow-combined);
+            white-space: nowrap;
+        }
+        .category-pill:hover { transform: translateY(-1px); }
+        .category-pill.active {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: var(--shadow-combined);
+        }
+
+        /* Article Cards */
+        .article-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .article-card {
+            background: var(--neumorphism-base);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-combined);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .article-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-combined);
+        }
+        .article-card:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-inset-combined);
+        }
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            border-radius: 4px 0 0 4px;
+        }
+        .article-card[data-cat="dasar"]::before { background: #31456A; }
+        .article-card[data-cat="rehabilitasi"]::before { background: #4A8B6A; }
+        .article-card[data-cat="nutrisi"]::before { background: #B8A85A; }
+        .article-card[data-cat="olahraga"]::before { background: #B87A5A; }
+        .article-card[data-cat="mental"]::before { background: #8B6AAA; }
+        .article-card[data-cat="pencegahan"]::before { background: #5A8B8A; }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+        .article-card[data-cat="dasar"] .article-icon { background: var(--gradient-primary); }
+        .article-card[data-cat="rehabilitasi"] .article-icon { background: var(--gradient-green); }
+        .article-card[data-cat="nutrisi"] .article-icon { background: linear-gradient(135deg, #B8A85A, #C8B86A); }
+        .article-card[data-cat="olahraga"] .article-icon { background: linear-gradient(135deg, #B87A5A, #C88A6A); }
+        .article-card[data-cat="mental"] .article-icon { background: linear-gradient(135deg, #8B6AAA, #9B7ABA); }
+        .article-card[data-cat="pencegahan"] .article-icon { background: linear-gradient(135deg, #5A8B8A, #4A7A7A); }
+
+        .article-category-tag {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .article-card[data-cat="dasar"] .article-category-tag { background: rgba(49, 69, 106, 0.12); color: #31456A; }
+        .article-card[data-cat="rehabilitasi"] .article-category-tag { background: rgba(74, 139, 106, 0.12); color: #4A8B6A; }
+        .article-card[data-cat="nutrisi"] .article-category-tag { background: rgba(184, 168, 90, 0.12); color: #9A8A3A; }
+        .article-card[data-cat="olahraga"] .article-category-tag { background: rgba(184, 122, 90, 0.12); color: #B87A5A; }
+        .article-card[data-cat="mental"] .article-category-tag { background: rgba(139, 106, 170, 0.12); color: #8B6AAA; }
+        .article-card[data-cat="pencegahan"] .article-category-tag { background: rgba(90, 139, 138, 0.12); color: #5A8B8A; }
+
+        .article-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
+        }
+        .article-summary {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .article-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.75rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid rgba(49, 69, 106, 0.06);
+        }
+        .article-read-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .article-read-btn {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Article Detail View */
+        .article-detail-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--neumorphism-bg);
+            z-index: 2000;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .article-detail-overlay::-webkit-scrollbar { display: none; }
+        .article-detail-overlay.active { display: block; }
+        .article-detail-header {
+            position: sticky;
+            top: 0;
+            background: var(--neumorphism-base);
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(94, 104, 121, 0.15);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .article-detail-back {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: none;
+            background: var(--neumorphism-base);
+            box-shadow: var(--shadow-combined);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .article-detail-back:active { box-shadow: var(--shadow-inset-combined); }
+        .article-detail-body {
+            padding: 1.25rem;
+            padding-bottom: 120px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .article-detail-body h1 {
+            font-size: 1.5rem;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+        }
+        .article-detail-body .detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(49, 69, 106, 0.08);
+        }
+        .article-detail-body .detail-meta span {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .article-content h2 {
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 2px solid rgba(49, 69, 106, 0.1);
+        }
+        .article-content h3 {
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .article-content p {
+            color: var(--text-dark);
+            line-height: 1.85;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        .article-content ul, .article-content ol {
+            margin: 0.75rem 0 1rem 1.5rem;
+            color: var(--text-dark);
+        }
+        .article-content li {
+            line-height: 1.8;
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+        }
+        .article-content .info-box {
+            padding: 1rem 1.25rem;
+            background: var(--neumorphism-base);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-combined);
+            margin: 1.25rem 0;
+            border-left: 4px solid var(--primary-blue);
+        }
+        .article-content .info-box.warning {
+            border-left-color: #B87A5A;
+        }
+        .article-content .info-box.success {
+            border-left-color: #4A8B6A;
+        }
+        .article-content .info-box p {
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+        .article-content .info-box strong {
+            color: var(--primary-blue);
+        }
+
+        /* Empty State */
+        .empty-search {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light);
+        }
+        .empty-search i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Article count badge */
+        .article-count {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 600px) {
+            .article-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding-bottom: 100px;">
+        <!-- Page Header -->
+        <div class="page-header fade-in" style="position: relative; padding-top: 2rem;">
+            <div style="width: 70px; height: 70px; background: var(--gradient-primary); border-radius: 20px; margin: 0 auto 0.75rem; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--white); box-shadow: var(--shadow-lg);">
+                <i class="bi bi-book"></i>
+            </div>
+            <h1 style="font-size: 1.6rem;">Ensiklopedia Stroke</h1>
+            <p>Panduan lengkap seputar stroke, rehabilitasi, dan pemulihan</p>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container fade-in">
+            <i class="bi bi-search"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Cari artikel..." oninput="filterArticles()">
+        </div>
+
+        <!-- Category Filter -->
+        <div class="category-scroll fade-in" id="categoryScroll">
+            <button class="category-pill active" onclick="setCategory('semua')" data-cat="semua">
+                <i class="bi bi-grid-3x3-gap"></i> Semua
+            </button>
+            <button class="category-pill" onclick="setCategory('dasar')" data-cat="dasar">
+                <i class="bi bi-heart-pulse"></i> Dasar Stroke
+            </button>
+            <button class="category-pill" onclick="setCategory('rehabilitasi')" data-cat="rehabilitasi">
+                <i class="bi bi-bandaid"></i> Rehabilitasi
+            </button>
+            <button class="category-pill" onclick="setCategory('nutrisi')" data-cat="nutrisi">
+                <i class="bi bi-cup-hot"></i> Nutrisi
+            </button>
+            <button class="category-pill" onclick="setCategory('olahraga')" data-cat="olahraga">
+                <i class="bi bi-bicycle"></i> Olahraga
+            </button>
+            <button class="category-pill" onclick="setCategory('mental')" data-cat="mental">
+                <i class="bi bi-emoji-smile"></i> Kesehatan Mental
+            </button>
+            <button class="category-pill" onclick="setCategory('pencegahan')" data-cat="pencegahan">
+                <i class="bi bi-shield-check"></i> Pencegahan
+            </button>
+        </div>
+
+        <!-- Article Count -->
+        <div class="article-count fade-in" id="articleCount"></div>
+
+        <!-- Article List -->
+        <div class="article-grid" id="articleGrid">
+            <!-- Articles will be rendered by JS -->
+        </div>
+    </div>
+
+    <!-- Article Detail Overlay -->
+    <div class="article-detail-overlay" id="articleDetail">
+        <div class="article-detail-header">
+            <button class="article-detail-back" onclick="closeArticle()">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+            <span style="font-weight: 600; color: var(--text-dark); font-size: 0.95rem;" id="detailHeaderTitle">Artikel</span>
+        </div>
+        <div class="article-detail-body" id="articleDetailBody">
+            <!-- Article content rendered here -->
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="bi bi-house-door"></i>
+            <span>Beranda</span>
+        </a>
+        <a href="sensors.html" class="nav-item">
+            <i class="bi bi-activity"></i>
+            <span>Monitoring</span>
+        </a>
+        <a href="encyclopedia.html" class="nav-item active">
+            <i class="bi bi-book" style="color: #31456A !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #31456A !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <span>Ensiklopedia</span>
+        </a>
+        <a href="patient.html" class="nav-item">
+            <i class="bi bi-person-heart"></i>
+            <span>Pasien</span>
+        </a>
+        <a href="account.html" class="nav-item">
+            <i class="bi bi-person"></i>
+            <span>Akun</span>
+        </a>
+    </nav>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <script src="js/config.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/encyclopedia.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>

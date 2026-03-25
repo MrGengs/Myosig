@@ -179,7 +179,12 @@ async function loadPatientRecords() {
                     avgMuscleActivity: data.avgMuscleActivity || 0,
                     movementCount: data.movementCount || 0,
                     maxAcceleration: data.maxAcceleration || 0,
-                    recordedData: data.recordedData || [] // Store raw sensor data for charts
+                    recordedData: data.recordedData || [],
+                    notes: data.notes || '',
+                    fatigueIndex: data.fatigueIndex,
+                    peakFatigue: data.peakFatigue,
+                    fatigueOnset: data.fatigueOnset,
+                    zoneDistribution: data.zoneDistribution || []
                 });
             });
             
@@ -191,9 +196,33 @@ async function loadPatientRecords() {
                 return dateB.getTime() - dateA.getTime();
             });
             
+            // Load daily photos for this patient
+            const dailyPhotosMap = {};
+            try {
+                const photosSnapshot = await firestore.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('patients')
+                    .doc(patientId)
+                    .collection('dailyPhotos')
+                    .get();
+
+                photosSnapshot.forEach(doc => {
+                    dailyPhotosMap[doc.id] = doc.data().photoUrl;
+                });
+            } catch (e) {
+                console.error('Error loading daily photos:', e);
+            }
+
+            // Match records with daily photos by date
+            records.forEach(record => {
+                const recordDate = record.timestamp instanceof Date ? record.timestamp : new Date(record.timestamp);
+                const dateKey = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}-${String(recordDate.getDate()).padStart(2, '0')}`;
+                record.dailyPhotoUrl = dailyPhotosMap[dateKey] || null;
+            });
+
             // Store records globally for AI recommendation
             patientRecords = records;
-            
+
             // Display records
             displayRecords(records);
             
@@ -213,7 +242,12 @@ async function loadPatientRecords() {
             setTimeout(() => {
                 getAIRecommendation();
             }, 500);
-            
+
+            // Initialize new features (zones, fatigue, goals, etc.)
+            setTimeout(() => {
+                initializeNewFeatures();
+            }, 300);
+
         } else {
             recordsList.innerHTML = `
                 <div class="empty-state">
@@ -256,7 +290,9 @@ function displayRecords(records) {
     
     recordsList.innerHTML = records.map(record => {
         const dateStr = formatDate(record.timestamp);
-        
+        const fatigueInfo = record.fatigueIndex !== undefined ? record.fatigueIndex : '-';
+        const hasNotes = record.notes && record.notes.trim().length > 0;
+
         return `
             <div class="record-item">
                 <div class="record-header">
@@ -264,8 +300,9 @@ function displayRecords(records) {
                         <div class="record-date">${dateStr}</div>
                         <div class="record-time">${record.time}</div>
                     </div>
-                    <div style="font-size: 0.85rem; color: var(--text-light);">
-                        ${record.duration} detik
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        ${fatigueInfo !== '-' ? `<span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; background: rgba(184, 168, 90, 0.15); color: #B8A85A; border-radius: 10px;"><i class="bi bi-battery-half"></i> ${fatigueInfo}%</span>` : ''}
+                        <span style="font-size: 0.85rem; color: var(--text-light);">${record.duration} detik</span>
                     </div>
                 </div>
                 <div class="record-stats">
@@ -285,6 +322,41 @@ function displayRecords(records) {
                         <div class="record-stat-label">Durasi</div>
                         <div class="record-stat-value">${Math.floor(record.duration / 60)}:${String(record.duration % 60).padStart(2, '0')}</div>
                     </div>
+                </div>
+                <!-- Session Notes -->
+                <div style="margin-top: 0.75rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+                        <i class="bi bi-journal-text" style="color: var(--text-light); font-size: 0.85rem;"></i>
+                        <span style="font-size: 0.8rem; color: var(--text-light); font-weight: 500;">Catatan Sesi</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="note-${record.id}" value="${(record.notes || '').replace(/"/g, '&quot;')}"
+                            placeholder="Tambahkan catatan sesi..."
+                            style="flex: 1; padding: 0.5rem 0.75rem; border: 1px solid rgba(49, 69, 106, 0.15); border-radius: 12px; font-size: 0.85rem; background: var(--white); color: var(--text-dark);">
+                        <button onclick="saveRecordNote('${record.id}', document.getElementById('note-${record.id}').value)"
+                            style="padding: 0.5rem 0.75rem; background: var(--neumorphism-base); border: none; border-radius: 12px; cursor: pointer; box-shadow: var(--shadow-combined); color: var(--text-dark); font-size: 0.85rem;"
+                            title="Simpan Catatan">
+                            <i class="bi bi-check-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Per-record Actions -->
+                <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                    <button onclick="if(typeof exportRecordToCSV==='function'){const r=patientRecords.find(x=>x.id==='${record.id}');if(r)exportRecordToCSV(r,patientData?patientData.name:'');}"
+                        style="flex: 1; padding: 0.4rem; background: var(--neumorphism-base); border: none; border-radius: 12px; cursor: pointer; box-shadow: var(--shadow-combined); color: var(--text-light); font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                        <i class="bi bi-download"></i> Export CSV
+                    </button>
+                    ${record.dailyPhotoUrl ? `
+                    <button onclick="viewDocumentationPhoto('${record.dailyPhotoUrl}')"
+                        style="flex: 1; padding: 0.4rem; background: var(--neumorphism-base); border: none; border-radius: 12px; cursor: pointer; box-shadow: var(--shadow-combined); color: #4A8B6A; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                        <i class="bi bi-camera-fill"></i> Foto Hari Ini
+                    </button>
+                    ` : `
+                    <button disabled
+                        style="flex: 1; padding: 0.4rem; background: var(--neumorphism-base); border: none; border-radius: 12px; cursor: not-allowed; box-shadow: var(--shadow-combined); color: var(--text-light); font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem; opacity: 0.5;">
+                        <i class="bi bi-camera"></i> Tidak ada foto
+                    </button>
+                    `}
                 </div>
             </div>
         `;
@@ -1475,4 +1547,285 @@ function displayAIRecommendation(recommendation) {
             </div>
         </div>
     `;
+}
+
+// =============================================
+// NEW FEATURES INTEGRATION
+// =============================================
+
+// --- EMG Zones Analysis ---
+function loadZonesAnalysis() {
+    if (!patientRecords || patientRecords.length === 0) {
+        const container = document.getElementById('zonesAnalysisContainer');
+        if (container) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">Belum ada data untuk analisis zona.</p>';
+        }
+        return;
+    }
+
+    if (typeof analyzeZonesFromRecords === 'function') {
+        const zoneData = analyzeZonesFromRecords(patientRecords);
+        if (typeof renderZoneDistribution === 'function') {
+            renderZoneDistribution('zonesAnalysisContainer', zoneData);
+        }
+    }
+}
+
+// --- Fatigue Trend Chart ---
+let fatigueChart = null;
+
+function loadFatigueTrend() {
+    if (!patientRecords || patientRecords.length === 0) {
+        const container = document.getElementById('fatigueSummary');
+        if (container) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 0.5rem;">Belum ada data untuk analisis kelelahan.</p>';
+        }
+        return;
+    }
+
+    if (typeof analyzeFatigueTrend !== 'function' || typeof Chart === 'undefined') return;
+
+    const trendData = analyzeFatigueTrend(patientRecords);
+
+    // Sort by timestamp ascending
+    const sorted = [...trendData].sort((a, b) => {
+        const da = a.timestamp instanceof Date ? a.timestamp : new Date(a.timestamp);
+        const db = b.timestamp instanceof Date ? b.timestamp : new Date(b.timestamp);
+        return da - db;
+    });
+
+    const recent = sorted.slice(-10);
+
+    const labels = recent.map(t => {
+        const d = t.timestamp instanceof Date ? t.timestamp : new Date(t.timestamp);
+        return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+    });
+
+    const avgData = recent.map(t => t.avgFatigue);
+    const peakData = recent.map(t => t.peakFatigue);
+
+    const ctx = document.getElementById('fatigueChart');
+    if (!ctx) return;
+
+    if (fatigueChart) { fatigueChart.destroy(); fatigueChart = null; }
+
+    fatigueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Rata-rata Kelelahan (%)',
+                    data: avgData,
+                    borderColor: '#B8A85A',
+                    backgroundColor: 'rgba(184, 168, 90, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4
+                },
+                {
+                    label: 'Puncak Kelelahan (%)',
+                    data: peakData,
+                    borderColor: '#B85A5A',
+                    backgroundColor: 'rgba(184, 90, 90, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    borderDash: [5, 5]
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'top', labels: { usePointStyle: true, padding: 10, font: { size: 11 } } }
+            },
+            scales: {
+                x: { display: true, title: { display: true, text: 'Tanggal', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                y: { display: true, title: { display: true, text: 'Kelelahan (%)', font: { size: 11 } }, beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' } }
+            }
+        }
+    });
+
+    // Summary
+    const container = document.getElementById('fatigueSummary');
+    if (container && recent.length > 0) {
+        const latestFatigue = recent[recent.length - 1];
+        const onsetCount = recent.filter(t => t.hadOnset).length;
+        container.innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center;">
+                <div style="padding: 0.5rem; background: var(--neumorphism-base); border-radius: var(--border-radius); box-shadow: var(--shadow-combined);">
+                    <div style="font-size: 0.7rem; color: var(--text-light);">Sesi Terakhir</div>
+                    <div style="font-weight: 600; color: #B8A85A;">${latestFatigue.avgFatigue}%</div>
+                </div>
+                <div style="padding: 0.5rem; background: var(--neumorphism-base); border-radius: var(--border-radius); box-shadow: var(--shadow-combined);">
+                    <div style="font-size: 0.7rem; color: var(--text-light);">Puncak Tertinggi</div>
+                    <div style="font-weight: 600; color: #B85A5A;">${Math.max(...peakData)}%</div>
+                </div>
+                <div style="padding: 0.5rem; background: var(--neumorphism-base); border-radius: var(--border-radius); box-shadow: var(--shadow-combined);">
+                    <div style="font-size: 0.7rem; color: var(--text-light);">Onset Terdeteksi</div>
+                    <div style="font-weight: 600; color: var(--text-dark);">${onsetCount}/${recent.length} sesi</div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// --- Progress Goals ---
+let currentGoals = null;
+
+async function loadProgressGoals() {
+    if (!currentUser || !patientId) return;
+    if (typeof loadPatientGoals !== 'function') return;
+
+    currentGoals = await loadPatientGoals(currentUser.uid, patientId);
+    const progress = typeof calculateWeeklyProgress === 'function'
+        ? calculateWeeklyProgress(patientRecords || [], currentGoals)
+        : null;
+
+    if (progress && typeof renderProgressGoals === 'function') {
+        renderProgressGoals('progressGoalsContainer', progress, currentGoals, 'openGoalsEditor()');
+    } else {
+        const container = document.getElementById('progressGoalsContainer');
+        if (container) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">Belum ada data untuk progress.</p>';
+        }
+    }
+}
+
+// Open goals editor
+window.openGoalsEditor = function() {
+    if (!currentGoals || typeof renderGoalsEditor !== 'function') return;
+
+    initModal();
+    const modal = document.getElementById('customModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalFooter = document.getElementById('modalFooter');
+
+    modalTitle.textContent = 'Edit Target Rehabilitasi';
+    modalBody.innerHTML = renderGoalsEditor(currentGoals);
+    modalFooter.innerHTML = `
+        <button class="btn btn-secondary" id="modalCancelBtn" style="flex: 1;">Batal</button>
+        <button class="btn btn-primary" id="modalSaveGoalsBtn" style="flex: 1;">Simpan</button>
+    `;
+
+    document.getElementById('modalCancelBtn').addEventListener('click', () => modal.classList.remove('active'));
+    document.getElementById('modalSaveGoalsBtn').addEventListener('click', async () => {
+        if (typeof getGoalsFromEditor !== 'function') return;
+        const newGoals = getGoalsFromEditor();
+        if (typeof savePatientGoals === 'function') {
+            const success = await savePatientGoals(currentUser.uid, patientId, newGoals);
+            if (success) {
+                modal.classList.remove('active');
+                if (typeof showAlert === 'function') showAlert('Target berhasil disimpan!', 'Berhasil');
+                loadProgressGoals();
+            } else {
+                if (typeof showAlert === 'function') showAlert('Gagal menyimpan target.', 'Kesalahan');
+            }
+        }
+    });
+
+    modal.classList.add('active');
+};
+
+// --- Export Handlers ---
+window.handleExportCSV = function() {
+    if (typeof exportAllRecordsToCSV === 'function' && patientRecords && patientData) {
+        exportAllRecordsToCSV(patientRecords, patientData.name);
+    } else {
+        if (typeof showAlert === 'function') showAlert('Tidak ada data untuk di-export.', 'Peringatan');
+    }
+};
+
+window.handleExportPDF = function() {
+    if (typeof exportToPDF === 'function' && patientData) {
+        exportToPDF(patientData, patientRecords, patientId);
+    } else {
+        if (typeof showAlert === 'function') showAlert('Data pasien tidak tersedia.', 'Peringatan');
+    }
+};
+
+window.handleExportSingleCSV = function() {
+    if (typeof exportRecordToCSV === 'function' && patientRecords && patientRecords.length > 0 && patientData) {
+        exportRecordToCSV(patientRecords[0], patientData.name);
+    } else {
+        if (typeof showAlert === 'function') showAlert('Tidak ada record untuk di-export.', 'Peringatan');
+    }
+};
+
+// --- Session Compare Navigation ---
+window.goToSessionCompare = function() {
+    if (patientId) {
+        window.location.href = 'session-compare.html?patientId=' + patientId;
+    } else {
+        window.location.href = 'session-compare.html';
+    }
+};
+
+// --- Session Notes ---
+window.saveRecordNote = async function(recordId, note) {
+    if (!currentUser || !patientId || !recordId) return;
+    try {
+        await firestore.collection('users').doc(currentUser.uid)
+            .collection('patients').doc(patientId)
+            .collection('monitoringRecords').doc(recordId)
+            .update({ notes: note });
+        if (typeof showAlert === 'function') showAlert('Catatan berhasil disimpan!', 'Berhasil');
+    } catch (e) {
+        console.error('Error saving note:', e);
+        if (typeof showAlert === 'function') showAlert('Gagal menyimpan catatan.', 'Kesalahan');
+    }
+};
+
+// --- Initialize New Features After Records Load ---
+function initializeNewFeatures() {
+    // Load zones analysis
+    loadZonesAnalysis();
+
+    // Load fatigue trend (after chart.js is ready)
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            loadFatigueTrend();
+        }, 200);
+    });
+
+    // Load progress goals
+    loadProgressGoals();
+}
+
+// View documentation photo in fullscreen modal
+function viewDocumentationPhoto(photoUrl) {
+    // Create modal if not exists
+    let modal = document.getElementById('photoViewerModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'photoViewerModal';
+        modal.style.cssText = 'display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;';
+        modal.innerHTML = `
+            <div style="position:absolute; top:1rem; right:1rem; z-index:10;">
+                <button onclick="closePhotoViewer()" style="background:rgba(255,255,255,0.15); border:none; color:#fff; width:44px; height:44px; border-radius:50%; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <img id="photoViewerImg" src="" alt="Foto Dokumentasi" style="max-width:90%; max-height:85vh; object-fit:contain; border-radius:8px;" />
+            <p style="color:rgba(255,255,255,0.6); font-size:0.85rem; margin-top:1rem;">Ketuk di luar foto untuk menutup</p>
+        `;
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closePhotoViewer();
+        });
+        document.body.appendChild(modal);
+    }
+
+    document.getElementById('photoViewerImg').src = photoUrl;
+    modal.style.display = 'flex';
+}
+
+// Close photo viewer modal
+function closePhotoViewer() {
+    const modal = document.getElementById('photoViewerModal');
+    if (modal) modal.style.display = 'none';
 }
