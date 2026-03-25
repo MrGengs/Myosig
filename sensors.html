@@ -57,9 +57,10 @@
             margin-bottom: 1rem;
             text-align: center;
             font-weight: 600;
-            background: var(--neumorphism-base);
-            box-shadow: var(--shadow-combined);
-            border: none;
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
         }
 
         .recording-status.recording {
@@ -92,18 +93,20 @@
         }
 
         .btn-record {
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             color: var(--text-dark);
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
         }
 
         .btn-record:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
         }
 
         .btn-record:active:not(:disabled) {
-            box-shadow: var(--shadow-inset-combined);
+            box-shadow: inset 0 2px 8px rgba(30, 80, 140, 0.08);
         }
 
         .btn-record:disabled {
@@ -112,18 +115,20 @@
         }
 
         .btn-stop {
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             color: var(--text-dark);
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
         }
 
         .btn-stop:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
         }
 
         .btn-stop:active:not(:disabled) {
-            box-shadow: var(--shadow-inset-combined);
+            box-shadow: inset 0 2px 8px rgba(30, 80, 140, 0.08);
         }
 
         .btn-stop:disabled {
@@ -190,7 +195,7 @@
                 </div>
 
                 <!-- Daily Photo Documentation -->
-                <div style="margin-top: 1rem; padding: 0.75rem; background: var(--neumorphism-base); border-radius: var(--border-radius); box-shadow: var(--shadow-combined);">
+                <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(255,255,255,0.55); backdrop-filter: blur(16px); border-radius: var(--border-radius); box-shadow: 0 8px 32px rgba(30,80,140,0.08); border: 1px solid rgba(255,255,255,0.6);">
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
                         <div style="flex: 1;">
                             <div style="font-weight: 600; color: var(--text-dark); font-size: 0.9rem;">
@@ -200,7 +205,7 @@
                                 Pilih pasien terlebih dahulu
                             </div>
                         </div>
-                        <button id="btnDailyPhoto" onclick="takeDailyPhoto()" disabled style="padding: 0.6rem 1.2rem; background: #4A8B6A; color: #fff; border: none; border-radius: var(--border-radius); font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; opacity: 0.5; white-space: nowrap;">
+                        <button id="btnDailyPhoto" onclick="takeDailyPhoto()" disabled style="padding: 0.6rem 1.2rem; background: #0891b2; color: #fff; border: none; border-radius: var(--border-radius); font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; opacity: 0.5; white-space: nowrap;">
                             <i class="bi bi-camera-fill"></i> Ambil Foto
                         </button>
                     </div>
@@ -322,13 +327,13 @@
                 <div style="padding: 0.75rem;">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <i class="bi bi-battery-full" style="font-size: 1.3rem; color: #4A8B6A;"></i>
-                            <span style="font-weight: 600; color: #4A8B6A;">Segar</span>
+                            <i class="bi bi-battery-full" style="font-size: 1.3rem; color: #0891b2;"></i>
+                            <span style="font-weight: 600; color: #0891b2;">Segar</span>
                         </div>
-                        <span style="font-size: 1.5rem; font-weight: 700; color: #4A8B6A;">0%</span>
+                        <span style="font-size: 1.5rem; font-weight: 700; color: #0891b2;">0%</span>
                     </div>
-                    <div style="width: 100%; height: 10px; background: var(--neumorphism-base); border-radius: 5px; box-shadow: inset 1px 1px 3px rgba(94, 104, 121, 0.2); overflow: hidden;">
-                        <div style="width: 0%; height: 100%; background: #4A8B6A; border-radius: 5px;"></div>
+                    <div style="width: 100%; height: 10px; background: var(--glass-bg); border-radius: 5px; box-shadow: inset 0 2px 8px rgba(30, 80, 140, 0.08); overflow: hidden;">
+                        <div style="width: 0%; height: 100%; background: #0891b2; border-radius: 5px;"></div>
                     </div>
                     <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-light);">
                         Puncak: 0% | Sampel: 0
@@ -468,7 +473,7 @@
 
             <!-- Action buttons -->
             <div style="display:flex; gap:0.75rem; width:100%; max-width:400px;">
-                <button id="btnCapture" onclick="capturePhoto()" style="flex:2; padding:1rem; border:none; border-radius:var(--border-radius); background:#4A8B6A; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+                <button id="btnCapture" onclick="capturePhoto()" style="flex:2; padding:1rem; border:none; border-radius:var(--border-radius); background:#0891b2; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
                     <i class="bi bi-camera-fill"></i> Ambil Foto
                 </button>
                 <button id="btnRetake" onclick="retakePhoto()" style="flex:1; padding:1rem; border:none; border-radius:var(--border-radius); background:rgba(255,255,255,0.15); color:#fff; font-size:1rem; cursor:pointer; display:none; align-items:center; justify-content:center; gap:0.5rem;">
@@ -477,7 +482,7 @@
             </div>
 
             <div style="display:flex; gap:0.75rem; width:100%; max-width:400px;">
-                <button id="btnUploadPhoto" onclick="uploadDocumentationPhoto()" style="flex:2; padding:1rem; border:none; border-radius:var(--border-radius); background:#31456A; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; display:none; align-items:center; justify-content:center; gap:0.5rem;">
+                <button id="btnUploadPhoto" onclick="uploadDocumentationPhoto()" style="flex:2; padding:1rem; border:none; border-radius:var(--border-radius); background:#2563eb; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; display:none; align-items:center; justify-content:center; gap:0.5rem;">
                     <i class="bi bi-cloud-upload"></i> Simpan Foto
                 </button>
                 <button id="btnCloseCamera" onclick="closeCameraModal()" style="flex:1; padding:1rem; border:none; border-radius:var(--border-radius); background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
@@ -488,7 +493,7 @@
             <!-- Upload progress -->
             <div id="uploadProgress" style="display:none; width:100%; max-width:400px; text-align:center; color:#fff;">
                 <div style="width:100%; height:6px; background:rgba(255,255,255,0.2); border-radius:3px; overflow:hidden; margin-bottom:0.5rem;">
-                    <div id="uploadProgressBar" style="width:0%; height:100%; background:#4A8B6A; border-radius:3px; transition:width 0.3s;"></div>
+                    <div id="uploadProgressBar" style="width:0%; height:100%; background:#0891b2; border-radius:3px; transition:width 0.3s;"></div>
                 </div>
                 <span id="uploadProgressText" style="font-size:0.85rem;">Mengupload foto...</span>
             </div>
@@ -502,7 +507,7 @@
             <span>Beranda</span>
         </a>
         <a href="sensors.html" class="nav-item active">
-            <i class="bi bi-activity" style="color: #31456A !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #31456A !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <i class="bi bi-activity" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
             <span>Monitoring</span>
         </a>
         <a href="encyclopedia.html" class="nav-item">

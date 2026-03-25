@@ -15,10 +15,11 @@
             height: 300px;
             margin: 1rem 0;
             padding: 1rem;
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-combined);
-            border: none;
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
         }
         
         .chart-container canvas {
@@ -26,12 +27,13 @@
         }
 
         .record-item {
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             border-radius: var(--border-radius);
             padding: 1rem;
             margin-bottom: 1rem;
-            box-shadow: var(--shadow-combined);
-            border: none;
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
         }
 
         .record-header {
@@ -61,10 +63,10 @@
         .record-stat {
             text-align: center;
             padding: 0.5rem;
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.35);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-combined);
-            border: none;
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
+            border: 1px solid rgba(255,255,255,0.35);
         }
 
         .record-stat-label {
@@ -99,13 +101,14 @@
         }
 
         .ai-recommendation {
-            background: var(--neumorphism-base);
-            border: none;
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.6);
             border-radius: var(--border-radius);
             padding: 1.5rem;
             margin-top: 1rem;
             line-height: 1.8;
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
         }
 
         .ai-recommendation h3,
@@ -159,13 +162,14 @@
         }
 
         .ai-error {
-            background: var(--neumorphism-base);
-            border: none;
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.6);
             border-radius: var(--border-radius);
             padding: 1rem;
             color: var(--text-dark);
             text-align: center;
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
         }
 
         /* Back Button Styles for Mobile */
@@ -186,27 +190,28 @@
             justify-content: center;
             gap: 0.5rem;
             padding: 0.625rem 1rem;
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             color: var(--text-dark);
-            border: none;
+            border: 1px solid rgba(255,255,255,0.6);
             border-radius: var(--border-radius);
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
             text-decoration: none;
             min-width: auto;
         }
 
         .back-button-mobile:hover {
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
             transform: translateY(-2px);
         }
 
         .back-button-mobile:active {
             transform: translateY(0);
-            box-shadow: var(--shadow-inset-combined);
+            box-shadow: inset 0 2px 8px rgba(30, 80, 140, 0.08);
         }
 
         .back-button-mobile i {
@@ -513,7 +518,7 @@
             <span>Ensiklopedia</span>
         </a>
         <a href="patient.html" class="nav-item active">
-            <i class="bi bi-person-heart" style="color: #31456A !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #31456A !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <i class="bi bi-person-heart" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
             <span>Pasien</span>
         </a>
         <a href="account.html" class="nav-item">

@@ -24,17 +24,19 @@
         .search-input {
             width: 100%;
             padding: 0.85rem 1rem 0.85rem 2.75rem;
-            border: none;
+            border: 1px solid rgba(255,255,255,0.6);
             border-radius: var(--border-radius);
             font-size: 1rem;
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             color: var(--text-dark);
-            box-shadow: var(--shadow-inset-combined);
+            box-shadow: inset 0 2px 8px rgba(30, 80, 140, 0.08);
             transition: var(--transition);
         }
         .search-input:focus {
             outline: none;
-            box-shadow: var(--shadow-inset-combined), 0 0 0 2px rgba(49, 69, 106, 0.15);
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
         }
         .search-input::placeholder { color: var(--text-light); }
 
@@ -53,21 +55,22 @@
             flex-shrink: 0;
             padding: 0.5rem 1rem;
             border-radius: 50px;
-            border: none;
+            border: 1px solid rgba(255,255,255,0.6);
             font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             color: var(--text-dark);
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
             white-space: nowrap;
         }
         .category-pill:hover { transform: translateY(-1px); }
         .category-pill.active {
             background: var(--gradient-primary);
             color: var(--white);
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
         }
 
         /* Article Cards */
@@ -77,23 +80,24 @@
             gap: 1rem;
         }
         .article-card {
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             border-radius: var(--border-radius);
             padding: 1.25rem;
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
             cursor: pointer;
             transition: var(--transition);
-            border: none;
+            border: 1px solid rgba(255,255,255,0.6);
             position: relative;
             overflow: hidden;
         }
         .article-card:hover {
             transform: translateY(-3px);
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
         }
         .article-card:active {
             transform: translateY(0);
-            box-shadow: var(--shadow-inset-combined);
+            box-shadow: inset 0 2px 8px rgba(30, 80, 140, 0.08);
         }
         .article-card::before {
             content: '';
@@ -104,12 +108,12 @@
             height: 100%;
             border-radius: 4px 0 0 4px;
         }
-        .article-card[data-cat="dasar"]::before { background: #31456A; }
-        .article-card[data-cat="rehabilitasi"]::before { background: #4A8B6A; }
-        .article-card[data-cat="nutrisi"]::before { background: #B8A85A; }
-        .article-card[data-cat="olahraga"]::before { background: #B87A5A; }
+        .article-card[data-cat="dasar"]::before { background: #2563eb; }
+        .article-card[data-cat="rehabilitasi"]::before { background: #0891b2; }
+        .article-card[data-cat="nutrisi"]::before { background: #eab308; }
+        .article-card[data-cat="olahraga"]::before { background: #f59e0b; }
         .article-card[data-cat="mental"]::before { background: #8B6AAA; }
-        .article-card[data-cat="pencegahan"]::before { background: #5A8B8A; }
+        .article-card[data-cat="pencegahan"]::before { background: #14b8a6; }
 
         .article-meta {
             display: flex;
@@ -130,10 +134,10 @@
         }
         .article-card[data-cat="dasar"] .article-icon { background: var(--gradient-primary); }
         .article-card[data-cat="rehabilitasi"] .article-icon { background: var(--gradient-green); }
-        .article-card[data-cat="nutrisi"] .article-icon { background: linear-gradient(135deg, #B8A85A, #C8B86A); }
-        .article-card[data-cat="olahraga"] .article-icon { background: linear-gradient(135deg, #B87A5A, #C88A6A); }
+        .article-card[data-cat="nutrisi"] .article-icon { background: linear-gradient(135deg, #eab308, #facc15); }
+        .article-card[data-cat="olahraga"] .article-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
         .article-card[data-cat="mental"] .article-icon { background: linear-gradient(135deg, #8B6AAA, #9B7ABA); }
-        .article-card[data-cat="pencegahan"] .article-icon { background: linear-gradient(135deg, #5A8B8A, #4A7A7A); }
+        .article-card[data-cat="pencegahan"] .article-icon { background: linear-gradient(135deg, #14b8a6, #2dd4bf); }
 
         .article-category-tag {
             display: inline-block;
@@ -144,12 +148,12 @@
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
-        .article-card[data-cat="dasar"] .article-category-tag { background: rgba(49, 69, 106, 0.12); color: #31456A; }
-        .article-card[data-cat="rehabilitasi"] .article-category-tag { background: rgba(74, 139, 106, 0.12); color: #4A8B6A; }
-        .article-card[data-cat="nutrisi"] .article-category-tag { background: rgba(184, 168, 90, 0.12); color: #9A8A3A; }
-        .article-card[data-cat="olahraga"] .article-category-tag { background: rgba(184, 122, 90, 0.12); color: #B87A5A; }
+        .article-card[data-cat="dasar"] .article-category-tag { background: rgba(37, 99, 235, 0.12); color: #2563eb; }
+        .article-card[data-cat="rehabilitasi"] .article-category-tag { background: rgba(8, 145, 178, 0.12); color: #0891b2; }
+        .article-card[data-cat="nutrisi"] .article-category-tag { background: rgba(234, 179, 8, 0.12); color: #b45309; }
+        .article-card[data-cat="olahraga"] .article-category-tag { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
         .article-card[data-cat="mental"] .article-category-tag { background: rgba(139, 106, 170, 0.12); color: #8B6AAA; }
-        .article-card[data-cat="pencegahan"] .article-category-tag { background: rgba(90, 139, 138, 0.12); color: #5A8B8A; }
+        .article-card[data-cat="pencegahan"] .article-category-tag { background: rgba(20, 184, 166, 0.12); color: #14b8a6; }
 
         .article-title {
             font-size: 1.05rem;
@@ -174,7 +178,7 @@
             justify-content: space-between;
             margin-top: 0.75rem;
             padding-top: 0.6rem;
-            border-top: 1px solid rgba(49, 69, 106, 0.06);
+            border-top: 1px solid rgba(37, 99, 235, 0.06);
         }
         .article-read-time {
             font-size: 0.75rem;
@@ -208,21 +212,24 @@
         .article-detail-header {
             position: sticky;
             top: 0;
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             padding: 1rem;
-            box-shadow: 0 4px 12px rgba(94, 104, 121, 0.15);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
             z-index: 10;
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.6);
         }
         .article-detail-back {
             width: 40px;
             height: 40px;
             border-radius: 12px;
-            border: none;
-            background: var(--neumorphism-base);
-            box-shadow: var(--shadow-combined);
+            border: 1px solid rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -231,7 +238,7 @@
             font-size: 1.1rem;
             flex-shrink: 0;
         }
-        .article-detail-back:active { box-shadow: var(--shadow-inset-combined); }
+        .article-detail-back:active { box-shadow: inset 0 2px 8px rgba(30, 80, 140, 0.08); }
         .article-detail-body {
             padding: 1.25rem;
             padding-bottom: 120px;
@@ -249,7 +256,7 @@
             gap: 0.75rem;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(49, 69, 106, 0.08);
+            border-bottom: 1px solid rgba(37, 99, 235, 0.06);
         }
         .article-detail-body .detail-meta span {
             font-size: 0.8rem;
@@ -264,7 +271,7 @@
             margin-top: 1.75rem;
             margin-bottom: 0.75rem;
             padding-bottom: 0.4rem;
-            border-bottom: 2px solid rgba(49, 69, 106, 0.1);
+            border-bottom: 2px solid rgba(37, 99, 235, 0.1);
         }
         .article-content h3 {
             font-size: 1.05rem;
@@ -289,17 +296,18 @@
         }
         .article-content .info-box {
             padding: 1rem 1.25rem;
-            background: var(--neumorphism-base);
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(16px);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-combined);
+            box-shadow: 0 8px 32px rgba(30,80,140,0.08);
             margin: 1.25rem 0;
             border-left: 4px solid var(--primary-blue);
         }
         .article-content .info-box.warning {
-            border-left-color: #B87A5A;
+            border-left-color: #f59e0b;
         }
         .article-content .info-box.success {
-            border-left-color: #4A8B6A;
+            border-left-color: #0891b2;
         }
         .article-content .info-box p {
             margin-bottom: 0.25rem;
@@ -410,7 +418,7 @@
             <span>Monitoring</span>
         </a>
         <a href="encyclopedia.html" class="nav-item active">
-            <i class="bi bi-book" style="color: #31456A !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #31456A !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <i class="bi bi-book" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
             <span>Ensiklopedia</span>
         </a>
         <a href="patient.html" class="nav-item">

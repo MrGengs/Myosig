@@ -1,96 +1,119 @@
 /* ============================================
    Myosig - Smart Wearable Device for Rehabilitation Stroke Patient
-   Design System: Light Blue Neumorphism
+   Design System: Light Glassmorphism
+   Mobile-First Responsive
    ============================================ */
 
-/* ========== CSS Variables - Neumorphism Design ========== */
+/* ========== CSS Variables ========== */
 :root {
-    /* Neumorphism Base Color - Soft Light Blue */
-    --neumorphism-bg: #E3EDF7;        /* Main background color */
-    --neumorphism-base: #E3EDF7;      /* Base color for all elements */
-    
-    /* Text Colors - Dark Blue-Grey for High Contrast */
-    --text-dark: #31456A;             /* Primary text color - Dark Blue-Grey */
-    --text-gray: #5A6B8A;             /* Secondary text color */
-    --text-light: #7A8BA8;            /* Light text color */
-    
-    /* Neumorphism Shadows - Dual Shadow System */
-    --shadow-light: -6px -6px 14px rgba(255, 255, 255, 1);           /* Top-Left Highlight */
-    --shadow-dark: 6px 6px 14px rgba(94, 104, 121, 0.288);          /* Bottom-Right Shadow */
-    --shadow-combined: -6px -6px 14px rgba(255, 255, 255, 1), 6px 6px 14px rgba(94, 104, 121, 0.288);
-    
-    /* Inset Shadows for Pressed/Active States */
-    --shadow-inset-light: inset -6px -6px 14px rgba(255, 255, 255, 1);
-    --shadow-inset-dark: inset 6px 6px 14px rgba(94, 104, 121, 0.288);
-    --shadow-inset-combined: inset -6px -6px 14px rgba(255, 255, 255, 1), inset 6px 6px 14px rgba(94, 104, 121, 0.288);
-    
-    /* Legacy color variables for compatibility (kept for gradients/icons) */
-    --primary-blue: #31456A;
-    --primary-blue-dark: #1E2F4A;
-    --secondary-purple: #5A6B8A;
-    --accent-green: #4A8B6A;
-    --color-orange: #B87A5A;
-    --color-teal: #5A8B8A;
-    --color-pink: #B87A8A;
-    --color-yellow: #B8A85A;
-    
-    /* Gradients - Subtle for icons and accents */
-    --gradient-primary: linear-gradient(135deg, #31456A 0%, #5A6B8A 100%);
-    --gradient-blue: linear-gradient(135deg, #31456A 0%, #4A5A7A 100%);
-    --gradient-purple: linear-gradient(135deg, #5A6B8A 0%, #4A5A7A 100%);
-    --gradient-green: linear-gradient(135deg, #4A8B6A 0%, #3A7B5A 100%);
-    
-    /* Status colors - Subtle for neumorphism */
-    --success-green: #4A8B6A;
-    --warning-orange: #B87A5A;
-    --danger-red: #B85A5A;
-    --off-gray: #7A8BA8;
-    
-    /* White for contrast elements */
-    --white: #FFFFFF;
-    
-    /* Border radius for soft rounded neumorphism */
+    /* Glass Effect */
+    --glass-bg: rgba(255, 255, 255, 0.52);
+    --glass-bg-strong: rgba(255, 255, 255, 0.70);
+    --glass-bg-light: rgba(255, 255, 255, 0.32);
+    --glass-border: rgba(255, 255, 255, 0.65);
+    --glass-border-subtle: rgba(255, 255, 255, 0.40);
+    --glass-shadow: 0 8px 32px rgba(30, 80, 140, 0.07);
+    --glass-shadow-lg: 0 16px 48px rgba(30, 80, 140, 0.11);
+    --glass-blur: blur(16px);
+    --glass-blur-strong: blur(24px);
+
+    /* Text Colors - blue-grey tones */
+    --text-dark: #0f2744;
+    --text-primary: #1a3a5c;
+    --text-secondary: #3d5a80;
+    --text-muted: #7a95b0;
+    --text-light: #a3bcd5;
+    --text-gray: #3d5a80;
+
+    /* Accent Colors - blue dominant palette */
+    --accent-blue: #2563eb;
+    --accent-purple: #3b82f6;
+    --accent-pink: #0ea5e9;
+    --accent-cyan: #06b6d4;
+    --accent-green: #0891b2;
+    --accent-orange: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-teal: #0d9488;
+
+    /* Gradients - blue dominant */
+    --gradient-primary: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    --gradient-blue: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+    --gradient-purple: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+    --gradient-green: linear-gradient(135deg, #0891b2 0%, #22d3ee 100%);
+    --gradient-orange: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+    --gradient-pink: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+    --gradient-cyan: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+    --gradient-teal: linear-gradient(135deg, #0d9488 0%, #2dd4bf 100%);
+
+    /* Status */
+    --success-green: #059669;
+    --warning-orange: #d97706;
+    --danger-red: #dc2626;
+    --off-gray: #94a3b8;
+
+    /* Legacy compatibility */
+    --primary-blue: #2563eb;
+    --primary-blue-dark: #1d4ed8;
+    --secondary-purple: #3b82f6;
+    --accent-green-legacy: #0891b2;
+    --color-orange: #f59e0b;
+    --color-teal: #0d9488;
+    --color-pink: #0ea5e9;
+    --color-yellow: #eab308;
+    --neumorphism-bg: transparent;
+    --neumorphism-base: var(--glass-bg);
+    --shadow-combined: var(--glass-shadow);
+    --shadow-inset-combined: inset 0 2px 8px rgba(30, 80, 140, 0.08);
+    --lighter-blue: rgba(37, 99, 235, 0.08);
+
+    --white: #ffffff;
     --border-radius: 20px;
-    --transition: all 0.3s ease;
+    --border-radius-sm: 14px;
+    --border-radius-xs: 10px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ========== Reset & Base Styles ========== */
+/* ========== Reset & Base ========== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Hide scrollbar globally but keep scrolling functionality */
 html {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
-    overflow-y: auto;          /* Enable scrolling */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: auto;
 }
 
 html::-webkit-scrollbar {
-    display: none;             /* Chrome, Safari, Opera */
+    display: none;
     width: 0;
     height: 0;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--neumorphism-bg); /* Soft Light Blue background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
+    background: #eef3f9 url('../assets/partners/bg.png') no-repeat center center fixed;
+    background-size: cover;
+    color: var(--text-dark);
     line-height: 1.6;
     min-height: 100vh;
-    padding-bottom: 90px; /* Space for bottom navbar on mobile */
+    padding-bottom: 90px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Hide scrollbar but keep scrolling */
     overflow-x: hidden;
     overflow-y: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
+body > *:not(script):not(link):not(style) {
+    position: relative;
+    z-index: 1;
+}
+
 body::-webkit-scrollbar,
 *::-webkit-scrollbar {
     display: none;
@@ -101,24 +124,17 @@ body::-webkit-scrollbar,
 /* ========== Typography ========== */
 h1, h2, h3, h4, h5, h6 {
     color: var(--text-dark);
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1rem;
+    letter-spacing: -0.01em;
 }
 
-h1 {
-    font-size: 2rem;
-}
-
-h2 {
-    font-size: 1.5rem;
-}
-
-h3 {
-    font-size: 1.25rem;
-}
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
 
 p {
-    color: var(--text-gray);
+    color: var(--text-secondary);
     margin-bottom: 0.5rem;
 }
 
@@ -131,52 +147,57 @@ p {
 
 .page-header {
     text-align: center;
-    padding: 2rem 1rem;
-    background: var(--neumorphism-base); /* Neumorphism base color */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    padding: 2rem 1.5rem;
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border-radius: var(--border-radius);
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-combined); /* Dual shadow for neumorphism */
-    border: none; /* Remove harsh borders */
+    box-shadow: var(--glass-shadow);
+    border: 1px solid var(--glass-border);
     position: relative;
     overflow: hidden;
 }
 
-/* Add subtle colorful gradient overlay to page header */
 .page-header::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 3px;
     background: var(--gradient-primary);
     border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 .page-header h1 {
-    color: var(--text-dark); /* Dark Blue-Grey text */
+    color: var(--text-dark);
     margin-bottom: 0.5rem;
+    font-weight: 700;
 }
 
 .page-header p {
-    color: var(--text-light);
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
-/* ========== Cards - Neumorphism Design ========== */
+/* ========== Glass Cards ========== */
 .card {
-    background: var(--neumorphism-base); /* Base color matching background */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: var(--border-radius);
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    box-shadow: var(--glass-shadow);
+    border: 1px solid var(--glass-border);
     transition: var(--transition);
-    border: none; /* Remove harsh borders */
 }
 
 .card:hover {
-    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
+    box-shadow: var(--glass-shadow-lg);
     transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
 .card-header {
@@ -185,230 +206,216 @@ p {
     justify-content: space-between;
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: none; /* Remove harsh borders - use subtle shadow instead */
+    border-bottom: 1px solid rgba(37, 99, 235, 0.08);
     position: relative;
 }
 
-/* Add subtle colorful accent line to card headers */
-.card-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 3px;
-    background: var(--gradient-primary);
-    border-radius: 2px;
-}
-
 .card-title {
-    font-size: 1.2rem;
-    color: var(--text-dark); /* Dark Blue-Grey text */
+    font-size: 1.15rem;
+    color: var(--text-dark);
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-weight: 700;
 }
 
 .card-icon {
-    color: var(--text-dark); /* Dark Blue-Grey for icons */
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     display: inline-block;
 }
 
-/* Colorful card headers - different colors for different cards */
-.card:nth-of-type(1) .card-icon {
-    color: var(--primary-blue);
-}
+.card:nth-of-type(1) .card-icon { color: var(--accent-blue); }
+.card:nth-of-type(2) .card-icon { color: var(--accent-purple); }
+.card:nth-of-type(3) .card-icon { color: var(--accent-green); }
+.card:nth-of-type(4) .card-icon { color: var(--accent-orange); }
+.card:nth-of-type(5) .card-icon { color: var(--accent-teal); }
+.card:nth-of-type(6) .card-icon { color: var(--accent-pink); }
 
-.card:nth-of-type(2) .card-icon {
-    color: var(--secondary-purple);
-}
-
-.card:nth-of-type(3) .card-icon {
-    color: var(--accent-green);
-}
-
-.card:nth-of-type(4) .card-icon {
-    color: var(--color-orange);
-}
-
-.card:nth-of-type(5) .card-icon {
-    color: var(--color-teal);
-}
-
-.card:nth-of-type(6) .card-icon {
-    color: var(--color-pink);
-}
-
-/* Remove colorful card borders - neumorphism doesn't use harsh borders */
-
-/* ========== Buttons - Neumorphism Design ========== */
+/* ========== Buttons ========== */
 .btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    border: none; /* Remove harsh borders */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     text-align: center;
     text-decoration: none;
     cursor: pointer;
     transition: var(--transition);
     width: 100%;
     margin-bottom: 0.5rem;
-    background: var(--neumorphism-base); /* Base color matching background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    color: var(--text-dark);
+    box-shadow: var(--glass-shadow);
 }
 
 .btn:hover {
-    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
     transform: translateY(-2px);
+    box-shadow: var(--glass-shadow-lg);
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
-/* Active/Pressed state - Inset shadows for pressed effect */
 .btn:active,
 .btn.active {
-    box-shadow: var(--shadow-inset-combined); /* Inset shadows for pressed look */
-    transform: translateY(0);
+    transform: translateY(0) scale(0.98);
+    box-shadow: inset 0 2px 8px rgba(30, 80, 140, 0.1);
 }
 
 .btn-primary {
-    background: var(--gradient-primary); /* Colorful gradient for primary button */
-    color: var(--white); /* White text for better contrast */
-    box-shadow: var(--shadow-combined);
+    background: var(--gradient-primary);
+    color: var(--white);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
 }
 
 .btn-primary:hover {
-    box-shadow: var(--shadow-combined);
-    transform: translateY(-2px);
-    opacity: 0.9;
+    box-shadow: 0 8px 30px rgba(37, 99, 235, 0.35);
+    border-color: rgba(37, 99, 235, 0.5);
 }
 
 .btn-primary:active,
 .btn-primary.active {
-    box-shadow: var(--shadow-inset-combined);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Button variants - colorful gradients for better visual appeal */
 .btn-purple {
-    background: var(--gradient-purple); /* Purple gradient */
-    color: var(--white); /* White text for better contrast */
-    box-shadow: var(--shadow-combined);
+    background: var(--gradient-purple);
+    color: var(--white);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
 }
 
 .btn-purple:hover {
-    box-shadow: var(--shadow-combined);
-    transform: translateY(-2px);
-    opacity: 0.9;
+    box-shadow: 0 8px 30px rgba(37, 99, 235, 0.35);
 }
 
 .btn-purple:active,
 .btn-purple.active {
-    box-shadow: var(--shadow-inset-combined);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn-green {
-    background: var(--gradient-green); /* Green gradient */
-    color: var(--white); /* White text for better contrast */
-    box-shadow: var(--shadow-combined);
+    background: var(--gradient-green);
+    color: var(--white);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
 }
 
 .btn-green:hover {
-    box-shadow: var(--shadow-combined);
-    transform: translateY(-2px);
-    opacity: 0.9;
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.35);
 }
 
 .btn-green:active,
 .btn-green.active {
-    box-shadow: var(--shadow-inset-combined);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn-orange {
-    background: linear-gradient(135deg, var(--color-orange) 0%, #C88A6A 100%); /* Orange gradient */
-    color: var(--white); /* White text for better contrast */
-    box-shadow: var(--shadow-combined);
+    background: var(--gradient-orange);
+    color: var(--white);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.25);
 }
 
 .btn-orange:hover {
-    box-shadow: var(--shadow-combined);
-    transform: translateY(-2px);
-    opacity: 0.9;
+    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);
 }
 
 .btn-orange:active,
 .btn-orange.active {
-    box-shadow: var(--shadow-inset-combined);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn-teal {
-    background: linear-gradient(135deg, var(--color-teal) 0%, #4A7A7A 100%); /* Teal gradient */
-    color: var(--white); /* White text for better contrast */
-    box-shadow: var(--shadow-combined);
+    background: var(--gradient-teal);
+    color: var(--white);
+    border: 1px solid rgba(20, 184, 166, 0.3);
+    box-shadow: 0 4px 20px rgba(20, 184, 166, 0.25);
 }
 
 .btn-teal:hover {
-    box-shadow: var(--shadow-combined);
-    transform: translateY(-2px);
-    opacity: 0.9;
+    box-shadow: 0 8px 30px rgba(20, 184, 166, 0.35);
 }
 
 .btn-teal:active,
 .btn-teal.active {
-    box-shadow: var(--shadow-inset-combined);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn-secondary {
-    background: var(--neumorphism-base);
+    background: var(--glass-bg);
     color: var(--text-dark);
-    box-shadow: var(--shadow-combined);
-    border: none; /* Remove harsh borders */
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
 }
 
 .btn-secondary:hover {
-    box-shadow: var(--shadow-combined);
-    transform: translateY(-2px);
+    background: var(--glass-bg-strong);
 }
 
 .btn-secondary:active,
 .btn-secondary.active {
-    box-shadow: var(--shadow-inset-combined);
+    box-shadow: inset 0 2px 8px rgba(30, 80, 140, 0.1);
 }
 
 .btn-success {
-    background: var(--gradient-green); /* Green gradient for success */
-    color: var(--white); /* White text for better contrast */
-    box-shadow: var(--shadow-combined);
+    background: var(--gradient-green);
+    color: var(--white);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
 }
 
 .btn-success:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.35);
 }
 
 .btn-success:active,
 .btn-success.active {
-    box-shadow: var(--shadow-inset-combined);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn-danger {
-    background: linear-gradient(135deg, var(--danger-red) 0%, #A84A4A 100%); /* Red gradient for danger */
-    color: var(--white); /* White text for better contrast */
-    box-shadow: var(--shadow-combined);
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+    color: var(--white);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.25);
 }
 
 .btn-danger:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(239, 68, 68, 0.35);
 }
 
 .btn-danger:active,
 .btn-danger.active {
-    box-shadow: var(--shadow-inset-combined);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* ========== Forms - Neumorphism Design ========== */
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    border: 2px solid var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+.btn-outline-primary:hover {
+    background: var(--gradient-primary);
+    color: var(--white);
+    border-color: transparent;
+    transform: translateY(-2px);
+}
+
+/* ========== Forms ========== */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -416,49 +423,83 @@ p {
 .form-label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    font-weight: 500;
+    color: var(--text-primary);
+    font-weight: 600;
     font-size: 0.9rem;
 }
 
 .form-input {
     width: 100%;
-    padding: 0.75rem;
-    border: none; /* Remove harsh borders */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-sm);
     font-size: 1rem;
-    background: var(--neumorphism-base); /* Base color matching background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    color: var(--text-dark);
     transition: var(--transition);
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
 }
 
 .form-input:focus {
     outline: none;
-    box-shadow: var(--shadow-inset-combined); /* Inset shadows when focused (pressed look) */
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    background: var(--glass-bg);
 }
 
 .form-input::placeholder {
     color: var(--text-light);
 }
 
-/* ========== Bottom Navigation Bar - Neumorphism Design ========== */
+.form-control {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-sm);
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    outline: none;
+}
+
+.form-control:hover {
+    border-color: rgba(37, 99, 235, 0.3);
+}
+
+.form-control:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.form-control option {
+    padding: 0.5rem;
+    background: #fff;
+    color: var(--text-dark);
+}
+
+/* ========== Bottom Navigation ========== */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--neumorphism-base); /* Base color matching background */
-    box-shadow: 0 -6px 14px rgba(94, 104, 121, 0.288); /* Bottom shadow for neumorphism */
-    padding: 0.75rem 0;
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border-top: 1px solid var(--glass-border);
+    box-shadow: 0 -4px 30px rgba(30, 80, 140, 0.08);
+    padding: 0.5rem 0.25rem;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
     z-index: 1000;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-top: none; /* Remove harsh borders */
-    /* Safe area for devices with notch */
-    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
 }
 
 .nav-item {
@@ -467,35 +508,32 @@ p {
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    color: var(--text-dark); /* Dark Blue-Grey for consistency */
-    padding: 0.4rem 0.35rem;
-    border-radius: var(--border-radius);
+    color: var(--text-muted);
+    padding: 0.5rem 0.5rem;
+    border-radius: var(--border-radius-sm);
     transition: var(--transition);
-    min-width: 50px;
+    min-width: 56px;
     flex: 1;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     -webkit-user-select: none;
     position: relative;
-    /* Ensure icon and text are always visible */
-    z-index: 1;
-    background: var(--neumorphism-base);
-    box-shadow: var(--shadow-combined); /* Extruded effect for inactive items */
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 .nav-item i {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
     transition: var(--transition);
     display: inline-block !important;
     position: relative;
     z-index: 2;
-    /* Ensure icon is always visible */
     opacity: 1 !important;
     visibility: visible !important;
-    /* Prevent icon from disappearing - use Dark Blue-Grey */
-    color: var(--text-dark) !important;
-    -webkit-text-fill-color: var(--text-dark) !important;
+    color: var(--text-muted) !important;
+    -webkit-text-fill-color: var(--text-muted) !important;
     background: none !important;
     -webkit-background-clip: unset !important;
     background-clip: unset !important;
@@ -503,20 +541,28 @@ p {
 
 .nav-item span {
     font-size: 0.65rem;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.2;
     text-align: center;
 }
 
 .nav-item.active {
-    color: var(--primary-blue); /* Blue color for active nav item */
+    color: var(--accent-blue);
+    background: rgba(37, 99, 235, 0.08);
     position: relative;
-    /* Ensure child elements (icon and text) are visible */
     z-index: 1;
-    /* Active items have inset shadow (pressed effect) */
-    box-shadow: var(--shadow-inset-combined);
-    /* Add subtle background color for active state */
-    background: linear-gradient(135deg, rgba(49, 69, 106, 0.1) 0%, rgba(90, 107, 138, 0.05) 100%);
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 0 0 4px 4px;
 }
 
 .nav-item.active * {
@@ -524,75 +570,133 @@ p {
     z-index: 2;
 }
 
-.nav-item.active::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--neumorphism-base);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-inset-combined); /* Inset shadows for pressed/active look */
-    z-index: 0;
-    /* Ensure it doesn't cover icon */
-    pointer-events: none;
-}
-
 .nav-item.active i,
 a.nav-item.active i,
 .nav-item.active > i,
 a.nav-item.active > i {
-    /* Ensure icon is always visible with colorful blue */
-    color: var(--primary-blue) !important;
+    color: var(--accent-blue) !important;
+    -webkit-text-fill-color: var(--accent-blue) !important;
     transform: scale(1.1) !important;
     display: inline-block !important;
     position: relative !important;
     z-index: 100 !important;
     opacity: 1 !important;
     visibility: visible !important;
-    /* Reset any gradient text effects that might hide the icon */
-    -webkit-text-fill-color: var(--text-dark) !important;
     background: transparent !important;
     -webkit-background-clip: unset !important;
     background-clip: unset !important;
-    /* Ensure icon is rendered and visible */
-    font-size: 1.5rem !important;
-    margin-bottom: 0.25rem !important;
-    /* Prevent any hiding */
+    font-size: 1.4rem !important;
+    margin-bottom: 0.2rem !important;
     clip: unset !important;
     clip-path: none !important;
-    /* Force rendering - ensure bootstrap-icons font is used */
     font-family: "bootstrap-icons" !important;
     font-style: normal !important;
     font-weight: normal !important;
     text-rendering: auto !important;
     -webkit-font-smoothing: antialiased !important;
-    /* Make sure icon is above everything */
-    position: relative !important;
-    /* Force icon to render */
     line-height: 1 !important;
     vertical-align: middle !important;
-    /* No glow effect - consistent dark blue-grey color */
+}
+
+.nav-item.active span {
+    color: var(--accent-blue);
+    font-weight: 700;
 }
 
 .nav-item:active {
-    transform: scale(0.95);
+    transform: scale(0.93);
 }
 
-.nav-item:active::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--neumorphism-base);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-inset-combined); /* Inset shadows for pressed look */
-    z-index: 0;
-    pointer-events: none;
+.nav-item:hover {
+    color: var(--text-primary);
+    background: rgba(37, 99, 235, 0.05);
 }
 
-/* Ensure icon is visible when nav-item is active (clicked) */
+.nav-item:hover i,
+a.nav-item:hover i {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Force Icon Visibility */
+a.nav-item.active i.bi,
+.nav-item.active i.bi,
+a.nav-item.active > i.bi,
+.nav-item.active > i.bi,
+a.nav-item.active i.bi-graph-up,
+.nav-item.active i.bi-graph-up,
+a.nav-item.active i.bi-activity,
+.nav-item.active i.bi-activity,
+a.nav-item.active i.bi-person-heart,
+.nav-item.active i.bi-person-heart,
+a.nav-item.active i.bi-house-door-fill,
+.nav-item.active i.bi-house-door-fill,
+a.nav-item.active i.bi-play-circle-fill,
+.nav-item.active i.bi-play-circle-fill,
+a.nav-item.active i.bi-person-fill,
+.nav-item.active i.bi-person-fill,
+a.nav-item.active i.bi-book,
+.nav-item.active i.bi-book,
+a.nav-item.active i.bi-person,
+.nav-item.active i.bi-person {
+    color: var(--accent-blue) !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-size: 1.4rem !important;
+    z-index: 999 !important;
+    position: relative !important;
+    -webkit-text-fill-color: var(--accent-blue) !important;
+    background: transparent !important;
+    font-family: "bootstrap-icons" !important;
+    clip: auto !important;
+    clip-path: none !important;
+    overflow: visible !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 1em !important;
+    min-height: 1em !important;
+}
+
+a[href*="sensors.html"].nav-item.active i,
+a[href*="patient.html"].nav-item.active i,
+a[href*="progress.html"].nav-item.active i,
+a[href*="encyclopedia.html"].nav-item.active i,
+a[href*="account.html"].nav-item.active i {
+    color: var(--accent-blue) !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-size: 1.4rem !important;
+    z-index: 1000 !important;
+    position: relative !important;
+    -webkit-text-fill-color: var(--accent-blue) !important;
+    background: transparent !important;
+    font-family: "bootstrap-icons" !important;
+    transform: scale(1.1) !important;
+    clip: auto !important;
+    clip-path: none !important;
+}
+
+.nav-item.active:hover i,
+a.nav-item.active:hover i {
+    color: var(--accent-blue) !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--accent-blue) !important;
+    background: transparent !important;
+    font-family: "bootstrap-icons" !important;
+    transform: scale(1.1) !important;
+    z-index: 1001 !important;
+    position: relative !important;
+}
+
 .nav-item:active i,
-a.nav-item:active i,
-.nav-item:active > i,
-a.nav-item:active > i {
+a.nav-item:active i {
     display: inline-block !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -600,113 +704,41 @@ a.nav-item:active > i {
     z-index: 1002 !important;
 }
 
-.nav-item:hover {
-    color: var(--text-dark);
-}
-
-.nav-item:hover::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--neumorphism-base);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-combined); /* Dual shadow on hover */
-    z-index: 0;
-    pointer-events: none;
-}
-
-/* Ensure icon is visible on hover for active items */
-.nav-item.active:hover i,
-a.nav-item.active:hover i,
-.nav-item.active:hover > i,
-a.nav-item.active:hover > i,
-a[href="progress.html"].nav-item.active:hover i,
-a[href="progress.html"].nav-item.active:hover i.bi-graph-up,
-a[href="sensors.html"].nav-item.active:hover i,
-a[href="sensors.html"].nav-item.active:hover i.bi-activity,
-a[href="patient.html"].nav-item.active:hover i,
-a[href="patient.html"].nav-item.active:hover i.bi-person-heart {
-    color: var(--text-dark) !important;
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    font-size: 1.5rem !important;
-    z-index: 1001 !important;
-    position: relative !important;
-    -webkit-text-fill-color: var(--text-dark) !important;
-    background: transparent !important;
-    font-family: "bootstrap-icons" !important;
-    transform: scale(1.1) !important;
-    /* Prevent any hiding effects */
-    clip: auto !important;
-    clip-path: none !important;
-    overflow: visible !important;
-}
-
-/* Ensure icon is visible on hover for all nav items */
-.nav-item:hover i,
-a.nav-item:hover i,
-.nav-item:hover > i,
-a.nav-item:hover > i {
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    z-index: 10 !important;
-    /* Ensure icon doesn't disappear on hover */
-    color: inherit !important;
-}
-
-/* Mobile optimizations for bottom nav */
+/* Mobile nav */
 @media (max-width: 768px) {
     .bottom-nav {
-        padding: 0.75rem 0;
-        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+        padding: 0.5rem 0;
+        padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
     }
-    
     .nav-item {
-        padding: 0.5rem 0.5rem;
+        padding: 0.45rem 0.4rem;
         min-width: 50px;
     }
-    
-    .nav-item i {
-        font-size: 1.4rem;
-    }
-    
-    .nav-item span {
-        font-size: 0.65rem;
-    }
+    .nav-item i { font-size: 1.3rem; }
+    .nav-item span { font-size: 0.6rem; }
 }
 
 @media (max-width: 480px) {
     .nav-item {
-        padding: 0.5rem 0.25rem;
+        padding: 0.4rem 0.25rem;
         min-width: 45px;
     }
-    
-    .nav-item i {
-        font-size: 1.3rem;
-        margin-bottom: 0.2rem;
-    }
-    
-    .nav-item span {
-        font-size: 0.6rem;
-    }
+    .nav-item i { font-size: 1.25rem; margin-bottom: 0.15rem; }
+    .nav-item span { font-size: 0.58rem; }
 }
 
-/* ========== Progress Indicators - Neumorphism Design ========== */
+/* ========== Progress ========== */
 .progress-bar-container {
-    background: var(--neumorphism-base);
+    background: rgba(37, 99, 235, 0.08);
     border-radius: 20px;
-    height: 12px;
+    height: 10px;
     margin: 1rem 0;
     overflow: hidden;
-    box-shadow: var(--shadow-inset-combined); /* Inset shadow for container */
-    border: none;
+    border: 1px solid rgba(37, 99, 235, 0.1);
 }
 
 .progress-bar {
-    background: var(--gradient-primary); /* Colorful gradient for progress */
+    background: var(--gradient-primary);
     height: 100%;
     border-radius: 20px;
     transition: width 0.5s ease;
@@ -717,7 +749,7 @@ a.nav-item:hover > i {
     color: var(--white);
     font-size: 0.7rem;
     font-weight: 600;
-    box-shadow: var(--shadow-combined);
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
 }
 
 .progress-info {
@@ -729,194 +761,142 @@ a.nav-item:hover > i {
 
 .progress-label {
     font-size: 0.9rem;
-    color: var(--text-gray);
+    color: var(--text-secondary);
 }
 
 .progress-value {
     font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-dark); /* Dark Blue-Grey text */
+    font-weight: 700;
+    color: var(--text-dark);
 }
 
-/* ========== Stats Cards - Neumorphism Design ========== */
+/* ========== Stats Cards ========== */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 0.85rem;
     margin-bottom: 1.5rem;
 }
 
 .stat-card {
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    padding: 1.5rem;
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    color: var(--text-dark);
+    padding: 1.25rem 1rem;
+    border-radius: var(--border-radius);
     text-align: center;
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
     position: relative;
     overflow: hidden;
-    background: var(--neumorphism-base); /* Base color matching background */
-    border: none; /* Remove harsh borders */
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
     transition: var(--transition);
 }
 
-/* All stat cards use neumorphism - no distinct background colors */
 .stat-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--glass-shadow-lg);
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
 .stat-card::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
-    animation: shimmer 3s infinite;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.04;
+    border-radius: var(--border-radius);
+    pointer-events: none;
 }
 
-/* Add subtle colorful overlay to stat cards */
-.stat-card:nth-of-type(1)::after {
+.stat-card:nth-of-type(1)::before { background: var(--gradient-blue); }
+.stat-card:nth-of-type(2)::before { background: var(--gradient-purple); }
+.stat-card:nth-of-type(3)::before { background: var(--gradient-green); }
+.stat-card:nth-of-type(4)::before { background: var(--gradient-orange); }
+
+.stat-card::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: var(--gradient-primary);
+    height: 3px;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
-.stat-card:nth-of-type(2)::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--gradient-purple);
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-}
-
-.stat-card:nth-of-type(3)::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--gradient-green);
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-}
-
-.stat-card:nth-of-type(4)::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(135deg, var(--color-orange) 0%, #C88A6A 100%);
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-}
-
-@keyframes shimmer {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(-50%, -50%) rotate(180deg); }
-}
+.stat-card:nth-of-type(1)::after { background: var(--gradient-blue); }
+.stat-card:nth-of-type(2)::after { background: var(--gradient-purple); }
+.stat-card:nth-of-type(3)::after { background: var(--gradient-green); }
+.stat-card:nth-of-type(4)::after { background: var(--gradient-orange); }
 
 .stat-card .stat-icon {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 0.5rem;
 }
 
-/* Colorful stat card icons - different colors for each stat card */
-.stat-card:nth-of-type(1) .stat-icon {
-    color: var(--primary-blue);
-}
-
-.stat-card:nth-of-type(2) .stat-icon {
-    color: var(--secondary-purple);
-}
-
-.stat-card:nth-of-type(3) .stat-icon {
-    color: var(--accent-green);
-}
-
-.stat-card:nth-of-type(4) .stat-icon {
-    color: var(--color-orange);
-}
-
-.stat-card:nth-of-type(5) .stat-icon {
-    color: var(--color-teal);
-}
-
-.stat-card:nth-of-type(6) .stat-icon {
-    color: var(--color-pink);
-}
-
-.stat-card:nth-of-type(7) .stat-icon {
-    color: var(--color-yellow);
-}
-
-.stat-card:nth-of-type(8) .stat-icon {
-    color: var(--primary-blue);
-}
+.stat-card:nth-of-type(1) .stat-icon { color: var(--accent-blue); }
+.stat-card:nth-of-type(2) .stat-icon { color: var(--accent-purple); }
+.stat-card:nth-of-type(3) .stat-icon { color: var(--accent-green); }
+.stat-card:nth-of-type(4) .stat-icon { color: var(--accent-orange); }
+.stat-card:nth-of-type(5) .stat-icon { color: var(--accent-teal); }
+.stat-card:nth-of-type(6) .stat-icon { color: var(--accent-pink); }
+.stat-card:nth-of-type(7) .stat-icon { color: var(--color-yellow); }
+.stat-card:nth-of-type(8) .stat-icon { color: var(--accent-blue); }
 
 .stat-card .stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+    color: var(--text-dark);
 }
 
 .stat-card .stat-label {
-    font-size: 0.85rem;
-    opacity: 0.9;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
 }
 
-/* ========== Chart Container - Neumorphism Design ========== */
+/* ========== Chart Container ========== */
 .chart-container {
-    background: var(--neumorphism-base); /* Base color matching background */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: var(--border-radius);
     padding: 1rem;
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    box-shadow: var(--glass-shadow);
+    border: 1px solid var(--glass-border);
     height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-light);
-    border: none; /* Remove harsh borders */
+    color: var(--text-muted);
 }
 
-/* ========== Sensor Data Display ========== */
+/* ========== Sensor Data ========== */
 .sensor-data {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border-radius: var(--border-radius);
-    margin-bottom: 1rem;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 0.75rem;
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border-subtle);
     transition: var(--transition);
 }
 
-/* Sensor data items - Neumorphism Design */
-.sensor-data {
-    background: var(--neumorphism-base); /* Base color matching background */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
-    border: none; /* Remove harsh borders */
-}
-
 .sensor-data:hover {
-    transform: translateX(5px);
-    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
+    transform: translateX(4px);
+    border-color: rgba(37, 99, 235, 0.2);
+    background: var(--glass-bg);
 }
 
-.sensor-info {
-    flex: 1;
-}
+.sensor-info { flex: 1; }
 
 .sensor-name {
     font-weight: 600;
@@ -926,101 +906,77 @@ a.nav-item:hover > i {
 
 .sensor-value {
     font-size: 1.5rem;
-    font-weight: 700;
-}
-
-/* Sensor values - all use Dark Blue-Grey text */
-.sensor-value {
-    color: var(--text-dark); /* Dark Blue-Grey text */
+    font-weight: 800;
+    color: var(--text-dark);
 }
 
 .sensor-unit {
     font-size: 0.85rem;
-    color: var(--text-light);
+    color: var(--text-muted);
     margin-left: 0.25rem;
 }
 
 .sensor-status {
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 1rem;
     border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .sensor-status.active {
-    background: var(--gradient-green); /* Colorful green gradient */
-    color: var(--white);
-    box-shadow: var(--shadow-combined);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(52, 211, 153, 0.15));
+    color: var(--success-green);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .sensor-status.inactive {
-    background: var(--text-light);
-    color: var(--white);
+    background: rgba(156, 163, 175, 0.12);
+    color: var(--off-gray);
+    border: 1px solid rgba(156, 163, 175, 0.2);
 }
 
-/* ========== Exercise List - Neumorphism Design ========== */
+/* ========== Exercise List ========== */
 .exercise-item {
     display: flex;
     align-items: center;
     padding: 1rem;
-    background: var(--neumorphism-base); /* Base color matching background */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    margin-bottom: 1rem;
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--glass-border-subtle);
     transition: var(--transition);
-    border: none; /* Remove harsh borders */
 }
 
 .exercise-item:hover {
-    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
-    transform: translateX(5px);
+    transform: translateX(4px);
+    border-color: rgba(37, 99, 235, 0.2);
+    background: var(--glass-bg);
 }
 
-/* Exercise icons - Neumorphism Design */
 .exercise-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--white); /* White text for better contrast */
-    font-size: 1.5rem;
+    color: var(--white);
+    font-size: 1.3rem;
     margin-right: 1rem;
     flex-shrink: 0;
-    background: var(--gradient-primary); /* Colorful gradient background */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
-    border: none; /* Remove harsh borders */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Different colors for different exercise icons */
-.exercise-item:nth-of-type(1) .exercise-icon {
-    background: var(--gradient-primary);
-}
+.exercise-item:nth-of-type(1) .exercise-icon { background: var(--gradient-primary); }
+.exercise-item:nth-of-type(2) .exercise-icon { background: var(--gradient-purple); }
+.exercise-item:nth-of-type(3) .exercise-icon { background: var(--gradient-green); }
+.exercise-item:nth-of-type(4) .exercise-icon { background: var(--gradient-orange); }
+.exercise-item:nth-of-type(5) .exercise-icon { background: var(--gradient-teal); }
+.exercise-item:nth-of-type(6) .exercise-icon { background: var(--gradient-pink); }
 
-.exercise-item:nth-of-type(2) .exercise-icon {
-    background: var(--gradient-purple);
-}
-
-.exercise-item:nth-of-type(3) .exercise-icon {
-    background: var(--gradient-green);
-}
-
-.exercise-item:nth-of-type(4) .exercise-icon {
-    background: linear-gradient(135deg, var(--color-orange) 0%, #C88A6A 100%);
-}
-
-.exercise-item:nth-of-type(5) .exercise-icon {
-    background: linear-gradient(135deg, var(--color-teal) 0%, #4A7A7A 100%);
-}
-
-.exercise-item:nth-of-type(6) .exercise-icon {
-    background: linear-gradient(135deg, var(--color-pink) 0%, #A86A7A 100%);
-}
-
-.exercise-content {
-    flex: 1;
-}
+.exercise-content { flex: 1; }
 
 .exercise-name {
     font-weight: 600;
@@ -1030,14 +986,14 @@ a.nav-item:hover > i {
 
 .exercise-duration {
     font-size: 0.85rem;
-    color: var(--text-light);
+    color: var(--text-muted);
 }
 
 .exercise-status {
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     margin-left: 0.5rem;
 }
 
@@ -1054,18 +1010,19 @@ a.nav-item:hover > i {
     top: 0;
     bottom: 0;
     width: 2px;
-    background: linear-gradient(to bottom, 
-        var(--primary-blue) 0%,
-        var(--secondary-purple) 25%,
+    background: linear-gradient(to bottom,
+        var(--accent-blue) 0%,
+        var(--accent-purple) 25%,
         var(--accent-green) 50%,
-        var(--color-orange) 75%,
-        var(--color-teal) 100%
+        var(--accent-orange) 75%,
+        var(--accent-teal) 100%
     );
+    border-radius: 2px;
 }
 
 .timeline-item {
     position: relative;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     padding-left: 2rem;
 }
 
@@ -1078,316 +1035,115 @@ a.nav-item:hover > i {
     height: 12px;
     border-radius: 50%;
     border: 3px solid var(--white);
-    box-shadow: 0 0 0 2px;
 }
 
-/* Colorful timeline dots - different colors for each item */
-.timeline-item:nth-child(1)::before {
-    background: var(--primary-blue);
-    box-shadow: 0 0 0 2px var(--primary-blue);
-}
-
-.timeline-item:nth-child(2)::before {
-    background: var(--secondary-purple);
-    box-shadow: 0 0 0 2px var(--secondary-purple);
-}
-
-.timeline-item:nth-child(3)::before {
-    background: var(--accent-green);
-    box-shadow: 0 0 0 2px var(--accent-green);
-}
-
-.timeline-item:nth-child(4)::before {
-    background: var(--color-orange);
-    box-shadow: 0 0 0 2px var(--color-orange);
-}
-
-.timeline-item:nth-child(5)::before {
-    background: var(--color-teal);
-    box-shadow: 0 0 0 2px var(--color-teal);
-}
-
-.timeline-item:nth-child(6)::before {
-    background: var(--color-pink);
-    box-shadow: 0 0 0 2px var(--color-pink);
-}
-
-.timeline-item:nth-child(7)::before {
-    background: var(--color-yellow);
-    box-shadow: 0 0 0 2px var(--color-yellow);
-}
-
-.timeline-item:nth-child(8)::before {
-    background: var(--primary-blue);
-    box-shadow: 0 0 0 2px var(--primary-blue);
-}
+.timeline-item:nth-child(1)::before { background: var(--accent-blue); box-shadow: 0 0 0 2px var(--accent-blue), 0 0 8px rgba(37, 99, 235, 0.3); }
+.timeline-item:nth-child(2)::before { background: var(--accent-purple); box-shadow: 0 0 0 2px var(--accent-purple), 0 0 8px rgba(37, 99, 235, 0.3); }
+.timeline-item:nth-child(3)::before { background: var(--accent-green); box-shadow: 0 0 0 2px var(--accent-green), 0 0 8px rgba(16, 185, 129, 0.3); }
+.timeline-item:nth-child(4)::before { background: var(--accent-orange); box-shadow: 0 0 0 2px var(--accent-orange), 0 0 8px rgba(245, 158, 11, 0.3); }
+.timeline-item:nth-child(5)::before { background: var(--accent-teal); box-shadow: 0 0 0 2px var(--accent-teal), 0 0 8px rgba(20, 184, 166, 0.3); }
+.timeline-item:nth-child(6)::before { background: var(--accent-pink); box-shadow: 0 0 0 2px var(--accent-pink), 0 0 8px rgba(14, 165, 233, 0.3); }
+.timeline-item:nth-child(7)::before { background: var(--color-yellow); box-shadow: 0 0 0 2px var(--color-yellow); }
+.timeline-item:nth-child(8)::before { background: var(--accent-blue); box-shadow: 0 0 0 2px var(--accent-blue); }
 
 .timeline-date {
-    font-size: 0.85rem;
-    color: var(--text-light);
+    font-size: 0.8rem;
+    color: var(--text-muted);
     margin-bottom: 0.25rem;
+    font-weight: 500;
 }
 
 .timeline-content {
-    background: var(--neumorphism-base); /* Base color matching background */
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     padding: 1rem;
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
-    border: none; /* Remove harsh borders */
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--glass-border-subtle);
 }
 
-/* ========== Alert Messages ========== */
+/* ========== Alerts ========== */
 .alert {
     padding: 1rem;
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius-sm);
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border-subtle);
 }
 
-/* Alerts - Neumorphism Design */
 .alert-success {
-    background: var(--neumorphism-base); /* Base color matching background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    border: none; /* Remove harsh borders */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(52, 211, 153, 0.06));
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    color: var(--text-dark);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
 }
 
 .alert-info {
-    background: var(--neumorphism-base); /* Base color matching background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    border: none; /* Remove harsh borders */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.06));
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    color: var(--text-dark);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
 }
 
 .alert-warning {
-    background: var(--neumorphism-base); /* Base color matching background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    border: none; /* Remove harsh borders */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 146, 60, 0.06));
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    color: var(--text-dark);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
 }
 
 .alert-purple {
-    background: var(--neumorphism-base); /* Base color matching background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    border: none; /* Remove harsh borders */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.06));
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    color: var(--text-dark);
 }
 
 .alert-orange {
-    background: var(--neumorphism-base); /* Base color matching background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    border: none; /* Remove harsh borders */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 146, 60, 0.06));
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    color: var(--text-dark);
 }
 
 .alert-teal {
-    background: var(--neumorphism-base); /* Base color matching background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    border: none; /* Remove harsh borders */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(45, 212, 191, 0.06));
+    border: 1px solid rgba(20, 184, 166, 0.15);
+    color: var(--text-dark);
 }
 
-/* ========== Responsive Design ========== */
-@media (min-width: 768px) {
-    body {
-        padding-bottom: 0;
-    }
-    
-    .container {
-        padding: 2rem;
-    }
-    
-    /* Keep bottom nav visible on mobile, hide on desktop if needed */
-    /* .bottom-nav {
-        display: none;
-    } */
-    
-    .stats-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .btn {
-        width: auto;
-        margin-right: 0.5rem;
-        margin-bottom: 0;
-    }
-    
-    h1 {
-        font-size: 2.5rem;
-    }
-    
-    h2 {
-        font-size: 2rem;
-    }
+.alert-success i,
+.alert-info i,
+.alert-warning i {
+    font-size: 1.5rem;
+    flex-shrink: 0;
 }
 
-/* Always show bottom nav on mobile */
-@media (max-width: 767px) {
-    .bottom-nav {
-        display: flex !important;
-    }
-    
-    body {
-        padding-bottom: 90px !important;
-    }
-    
-    /* Add padding to container to prevent content from being hidden by bottom nav */
-    .container {
-        padding-bottom: 100px;
-    }
+.alert-success strong,
+.alert-info strong,
+.alert-warning strong {
+    color: var(--text-dark);
+    display: block;
+    margin-bottom: 0.25rem;
 }
 
-/* Add padding for desktop as well */
-@media (min-width: 768px) {
-    .container {
-        padding-bottom: 100px;
-    }
+.alert-success p,
+.alert-info p,
+.alert-warning p {
+    color: var(--text-secondary);
+    margin: 0;
 }
 
-/* Exception: ai-chat.html doesn't need padding - container has height: 100vh */
-body:has(.chat-container) .container {
-    padding-bottom: 0 !important;
-}
-
-@media (min-width: 1024px) {
-    .container {
-        max-width: 1200px;
-    }
-    
-    .card {
-        padding: 2rem;
-    }
-}
-
-/* ========== Utility Classes ========== */
-.text-center {
-    text-align: center;
-}
-
-.mt-1 { margin-top: 0.5rem; }
-.mt-2 { margin-top: 1rem; }
-.mt-3 { margin-top: 1.5rem; }
-
-.mb-1 { margin-bottom: 0.5rem; }
-.mb-2 { margin-bottom: 1rem; }
-.mb-3 { margin-bottom: 1.5rem; }
-
-.hidden {
-    display: none;
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ========== Force Icon Visibility - Critical Fix ========== */
-/* Ensure icons in active nav items are always visible */
-a.nav-item.active i.bi,
-.nav-item.active i.bi,
-a.nav-item.active > i.bi,
-.nav-item.active > i.bi,
-a.nav-item.active i.bi-graph-up,
-.nav-item.active i.bi-graph-up,
-a.nav-item.active i.bi-activity,
-.nav-item.active i.bi-activity,
-a.nav-item.active i.bi-person-heart,
-.nav-item.active i.bi-person-heart,
-a.nav-item.active i.bi-house-door-fill,
-.nav-item.active i.bi-house-door-fill,
-a.nav-item.active i.bi-play-circle-fill,
-.nav-item.active i.bi-play-circle-fill,
-a.nav-item.active i.bi-person-fill,
-.nav-item.active i.bi-person-fill {
-    color: var(--text-dark) !important;
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    font-size: 1.5rem !important;
-    z-index: 999 !important;
-    position: relative !important;
-    -webkit-text-fill-color: var(--text-dark) !important;
-    background: transparent !important;
-    font-family: "bootstrap-icons" !important;
-    /* Force icon to be visible - remove any hiding effects */
-    clip: auto !important;
-    clip-path: none !important;
-    overflow: visible !important;
-    text-indent: 0 !important;
-    text-transform: none !important;
-    letter-spacing: normal !important;
-    word-spacing: normal !important;
-    /* Ensure icon renders */
-    font-variant: normal !important;
-    font-stretch: normal !important;
-    line-height: 1 !important;
-    vertical-align: middle !important;
-    /* Absolutely ensure icon is visible */
-    width: auto !important;
-    height: auto !important;
-    min-width: 1em !important;
-    min-height: 1em !important;
-    max-width: none !important;
-    max-height: none !important;
-}
-
-/* Additional fix specifically for navigation icons */
-a[href="progress.html"].nav-item.active i.bi-graph-up,
-a[href*="progress.html"].nav-item.active i.bi-graph-up,
-a[href="sensors.html"].nav-item.active i.bi-activity,
-a[href*="sensors.html"].nav-item.active i.bi-activity,
-a[href="patient.html"].nav-item.active i.bi-person-heart,
-a[href*="patient.html"].nav-item.active i.bi-person-heart,
-a.nav-item.active i.bi-graph-up,
-.nav-item.active i.bi-graph-up,
-a.nav-item.active i.bi-activity,
-.nav-item.active i.bi-activity,
-a.nav-item.active i.bi-person-heart,
-.nav-item.active i.bi-person-heart {
-    color: var(--primary-blue) !important;
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    font-size: 1.5rem !important;
-    z-index: 1000 !important;
-    position: relative !important;
-    -webkit-text-fill-color: var(--text-dark) !important;
-    background: transparent !important;
-    font-family: "bootstrap-icons" !important;
-    /* Remove any transform that might hide it */
-    transform: scale(1.1) !important;
-    /* Ensure it's not clipped */
-    clip: auto !important;
-    clip-path: none !important;
-    overflow: visible !important;
-    /* Force rendering */
-    line-height: 1 !important;
-    vertical-align: middle !important;
-    width: auto !important;
-    height: auto !important;
-    min-width: 1em !important;
-    min-height: 1em !important;
-}
-
-/* ========== Custom Modal Styles ========== */
+/* ========== Modals ========== */
 .custom-modal {
     display: none;
     position: fixed;
@@ -1411,23 +1167,25 @@ a.nav-item.active i.bi-person-heart,
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    background: rgba(30, 27, 75, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .custom-modal-content {
     position: relative;
-    background: var(--neumorphism-base); /* Base color matching background */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
-    max-width: 90%;
-    width: 100%;
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border-radius: var(--border-radius);
+    box-shadow: 0 24px 80px rgba(30, 80, 140, 0.2);
     max-width: 400px;
+    width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     z-index: 10001;
-    animation: modalSlideIn 0.3s ease;
-    border: none; /* Remove harsh borders */
+    animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--glass-border);
 }
 
 @keyframes modalSlideIn {
@@ -1446,38 +1204,38 @@ a.nav-item.active i.bi-person-heart,
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem 1.5rem;
-    border-bottom: none; /* Remove harsh borders */
+    border-bottom: 1px solid rgba(37, 99, 235, 0.08);
 }
 
 .custom-modal-title {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-dark);
     margin: 0;
 }
 
 .custom-modal-close {
-    background: none;
+    background: rgba(37, 99, 235, 0.06);
     border: none;
     font-size: 1.25rem;
-    color: var(--text-light);
+    color: var(--text-muted);
     cursor: pointer;
-    padding: 0.25rem;
+    padding: 0.4rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: 10px;
     transition: var(--transition);
 }
 
 .custom-modal-close:hover {
-    background: var(--lighter-blue);
-    color: var(--text-dark);
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--accent-red);
 }
 
 .custom-modal-body {
     padding: 1.5rem;
-    color: var(--text-gray);
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 
@@ -1485,7 +1243,7 @@ a.nav-item.active i.bi-person-heart,
     display: flex;
     gap: 0.75rem;
     padding: 1rem 1.5rem;
-    border-top: none; /* Remove harsh borders */
+    border-top: 1px solid rgba(37, 99, 235, 0.08);
     justify-content: flex-end;
 }
 
@@ -1494,37 +1252,7 @@ a.nav-item.active i.bi-person-heart,
     min-width: 80px;
 }
 
-/* Form Control Styles - Neumorphism Design */
-.form-control {
-    width: 100%;
-    padding: 0.75rem;
-    border: none; /* Remove harsh borders */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    background: var(--neumorphism-base); /* Base color matching background */
-    color: var(--text-dark); /* Dark Blue-Grey text */
-    font-size: 1rem;
-    font-family: inherit;
-    cursor: pointer;
-    transition: var(--transition);
-    outline: none;
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
-}
-
-.form-control:hover {
-    box-shadow: var(--shadow-combined);
-}
-
-.form-control:focus {
-    box-shadow: var(--shadow-inset-combined); /* Inset shadows when focused (pressed look) */
-}
-
-.form-control option {
-    padding: 0.5rem;
-    background: var(--neumorphism-base);
-    color: var(--text-dark);
-}
-
-/* ========== Edit Profile Modal Styles ========== */
+/* Modal Overlay */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -1532,8 +1260,9 @@ a.nav-item.active i.bi-person-heart,
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    background: rgba(30, 27, 75, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 10000;
     align-items: center;
     justify-content: center;
@@ -1546,16 +1275,18 @@ a.nav-item.active i.bi-person-heart,
 
 .modal-content {
     position: relative;
-    background: var(--neumorphism-base); /* Base color matching background */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border-radius: var(--border-radius);
+    box-shadow: 0 24px 80px rgba(30, 80, 140, 0.2);
     width: 100%;
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
     z-index: 10001;
-    animation: modalSlideIn 0.3s ease;
-    border: none; /* Remove harsh borders */
+    animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--glass-border);
 }
 
 .modal-header {
@@ -1563,13 +1294,13 @@ a.nav-item.active i.bi-person-heart,
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem 1.5rem;
-    border-bottom: none; /* Remove harsh borders */
+    border-bottom: 1px solid rgba(37, 99, 235, 0.08);
 }
 
 .modal-header h3 {
     margin: 0;
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-dark);
     display: flex;
     align-items: center;
@@ -1577,10 +1308,10 @@ a.nav-item.active i.bi-person-heart,
 }
 
 .modal-close-btn {
-    background: none;
+    background: rgba(37, 99, 235, 0.06);
     border: none;
-    font-size: 1.5rem;
-    color: var(--text-light);
+    font-size: 1.4rem;
+    color: var(--text-muted);
     cursor: pointer;
     padding: 0;
     width: 2rem;
@@ -1589,12 +1320,12 @@ a.nav-item.active i.bi-person-heart,
     align-items: center;
     justify-content: center;
     transition: var(--transition);
-    border-radius: 50%;
+    border-radius: 10px;
 }
 
 .modal-close-btn:hover {
-    background: var(--lighter-blue);
-    color: var(--text-dark);
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--accent-red);
 }
 
 .modal-body {
@@ -1608,52 +1339,14 @@ a.nav-item.active i.bi-person-heart,
     justify-content: flex-end;
     gap: 0.75rem;
     padding: 1.25rem 1.5rem;
-    border-top: none; /* Remove harsh borders */
+    border-top: 1px solid rgba(37, 99, 235, 0.08);
 }
 
 body.modal-open {
     overflow: hidden;
 }
 
-/* ========== Hide Scrollbar for All Scrollable Elements ========== */
-/* Hide scrollbar for all scrollable containers but keep scrolling functionality */
-.container,
-.card,
-.modal-content,
-.modal-body,
-.chart-container,
-.timeline,
-.exercise-list,
-.stats-grid,
-.chart-wrapper,
-#exerciseHistory,
-.timeline-item,
-textarea,
-select {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
-}
-
-.container::-webkit-scrollbar,
-.card::-webkit-scrollbar,
-.modal-content::-webkit-scrollbar,
-.modal-body::-webkit-scrollbar,
-.chart-container::-webkit-scrollbar,
-.timeline::-webkit-scrollbar,
-.exercise-list::-webkit-scrollbar,
-.stats-grid::-webkit-scrollbar,
-.chart-wrapper::-webkit-scrollbar,
-#exerciseHistory::-webkit-scrollbar,
-.timeline-item::-webkit-scrollbar,
-textarea::-webkit-scrollbar,
-select::-webkit-scrollbar {
-    display: none;             /* Chrome, Safari, Opera */
-    width: 0;
-    height: 0;
-}
-
-/* ========== Patient Page Styles ========== */
-/* Patient Information Grid */
+/* ========== Patient Page ========== */
 .patient-info-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1664,39 +1357,26 @@ select::-webkit-scrollbar {
 .patient-info-item {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .patient-info-label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.85rem;
-    color: var(--text-light);
-    font-weight: 500;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
-.patient-info-label i {
-    color: var(--primary-blue);
-    font-size: 1rem;
-}
+.patient-info-label i { font-size: 1rem; }
 
-/* Colorful patient info icons - different colors for variety */
-.patient-info-item:nth-of-type(1) .patient-info-label i {
-    color: var(--primary-blue);
-}
-
-.patient-info-item:nth-of-type(2) .patient-info-label i {
-    color: var(--secondary-purple);
-}
-
-.patient-info-item:nth-of-type(3) .patient-info-label i {
-    color: var(--accent-green);
-}
-
-.patient-info-item:nth-of-type(4) .patient-info-label i {
-    color: var(--color-orange);
-}
+.patient-info-item:nth-of-type(1) .patient-info-label i { color: var(--accent-blue); }
+.patient-info-item:nth-of-type(2) .patient-info-label i { color: var(--accent-purple); }
+.patient-info-item:nth-of-type(3) .patient-info-label i { color: var(--accent-green); }
+.patient-info-item:nth-of-type(4) .patient-info-label i { color: var(--accent-orange); }
 
 .patient-info-value {
     font-size: 1rem;
@@ -1705,85 +1385,70 @@ select::-webkit-scrollbar {
     word-break: break-word;
 }
 
-/* Contact Item Styles */
+/* Contact Items */
 .contact-item {
     display: flex;
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: var(--neumorphism-base); /* Base color matching background */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: var(--border-radius-sm);
     transition: var(--transition);
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
-    border: none; /* Remove harsh borders */
+    border: 1px solid var(--glass-border-subtle);
 }
 
 .contact-item:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
+    border-color: rgba(37, 99, 235, 0.2);
+    background: var(--glass-bg);
 }
 
 .contact-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: var(--white);
     flex-shrink: 0;
-    background: var(--gradient-primary); /* Colorful gradient background */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
-    border: none; /* Remove harsh borders */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Different colors for different contact avatars */
-.contact-item:nth-of-type(1) .contact-avatar {
-    background: var(--gradient-primary);
-}
-
-.contact-item:nth-of-type(2) .contact-avatar {
-    background: var(--gradient-purple);
-}
-
-.contact-item:nth-of-type(3) .contact-avatar {
-    background: var(--gradient-green);
-}
-
-.contact-item:nth-of-type(4) .contact-avatar {
-    background: linear-gradient(135deg, var(--color-orange) 0%, #C88A6A 100%);
-}
-
-.contact-item:nth-of-type(5) .contact-avatar {
-    background: linear-gradient(135deg, var(--color-teal) 0%, #4A7A7A 100%);
-}
+.contact-item:nth-of-type(1) .contact-avatar { background: var(--gradient-primary); }
+.contact-item:nth-of-type(2) .contact-avatar { background: var(--gradient-purple); }
+.contact-item:nth-of-type(3) .contact-avatar { background: var(--gradient-green); }
+.contact-item:nth-of-type(4) .contact-avatar { background: var(--gradient-orange); }
+.contact-item:nth-of-type(5) .contact-avatar { background: var(--gradient-teal); }
 
 .contact-info {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
 }
 
 .contact-name {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-dark);
 }
 
 .contact-role {
-    font-size: 0.85rem;
-    color: var(--text-light);
+    font-size: 0.82rem;
+    color: var(--text-muted);
 }
 
 .contact-details {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
     margin-top: 0.25rem;
-    font-size: 0.85rem;
-    color: var(--text-gray);
+    font-size: 0.82rem;
+    color: var(--text-secondary);
 }
 
 .contact-details span {
@@ -1792,28 +1457,15 @@ select::-webkit-scrollbar {
     gap: 0.5rem;
 }
 
-.contact-details i {
-    color: var(--primary-blue);
-}
+.contact-details i { color: var(--accent-blue); }
+.contact-item:nth-of-type(2) .contact-details i { color: var(--accent-purple); }
+.contact-item:nth-of-type(3) .contact-details i { color: var(--accent-green); }
 
-/* Colorful contact detail icons */
-.contact-item:nth-of-type(1) .contact-details i {
-    color: var(--primary-blue);
-}
-
-.contact-item:nth-of-type(2) .contact-details i {
-    color: var(--secondary-purple);
-}
-
-.contact-item:nth-of-type(3) .contact-details i {
-    color: var(--accent-green);
-}
-
-/* Rehabilitation Status Styles */
+/* Rehab Status */
 .rehab-status-section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 0.85rem;
     padding: 1rem 0;
 }
 
@@ -1822,22 +1474,18 @@ select::-webkit-scrollbar {
     flex-direction: column;
     gap: 0.5rem;
     padding: 1rem;
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius-sm);
     text-align: center;
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border-subtle);
     transition: var(--transition);
-}
-
-/* Rehab status items - Neumorphism Design */
-.rehab-status-item {
-    background: var(--neumorphism-base); /* Base color matching background */
-    border-radius: var(--border-radius); /* Soft rounded - 20px */
-    box-shadow: var(--shadow-combined); /* Dual shadow for extruded 3D look */
-    border: none; /* Remove harsh borders */
 }
 
 .rehab-status-item:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-combined); /* Keep neumorphism on hover */
+    border-color: rgba(37, 99, 235, 0.2);
 }
 
 .rehab-status-label {
@@ -1845,150 +1493,141 @@ select::-webkit-scrollbar {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    font-size: 0.85rem;
-    color: var(--text-light);
-    font-weight: 500;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
-.rehab-status-label i {
-    color: var(--primary-blue);
-    font-size: 1rem;
-}
+.rehab-status-label i { font-size: 1rem; }
 
-/* Colorful rehab status icons - different colors for each status */
-.rehab-status-item:nth-of-type(1) .rehab-status-label i {
-    color: var(--primary-blue);
-}
-
-.rehab-status-item:nth-of-type(2) .rehab-status-label i {
-    color: var(--accent-green);
-}
-
-.rehab-status-item:nth-of-type(3) .rehab-status-label i {
-    color: var(--color-orange);
-}
-
-.rehab-status-item:nth-of-type(4) .rehab-status-label i {
-    color: var(--secondary-purple);
-}
+.rehab-status-item:nth-of-type(1) .rehab-status-label i { color: var(--accent-blue); }
+.rehab-status-item:nth-of-type(2) .rehab-status-label i { color: var(--accent-green); }
+.rehab-status-item:nth-of-type(3) .rehab-status-label i { color: var(--accent-orange); }
+.rehab-status-item:nth-of-type(4) .rehab-status-label i { color: var(--accent-purple); }
 
 .rehab-status-value {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-dark);
 }
 
-/* Rehab status values - all use Dark Blue-Grey text */
-.rehab-status-value {
-    color: var(--text-dark); /* Dark Blue-Grey text */
-}
-
-/* Status Badge Styles */
+/* Status Badges */
 .status-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
 }
 
 .status-active {
-    background: rgba(74, 139, 106, 0.15); /* Slightly more visible green background */
+    background: rgba(16, 185, 129, 0.1);
     color: var(--success-green);
-    border: 1px solid rgba(74, 139, 106, 0.3); /* Subtle border for definition */
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .status-warning {
-    background: rgba(184, 122, 90, 0.15); /* Slightly more visible orange background */
+    background: rgba(245, 158, 11, 0.1);
     color: var(--warning-orange);
-    border: 1px solid rgba(184, 122, 90, 0.3); /* Subtle border for definition */
+    border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .status-danger {
-    background: rgba(184, 90, 90, 0.15); /* Slightly more visible red background */
+    background: rgba(239, 68, 68, 0.1);
     color: var(--danger-red);
-    border: 1px solid rgba(184, 90, 90, 0.3); /* Subtle border for definition */
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-/* Button Small Variant */
-.btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+/* ========== Responsive ========== */
+@media (max-width: 767px) {
+    .bottom-nav {
+        display: flex !important;
+    }
+    body {
+        padding-bottom: 90px !important;
+    }
+    .container {
+        padding-bottom: 100px;
+    }
 }
 
-/* Button Outline Primary */
-.btn-outline-primary {
-    background: transparent;
-    border: 2px solid var(--primary-blue);
-    color: var(--primary-blue);
-    transition: var(--transition);
+@media (min-width: 768px) {
+    body {
+        padding-bottom: 0;
+    }
+    .container {
+        padding: 2rem;
+        padding-bottom: 100px;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .btn {
+        width: auto;
+        margin-right: 0.5rem;
+        margin-bottom: 0;
+    }
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
 }
 
-.btn-outline-primary:hover {
-    background: var(--primary-blue);
-    color: var(--white);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+body:has(.chat-container) .container {
+    padding-bottom: 0 !important;
 }
 
-/* Responsive adjustments for patient page */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1200px;
+    }
+    .card {
+        padding: 2rem;
+    }
+}
+
 @media (max-width: 480px) {
     .patient-info-grid {
         grid-template-columns: 1fr;
     }
-    
     .rehab-status-section {
         grid-template-columns: 1fr;
     }
-    
     .contact-item {
         flex-wrap: wrap;
     }
-    
     .contact-item button {
         width: 100%;
         margin-top: 0.5rem;
     }
 }
 
-/* Enhanced Alert Styles - ensure all alerts use flex layout */
-.alert-success,
-.alert-info,
-.alert-warning {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
+/* ========== Utilities ========== */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+
+.hidden { display: none; }
+
+.fade-in {
+    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.alert-success i,
-.alert-info i,
-.alert-warning i {
-    font-size: 1.5rem;
-    flex-shrink: 0;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.alert-success strong,
-.alert-info strong,
-.alert-warning strong {
-    color: var(--text-dark);
-    display: block;
-    margin-bottom: 0.25rem;
-}
-
-.alert-success p,
-.alert-info p,
-.alert-warning p {
-    color: var(--text-gray);
-    margin: 0;
-}
-
-/* Loading Spinner */
+/* ========== Loading ========== */
 .loading-spinner {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 3px solid rgba(0, 212, 255, 0.4);
+    border: 3px solid rgba(37, 99, 235, 0.2);
     border-radius: 50%;
-    border-top-color: var(--primary-blue);
+    border-top-color: var(--accent-blue);
     animation: spin 0.8s linear infinite;
 }
 
@@ -1996,11 +1635,11 @@ select::-webkit-scrollbar {
     to { transform: rotate(360deg); }
 }
 
-/* Empty State */
+/* ========== Empty State ========== */
 .empty-state {
     text-align: center;
     padding: 2rem 1rem;
-    color: var(--text-light);
+    color: var(--text-muted);
 }
 
 .empty-state i {
@@ -2016,6 +1655,27 @@ select::-webkit-scrollbar {
 }
 
 .empty-state p {
-    color: var(--text-light);
+    color: var(--text-muted);
     margin: 0;
+}
+
+/* ========== Scrollbar Hide ========== */
+.container, .card, .modal-content, .modal-body,
+.chart-container, .timeline, .exercise-list,
+.stats-grid, .chart-wrapper, #exerciseHistory,
+.timeline-item, textarea, select {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar, .card::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar, .modal-body::-webkit-scrollbar,
+.chart-container::-webkit-scrollbar, .timeline::-webkit-scrollbar,
+.exercise-list::-webkit-scrollbar, .stats-grid::-webkit-scrollbar,
+.chart-wrapper::-webkit-scrollbar, #exerciseHistory::-webkit-scrollbar,
+.timeline-item::-webkit-scrollbar, textarea::-webkit-scrollbar,
+select::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
 }
