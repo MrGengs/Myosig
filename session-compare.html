@@ -66,15 +66,24 @@
     </style>
 </head>
 <body>
+
+    <!-- ===== APP BAR ===== -->
+    <header class="app-bar">
+        <div class="app-bar-inner">
+            <button onclick="window.history.back()" class="app-bar-back">
+                <i class="bi bi-arrow-left"></i>
+                <span>Kembali</span>
+            </button>
+            <span class="app-bar-page-title">Perbandingan Sesi</span>
+            <div class="app-bar-actions">
+                <div class="app-bar-date" id="appBarDate"></div>
+            </div>
+        </div>
+    </header>
+
     <div class="container" style="padding-bottom: 100px;">
         <!-- Page Header -->
-        <div class="page-header fade-in" style="position: relative; padding-top: 2rem;">
-            <div style="position: absolute; top: 1rem; left: 1rem; z-index: 10;">
-                <button onclick="window.history.back()" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: rgba(255,255,255,0.55); backdrop-filter: blur(16px); color: var(--text-dark); border: 1px solid rgba(255,255,255,0.6); border-radius: var(--border-radius); font-size: 0.9rem; cursor: pointer; box-shadow: 0 8px 32px rgba(30,80,140,0.08);">
-                    <i class="bi bi-arrow-left"></i>
-                    <span>Kembali</span>
-                </button>
-            </div>
+        <div class="page-header fade-in">
             <h1><i class="bi bi-arrow-left-right card-icon"></i> Perbandingan Sesi</h1>
             <p>Bandingkan dua sesi monitoring secara side-by-side</p>
         </div>
@@ -164,30 +173,6 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">
-            <i class="bi bi-house-door"></i>
-            <span>Beranda</span>
-        </a>
-        <a href="sensors.html" class="nav-item">
-            <i class="bi bi-activity"></i>
-            <span>Monitoring</span>
-        </a>
-        <a href="encyclopedia.html" class="nav-item">
-            <i class="bi bi-book"></i>
-            <span>Ensiklopedia</span>
-        </a>
-        <a href="patient.html" class="nav-item active">
-            <i class="bi bi-person-heart" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
-            <span>Pasien</span>
-        </a>
-        <a href="account.html" class="nav-item">
-            <i class="bi bi-person"></i>
-            <span>Akun</span>
-        </a>
-    </nav>
-
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -200,5 +185,6 @@
     <script src="js/modal.js"></script>
     <script src="js/session-compare.js"></script>
     <script src="js/navigation.js"></script>
+    <script src="js/app-header.js"></script>
 </body>
 </html>

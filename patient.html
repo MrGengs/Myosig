@@ -126,6 +126,20 @@
     </style>
 </head>
 <body>
+
+    <!-- ===== APP BAR ===== -->
+    <header class="app-bar">
+        <div class="app-bar-inner">
+            <a href="dashboard.html" class="app-bar-brand">
+                <img src="assets/image/logo.png" alt="Myosig" class="app-bar-logo">
+            </a>
+            <div class="app-bar-actions">
+                <div class="app-bar-date" id="appBarDate"></div>
+                <a href="account.html" class="app-bar-avatar" id="appBarAvatar" title="Profil"><i class="bi bi-person"></i></a>
+            </div>
+        </div>
+    </header>
+
     <div class="container" style="padding-bottom: 100px;">
         <!-- Page Header -->
         <div class="page-header fade-in" style="display: flex; justify-content: space-between; align-items: center;">
@@ -271,5 +285,6 @@
     <script src="js/modal.js"></script>
     <script src="js/patient.js"></script>
     <script src="js/navigation.js"></script>
+    <script src="js/app-header.js"></script>
 </body>
 </html>

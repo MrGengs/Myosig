@@ -402,15 +402,25 @@
     </style>
 </head>
 <body>
+
+    <!-- ===== APP BAR ===== -->
+    <header class="app-bar">
+        <div class="app-bar-inner">
+            <button onclick="window.history.back()" class="app-bar-back">
+                <i class="bi bi-arrow-left"></i>
+                <span>Kembali</span>
+            </button>
+            <span class="app-bar-page-title">Detail Pasien</span>
+            <div class="app-bar-actions">
+                <div class="app-bar-date" id="appBarDate"></div>
+            </div>
+        </div>
+    </header>
+
     <div class="container" style="padding-bottom: 100px;">
         <!-- Page Header with Patient Avatar -->
-        <div class="page-header fade-in" style="position: relative; padding-top: 2rem;">
-            <div class="back-button-container">
-                <button onclick="window.history.back()" class="back-button-mobile">
-                    <i class="bi bi-arrow-left"></i>
-                    <span>Kembali</span>
-                </button>
-            </div>
+        <div class="page-header fade-in" style="position: relative;">
+            <div class="back-button-container" style="display:none;">
             <div style="width: 120px; height: 120px; background: var(--gradient-primary); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--white); box-shadow: var(--shadow-lg); border: 4px solid var(--white);">
                 <i class="bi bi-person-heart"></i>
             </div>
@@ -714,5 +724,6 @@
     <script src="js/exercise-data.js"></script>
     <script src="js/patient-detail.js"></script>
     <script src="js/navigation.js"></script>
+    <script src="js/app-header.js"></script>
 </body>
 </html>
