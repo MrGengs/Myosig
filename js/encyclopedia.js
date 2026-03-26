@@ -815,8 +815,17 @@ const ENCYCLOPEDIA_ARTICLES = [
 let currentCategory = 'semua';
 let currentSearch = '';
 
+function getInitialCategoryFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const cat = (params.get('cat') || '').toLowerCase().trim();
+    const validCategories = ['semua', 'dasar', 'rehabilitasi', 'nutrisi', 'olahraga', 'mental', 'pencegahan'];
+    return validCategories.includes(cat) ? cat : 'semua';
+}
+
 // Initialize
 window.addEventListener('DOMContentLoaded', function() {
+    currentCategory = getInitialCategoryFromUrl();
+
     // Check auth
     if (typeof firebase !== 'undefined' && typeof initializeFirebase !== 'undefined') {
         initializeFirebase();
@@ -867,6 +876,11 @@ function renderArticles() {
     const grid = document.getElementById('articleGrid');
     const countEl = document.getElementById('articleCount');
     if (!grid) return;
+
+    // Keep category pill state in sync (including deep-link via URL query).
+    document.querySelectorAll('.category-pill').forEach(pill => {
+        pill.classList.toggle('active', pill.getAttribute('data-cat') === currentCategory);
+    });
 
     const filtered = getFilteredArticles();
 
