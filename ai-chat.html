@@ -502,6 +502,172 @@
             color: var(--text-gray);
         }
 
+        /* Exercise images in chat */
+        .chat-exercise-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .chat-exercise-gallery-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .chat-exercise-gallery-hint {
+            font-size: 0.72rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .chat-exercise-scroll {
+            display: flex;
+            gap: 0.6rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chat-exercise-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .chat-exercise-scroll::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.12);
+            border-radius: 4px;
+        }
+
+        .chat-exercise-item {
+            flex: 0 0 auto;
+            width: 220px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: transform 0.2s;
+            scroll-snap-align: start;
+        }
+
+        .chat-exercise-item:active {
+            transform: scale(0.97);
+        }
+
+        .chat-exercise-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .chat-exercise-item-label {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.3rem;
+        }
+
+        .chat-exercise-type-badge {
+            font-size: 0.6rem;
+            font-weight: 500;
+            padding: 0.15rem 0.4rem;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .chat-exercise-type-badge.stretching { background: #fff3e0; color: #e65100; }
+        .chat-exercise-type-badge.strengthening { background: #e3f2fd; color: #1565c0; }
+        .chat-exercise-type-badge.functional { background: #e8f5e9; color: #2e7d32; }
+
+        @media (max-width: 480px) {
+            .chat-exercise-item {
+                width: 180px;
+            }
+        }
+
+        /* Lightbox */
+        .exercise-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 10000;
+            flex-direction: column;
+            touch-action: pinch-zoom;
+        }
+
+        .exercise-lightbox.active {
+            display: flex;
+        }
+
+        .exercise-lightbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
+        }
+
+        .exercise-lightbox-title {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            margin-right: 1rem;
+        }
+
+        .exercise-lightbox-close {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .exercise-lightbox-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            padding: 1rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .exercise-lightbox-body img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
         /* Mobile optimizations */
         @media (max-width: 480px) {
             .chat-header {
@@ -620,6 +786,19 @@
             </div>
         </div>
     </div>
+    <!-- Exercise Image Lightbox for Chat -->
+    <div id="chatExerciseLightbox" class="exercise-lightbox" onclick="closeChatExerciseLightbox(event)">
+        <div class="exercise-lightbox-header">
+            <span id="chatExerciseLightboxTitle" class="exercise-lightbox-title"></span>
+            <button class="exercise-lightbox-close" onclick="closeChatExerciseLightbox(event)">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="exercise-lightbox-body">
+            <img id="chatExerciseLightboxImg" src="" alt="Exercise" />
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -629,6 +808,7 @@
     
     <script src="js/config.js"></script>
     <script src="js/firebase-config.js"></script>
+    <script src="js/exercise-data.js"></script>
     <script src="js/ai-chat.js"></script>
     <script src="js/navigation.js"></script>
 </body>

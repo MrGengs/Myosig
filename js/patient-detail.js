@@ -1125,7 +1125,10 @@ async function getAIRecommendation() {
         
         // Display recommendation
         displayAIRecommendation(recommendation);
-        
+
+        // Match and display exercise images from booklet
+        displayExerciseImages(recommendation);
+
     } catch (error) {
         console.error('Error getting AI recommendation:', error);
         
@@ -1198,6 +1201,9 @@ function preparePatientSummary() {
     
     if (patientData.medicalNotes) {
         summary += `- Catatan Medis: ${patientData.medicalNotes}\n`;
+        summary += `  (PENTING: Analisis catatan medis di atas untuk menentukan area tubuh yang terdampak stroke - apakah lengan, kaki, atau keduanya. Gunakan informasi ini untuk memilih latihan yang sesuai.)\n`;
+    } else {
+        summary += `- Catatan Medis: Tidak ada catatan medis spesifik. Asumsikan pasien hemiplegi dengan gangguan pada lengan dan kaki.\n`;
     }
     
     summary += `\n`;
@@ -1319,23 +1325,57 @@ async function callGeminiAPI(patientSummary) {
     // Use the API URL from firebase-config.js (gemini-2.5-flash or fallback to gemini-pro)
     const apiUrl = GEMINI_API_URL || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
     
-    const prompt = `Anda adalah AI Assistant khusus untuk membantu DOKTER dalam menangani pasien rehabilitasi stroke. Berdasarkan data pasien berikut, berikan analisis dan rekomendasi profesional untuk DOKTER:
+    const prompt = `Anda adalah AI Assistant khusus untuk membantu DOKTER dalam menangani pasien rehabilitasi stroke (hemiplegi). Berdasarkan data pasien berikut, berikan analisis dan rekomendasi profesional untuk DOKTER:
 
 ${patientSummary}
+
+KONTEKS PENTING:
+- Aplikasi Myosig memantau aktivitas otot (EMG) lengan pasien stroke hemiplegi
+- Data monitoring (aktivitas otot, gerakan, akselerasi) berasal dari sensor pada lengan pasien
+- Analisis catatan medis pasien untuk menentukan area tubuh yang terdampak (lengan saja, kaki saja, atau keduanya)
+- Jika tidak ada catatan medis spesifik, asumsikan pasien mengalami hemiplegia dan perlu rehabilitasi lengan DAN kaki
+
+PANDUAN PEMILIHAN LATIHAN BERDASARKAN KONDISI:
+- Aktivitas otot < 15% (Sangat Rendah): Fokus pada latihan PEREGANGAN (stretching) untuk mencegah kekakuan. Pilih latihan pasif dan ringan.
+- Aktivitas otot 15-30% (Rendah): Kombinasi PEREGANGAN + PENGUATAN OTOT ringan. Mulai latihan dengan bantuan tangan sehat.
+- Aktivitas otot 30-50% (Sedang): Kombinasi PENGUATAN OTOT + mulai LATIHAN FUNGSIONAL sederhana.
+- Aktivitas otot 50-70% (Baik): Fokus pada LATIHAN FUNGSIONAL untuk kemandirian sehari-hari.
+- Aktivitas otot > 70% (Sangat Baik): Latihan FUNGSIONAL lanjutan dan aktivitas kompleks.
 
 Sebagai AI Assistant untuk dokter, berikan rekomendasi dalam format berikut:
 
 1. ANALISIS PERKEMBANGAN PASIEN
    - Analisis kondisi pasien berdasarkan data monitoring (aktivitas otot, gerakan, akselerasi)
    - Evaluasi tren perkembangan (meningkat, menurun, atau stabil)
-   - Identifikasi area yang perlu perhatian khusus
+   - Identifikasi area tubuh yang perlu perhatian khusus berdasarkan catatan medis
    - Perbandingan dengan baseline atau target rehabilitasi
 
-2. REKOMENDASI PROGRAM LATIHAN/OLAHRAGA UNTUK PASIEN
-   - Rekomendasi 5-7 latihan spesifik yang sesuai dengan kondisi pasien
+2. REKOMENDASI PROGRAM LATIHAN UNTUK PASIEN
+   - Pilih 5-7 latihan yang PALING SESUAI dengan kondisi spesifik pasien saat ini
    - Setiap latihan harus mencakup: nama latihan, cara melakukan, target otot yang dilatih
-   - Latihan harus disesuaikan dengan tingkat aktivitas otot pasien saat ini
-   - Fokus pada rehabilitasi stroke untuk lengan dan koordinasi gerakan
+   - Sesuaikan tingkat kesulitan dengan level aktivitas otot pasien
+   - WAJIB: Gunakan HANYA nama-nama latihan dari daftar Self Rehabilitation Booklet berikut ini. Pilih latihan yang cocok dengan kondisi dan kebutuhan pasien:
+
+     UPPER LIMB - Peregangan (untuk kekakuan/spastisitas lengan):
+       Lengan Ditempatkan di Depan, Lengan Ditempatkan di Samping, Mengangkat Lengan, Meluruskan Siku, Memutar Lengan Bawah, Meluruskan Pergelangan Tangan, Meluruskan Jari-jari, Meluruskan Jempol
+
+     UPPER LIMB - Penguatan Otot (untuk kelemahan otot lengan):
+       Mengangkat Benda, Meluruskan Siku, Mengangkat Pergelangan Tangan, Membuka Tangan
+
+     UPPER LIMB - Latihan Fungsional (untuk kemandirian aktivitas sehari-hari):
+       Menggambar Garis, Memindahkan Botol, Memutar Botol, Menggunakan Sendok, Menyisir Rambut, Memegang Botol, Membuka Botol, Memegang Gelas, Membuka Keran, Menulis, Membalik Halaman, Melempar Bola
+
+     LOWER LIMB - Peregangan (untuk kekakuan/spastisitas kaki):
+       Duduk di Tumit, Meluruskan Kaki, Peregangan Betis
+
+     LOWER LIMB - Penguatan Otot (untuk kelemahan otot kaki):
+       Meluruskan Kaki ke Samping, Meluruskan Kaki ke Belakang, Mengangkat Lutut, Meluruskan Lutut, Menekuk Lutut, Berdiri Jinjit, Mengangkat Jari Kaki
+
+     LOWER LIMB - Latihan Fungsional (untuk mobilitas dan keseimbangan):
+       Berdiri Duduk, Berdiri Satu Kaki, Melangkahi Rintangan, Berjalan Zigzag, Tangga, Mengambil Benda dari Lantai, Menendang Bola
+
+   - Jangan merekomendasikan latihan lower limb jika catatan medis menunjukkan hanya lengan yang terdampak, dan sebaliknya
+   - Jika terdampak keduanya, berikan kombinasi upper + lower limb yang proporsional
 
 3. REKOMENDASI UNTUK DOKTER
    - Tindakan medis atau intervensi yang perlu dilakukan dokter
@@ -1350,7 +1390,7 @@ Sebagai AI Assistant untuk dokter, berikan rekomendasi dalam format berikut:
 
 5. CATATAN PENTING
    - Peringatan atau hal-hal yang perlu diperhatikan dokter
-   - Kontraindikasi atau batasan latihan jika ada
+   - Kontraindikasi atau batasan latihan berdasarkan kondisi pasien
    - Saran konsultasi dengan spesialis jika diperlukan
 
 Gunakan bahasa Indonesia yang profesional dan medis. Fokus pada memberikan panduan yang jelas untuk DOKTER dalam merencanakan dan mengevaluasi program rehabilitasi stroke pasien.`;
@@ -1509,6 +1549,91 @@ function displayAIRecommendation(recommendation) {
         </div>
     `;
 }
+
+// =============================================
+// EXERCISE IMAGES FROM BOOKLET
+// =============================================
+
+// Display exercise images matched from AI recommendation
+function displayExerciseImages(recommendationText) {
+    const section = document.getElementById('exerciseImagesSection');
+    const listEl = document.getElementById('exerciseImagesList');
+    if (!section || !listEl) return;
+
+    // Check if exercise-data.js is loaded
+    if (typeof matchExercisesFromRecommendation === 'undefined') {
+        console.warn('exercise-data.js not loaded');
+        return;
+    }
+
+    const matched = matchExercisesFromRecommendation(recommendationText);
+
+    if (matched.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    // Group by category
+    const grouped = {};
+    for (const ex of matched) {
+        if (!grouped[ex.category]) grouped[ex.category] = [];
+        grouped[ex.category].push(ex);
+    }
+
+    let html = '';
+    for (const category of Object.keys(grouped)) {
+        const icon = category === 'upper_limb' ? 'bi-hand-index-thumb' : category === 'lower_limb' ? 'bi-leg' : 'bi-arrow-up-circle';
+        html += `<div class="exercise-category-header"><i class="bi ${icon}"></i> ${getCategoryLabel(category)}</div>`;
+
+        for (const ex of grouped[category]) {
+            const typeBadgeClass = ex.type;
+            html += `
+                <div class="exercise-card" onclick="openExerciseLightbox('${ex.image}', '${ex.nameId}')">
+                    <img src="${ex.image}" alt="${ex.nameId}" loading="lazy" />
+                    <div class="exercise-card-label">
+                        <span>${ex.nameId}</span>
+                        <span class="exercise-type-badge ${typeBadgeClass}">${getTypeLabel(ex.type)}</span>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    listEl.innerHTML = html;
+    section.style.display = 'block';
+}
+
+// Open exercise image in lightbox for zoom
+function openExerciseLightbox(imageSrc, title) {
+    const lightbox = document.getElementById('exerciseLightbox');
+    const img = document.getElementById('exerciseLightboxImg');
+    const titleEl = document.getElementById('exerciseLightboxTitle');
+
+    if (!lightbox || !img) return;
+
+    img.src = imageSrc;
+    if (titleEl) titleEl.textContent = title || '';
+
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close exercise lightbox
+function closeExerciseLightbox(event) {
+    // Only close if clicking backdrop or close button, not the image
+    if (event && event.target && event.target.tagName === 'IMG') return;
+
+    const lightbox = document.getElementById('exerciseLightbox');
+    if (lightbox) {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Close lightbox on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeExerciseLightbox(e);
+});
 
 // =============================================
 // NEW FEATURES INTEGRATION

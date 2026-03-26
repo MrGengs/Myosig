@@ -107,13 +107,19 @@ async function sendMessage() {
     try {
         // Get response from AI
         const response = await getAIResponse(message);
-        
+
         // Remove loading indicator
         hideLoading();
-        
+
+        // Match exercise images if query is exercise-related
+        let exercises = [];
+        if (isExerciseRelatedQuery(message) && typeof matchExercisesFromRecommendation !== 'undefined') {
+            exercises = matchExercisesFromRecommendation(response).slice(0, 14);
+        }
+
         // Add AI response to chat
-        addMessage('ai', response);
-        
+        addMessage('ai', response, exercises);
+
     } catch (error) {
         console.error('Error getting AI response:', error);
         
@@ -139,27 +145,27 @@ function sendSuggestion(suggestion) {
 }
 
 // Add message to chat
-function addMessage(type, content) {
+function addMessage(type, content, exercises) {
     const messagesContainer = document.getElementById('chatMessages');
     if (!messagesContainer) return;
-    
+
     // Remove empty state if exists
     const emptyState = messagesContainer.querySelector('.chat-empty-state');
     if (emptyState) {
         emptyState.remove();
     }
-    
+
     // Create message element
     const messageDiv = document.createElement('div');
     messageDiv.className = `chat-message ${type}`;
-    
+
     // Get current time
     const now = new Date();
-    const timeStr = now.toLocaleTimeString('id-ID', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
+    const timeStr = now.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit'
     });
-    
+
     // Avatar - use PhotoURL for user, icon for AI
     let avatarHTML = '';
     if (type === 'user') {
@@ -188,15 +194,20 @@ function addMessage(type, content) {
             </div>
         `;
     }
-    
+
+    // Exercise gallery HTML for AI messages
+    const galleryHTML = (type === 'ai' && exercises && exercises.length > 0)
+        ? renderChatExerciseGallery(exercises)
+        : '';
+
     messageDiv.innerHTML = `
         ${avatarHTML}
         <div class="chat-content">
-            <div class="chat-bubble">${formatMessage(content)}</div>
+            <div class="chat-bubble">${formatMessage(content)}${galleryHTML}</div>
             <div class="chat-time">${timeStr}</div>
         </div>
     `;
-    
+
     messagesContainer.appendChild(messageDiv);
     
     // Scroll to bottom
@@ -501,6 +512,38 @@ KONTEKS DATA FIREBASE:\n\n`;
     
     prompt += `PERTANYAAN USER:\n${userMessage}\n\n`;
     
+    // Tambahkan daftar latihan booklet jika pertanyaan berkaitan dengan latihan/rehabilitasi
+    if (isExerciseRelatedQuery(userMessage)) {
+        prompt += `DAFTAR LATIHAN DARI SELF REHABILITATION BOOKLET (gunakan nama-nama ini saat merekomendasikan latihan):
+
+UPPER LIMB - Peregangan:
+  Lengan Ditempatkan di Depan, Lengan Ditempatkan di Samping, Mengangkat Lengan, Meluruskan Siku, Memutar Lengan Bawah, Meluruskan Pergelangan Tangan, Meluruskan Jari-jari, Meluruskan Jempol
+
+UPPER LIMB - Penguatan Otot:
+  Mengangkat Benda, Meluruskan Siku, Mengangkat Pergelangan Tangan, Membuka Tangan
+
+UPPER LIMB - Latihan Fungsional:
+  Menggambar Garis, Memindahkan Botol, Memutar Botol, Menggunakan Sendok, Menyisir Rambut, Memegang Botol, Membuka Botol, Memegang Gelas, Membuka Keran, Menulis, Membalik Halaman, Melempar Bola
+
+LOWER LIMB - Peregangan:
+  Duduk di Tumit, Meluruskan Kaki, Peregangan Betis
+
+LOWER LIMB - Penguatan Otot:
+  Meluruskan Kaki ke Samping, Meluruskan Kaki ke Belakang, Mengangkat Lutut, Meluruskan Lutut, Menekuk Lutut, Berdiri Jinjit, Mengangkat Jari Kaki
+
+LOWER LIMB - Latihan Fungsional:
+  Berdiri Duduk, Berdiri Satu Kaki, Melangkahi Rintangan, Berjalan Zigzag, Tangga, Mengambil Benda dari Lantai, Menendang Bola
+
+PANDUAN TINGKAT AKTIVITAS OTOT:
+- < 15% (Sangat Rendah): Fokus PEREGANGAN pasif dan ringan
+- 15-30% (Rendah): PEREGANGAN + PENGUATAN OTOT ringan
+- 30-50% (Sedang): PENGUATAN OTOT + LATIHAN FUNGSIONAL sederhana
+- 50-70% (Baik): Fokus LATIHAN FUNGSIONAL
+- > 70% (Sangat Baik): LATIHAN FUNGSIONAL lanjutan dan kompleks
+
+`;
+    }
+
     prompt += `INSTRUKSI:
 1. Anda adalah AI Assistant khusus untuk DOKTER, bukan untuk pasien
 2. Jawab pertanyaan dokter dengan jelas, informatif, dan profesional dalam bahasa Indonesia
@@ -515,8 +558,76 @@ KONTEKS DATA FIREBASE:\n\n`;
 11. Jawab dengan ramah, profesional, dan sesuai dengan konteks sebagai asisten untuk dokter
 12. Gunakan terminologi medis yang tepat namun tetap mudah dipahami
 13. Berikan insight klinis dan rekomendasi yang dapat membantu dokter dalam pengambilan keputusan
+14. Jika merekomendasikan latihan, WAJIB gunakan nama latihan dari daftar booklet di atas
 
 Jawab pertanyaan dokter sekarang:`;
-    
+
     return prompt;
+}
+
+// Detect if user message is exercise/rehabilitation related
+function isExerciseRelatedQuery(text) {
+    if (!text) return false;
+    const keywords = [
+        'latihan', 'exercise', 'rehabilitasi', 'rehab', 'terapi', 'fisioterapi',
+        'gerak', 'gerakan', 'program', 'stroke ringan', 'stroke berat', 'stroke sedang',
+        'hemiplegi', 'hemiplegia', 'peregangan', 'stretching', 'penguatan', 'strengthening',
+        'fungsional', 'functional', 'lengan', 'kaki', 'tangan', 'jari', 'siku', 'lutut',
+        'pergelangan', 'bahu', 'shoulder', 'elbow', 'wrist', 'finger', 'knee', 'ankle',
+        'rekomendasi latihan', 'program latihan', 'program rehabilitasi', 'latihan apa',
+        'latihan yang', 'apa saja latihan', 'jenis latihan', 'cara latihan'
+    ];
+    const lower = text.toLowerCase();
+    return keywords.some(kw => lower.includes(kw));
+}
+
+// Render horizontal scrollable exercise gallery for chat
+function renderChatExerciseGallery(exercises) {
+    if (!exercises || exercises.length === 0) return '';
+
+    const items = exercises.map(ex => {
+        const badgeClass = ex.type || 'stretching';
+        const badgeLabel = typeof getTypeLabel === 'function' ? getTypeLabel(ex.type) : ex.type;
+        const escapedSrc = ex.image.replace(/'/g, "\\'");
+        const escapedName = ex.nameId.replace(/'/g, "\\'");
+        return `
+            <div class="chat-exercise-item" onclick="openChatExerciseLightbox('${escapedSrc}', '${escapedName}')">
+                <img src="${ex.image}" alt="${ex.nameId}" loading="lazy" />
+                <div class="chat-exercise-item-label">
+                    <span>${ex.nameId}</span>
+                    <span class="chat-exercise-type-badge ${badgeClass}">${badgeLabel}</span>
+                </div>
+            </div>`;
+    }).join('');
+
+    return `
+        <div class="chat-exercise-gallery">
+            <div class="chat-exercise-gallery-title">
+                <i class="bi bi-images"></i> Panduan Latihan Rehabilitasi
+            </div>
+            <div class="chat-exercise-gallery-hint">Geser untuk lihat semua • Tap gambar untuk perbesar</div>
+            <div class="chat-exercise-scroll">${items}</div>
+        </div>`;
+}
+
+// Open exercise lightbox in ai-chat
+function openChatExerciseLightbox(src, title) {
+    const lightbox = document.getElementById('chatExerciseLightbox');
+    const img = document.getElementById('chatExerciseLightboxImg');
+    const titleEl = document.getElementById('chatExerciseLightboxTitle');
+    if (!lightbox || !img) return;
+    img.src = src;
+    if (titleEl) titleEl.textContent = title;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close exercise lightbox
+function closeChatExerciseLightbox(event) {
+    if (event && event.target && event.target.tagName === 'IMG') return;
+    const lightbox = document.getElementById('chatExerciseLightbox');
+    if (lightbox) {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }

@@ -172,6 +172,149 @@
             box-shadow: 0 8px 32px rgba(30,80,140,0.08);
         }
 
+        /* Exercise Images */
+        .exercise-card {
+            background: rgba(255,255,255,0.7);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 16px rgba(30,80,140,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .exercise-card:active {
+            transform: scale(0.98);
+        }
+
+        .exercise-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .exercise-card-label {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .exercise-card-label .exercise-type-badge {
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .exercise-type-badge.stretching {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .exercise-type-badge.strengthening {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .exercise-type-badge.functional {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .exercise-category-header {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(37, 99, 235, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .exercise-category-header:first-child {
+            margin-top: 0;
+        }
+
+        /* Lightbox */
+        .exercise-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 10000;
+            flex-direction: column;
+            touch-action: pinch-zoom;
+        }
+
+        .exercise-lightbox.active {
+            display: flex;
+        }
+
+        .exercise-lightbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
+        }
+
+        .exercise-lightbox-title {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            margin-right: 1rem;
+        }
+
+        .exercise-lightbox-close {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .exercise-lightbox-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            padding: 1rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .exercise-lightbox-body img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
         /* Back Button Styles for Mobile */
         .page-header {
             position: relative;
@@ -483,6 +626,33 @@
                     <p style="margin-top: 1rem;">AI sedang menganalisis perkembangan pasien dan menyiapkan rekomendasi...</p>
                 </div>
             </div>
+
+            <!-- Exercise Images Section -->
+            <div id="exerciseImagesSection" style="display: none; padding: 1rem; padding-top: 0;">
+                <div style="border-top: 1px solid rgba(0,0,0,0.08); padding-top: 1rem; margin-top: 0.5rem;">
+                    <h3 style="color: var(--primary-blue); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="bi bi-images"></i>
+                        Panduan Latihan dari Booklet Rehabilitasi
+                    </h3>
+                    <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">
+                        Tap gambar untuk memperbesar. Sumber: Self Rehabilitation Booklet for Hemiplegic Patients.
+                    </p>
+                    <div id="exerciseImagesList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise Image Lightbox Modal -->
+        <div id="exerciseLightbox" class="exercise-lightbox" onclick="closeExerciseLightbox(event)">
+            <div class="exercise-lightbox-header">
+                <span id="exerciseLightboxTitle" class="exercise-lightbox-title"></span>
+                <button class="exercise-lightbox-close" onclick="closeExerciseLightbox(event)">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="exercise-lightbox-body">
+                <img id="exerciseLightboxImg" src="" alt="Exercise" />
+            </div>
         </div>
 
         <!-- Records List -->
@@ -541,6 +711,7 @@
     <script src="js/fatigue-monitor.js"></script>
     <script src="js/export-data.js"></script>
     <script src="js/progress-goals.js"></script>
+    <script src="js/exercise-data.js"></script>
     <script src="js/patient-detail.js"></script>
     <script src="js/navigation.js"></script>
 </body>
