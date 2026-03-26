@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Myosig - Kelola Banner</title>
+    <link rel="icon" href="../assets/image/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <!-- ===== APP BAR ===== -->
+    <header class="app-bar">
+        <div class="app-bar-inner">
+            <a href="index.html" class="app-bar-brand">
+                <img src="../assets/image/logo.png" alt="Myosig" class="app-bar-logo">
+            </a>
+            <span class="app-bar-page-title" style="font-weight:600; color:var(--text-dark); font-size:0.95rem;">Admin Panel</span>
+            <div class="app-bar-actions">
+                <div class="admin-avatar-wrap">
+                    <div class="admin-avatar-btn" id="adminAvatarBtn" onclick="toggleAdminDropdown()" title="Profil Admin">A</div>
+                    <div class="admin-avatar-dropdown" id="adminAvatarDropdown">
+                        <div class="admin-avatar-dropdown-header">
+                            <div class="admin-avatar-dropdown-name" id="adminDropdownName">Admin</div>
+                            <div class="admin-avatar-dropdown-email" id="adminDropdownEmail">admin@myosig.com</div>
+                        </div>
+                        <button class="admin-avatar-dropdown-item danger" onclick="closeAdminDropdown(); adminLogout();">
+                            <i class="bi bi-box-arrow-right"></i> Keluar
+                        </button>
+                    </div>
+                </div>
+                <div class="admin-avatar-overlay" id="adminAvatarOverlay" onclick="closeAdminDropdown()"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="padding-bottom: 100px;">
+
+        <!-- Page Header -->
+        <div class="page-header fade-in">
+            <h1><i class="bi bi-images" style="color: var(--primary-blue);"></i> Kelola Banner</h1>
+            <p>Banner aktif: <strong id="bannerCount">-</strong></p>
+        </div>
+
+        <!-- Info -->
+        <div class="card fade-in">
+            <div class="alert alert-info" style="margin-bottom:0;">
+                <i class="bi bi-info-circle" style="font-size:1.3rem;"></i>
+                <div>
+                    <strong>Informasi</strong>
+                    <p style="margin:0.25rem 0 0;">Banner tampil di dashboard semua pengguna. Rasio yang disarankan <strong>3:1</strong> (contoh: 1200x400 px). Maks 10 banner, format JPG/PNG/WebP, ukuran maks 2MB. Gambar yang tidak sesuai rasio akan otomatis di-crop.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner List -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title"><i class="bi bi-collection card-icon"></i> Daftar Banner</h2>
+            </div>
+            <div id="bannerList" class="admin-banner-list">
+                <div class="admin-list-loading">
+                    <i class="bi bi-hourglass-split"></i>
+                    <p>Memuat banner...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Banner -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title"><i class="bi bi-cloud-arrow-up card-icon"></i> Upload Banner Baru</h2>
+            </div>
+            <div class="admin-banner-add">
+                <label for="bannerFileInput" class="admin-banner-add-btn">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Pilih Gambar</span>
+                    <small>Rasio 3:1 (1200x400 px) — maks 2MB</small>
+                </label>
+                <input type="file" id="bannerFileInput" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="onBannerFileSelect(this)">
+            </div>
+
+            <!-- Crop Preview -->
+            <div id="bannerCropArea" style="display:none; margin-top:1rem;">
+                <p style="font-size:0.85rem; color:var(--text-gray); margin-bottom:0.75rem;">
+                    <i class="bi bi-crop"></i> Geser gambar ke atas/bawah untuk mengatur area yang ditampilkan, lalu klik <strong>Upload</strong>.
+                </p>
+                <div class="admin-crop-container" id="cropContainer">
+                    <img id="cropImage" src="" alt="Preview" draggable="false">
+                </div>
+                <div style="display:flex; gap:0.75rem; margin-top:0.75rem;">
+                    <button class="btn btn-secondary" onclick="cancelCrop()" style="flex:1;">Batal</button>
+                    <button class="btn btn-primary" onclick="confirmCrop()" style="flex:1;">
+                        <i class="bi bi-cloud-arrow-up"></i> Upload
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Progress -->
+            <div id="bannerUploadProgress" style="display:none; margin-top:1rem;">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <div class="loading-spinner"></div>
+                    <span id="bannerUploadText" style="font-size:0.9rem; color:var(--text-gray);">Mengupload banner...</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="users.html" class="nav-item">
+            <i class="bi bi-people"></i>
+            <span>Anggota</span>
+        </a>
+        <a href="banners.html" class="nav-item active">
+            <i class="bi bi-images" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
+            <span>Banner</span>
+        </a>
+        <a href="manage-data.html" class="nav-item">
+            <i class="bi bi-database-gear"></i>
+            <span>Data</span>
+        </a>
+    </nav>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/modal.js"></script>
+    <script src="../js/admin/admin-shared.js"></script>
+    <script src="../js/admin/admin-banners.js"></script>
+    <script src="../js/navigation.js"></script>
+</body>
+</html>

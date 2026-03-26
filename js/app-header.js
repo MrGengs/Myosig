@@ -1,159 +1,152 @@
 /**
- * Myosig — App Header & Daily Health Tip
- * Handles: app-bar date/time + rotating health tip banner
+ * Myosig — App Header & Banner Slider
+ * Handles: app-bar date/time + image banner carousel
  */
 
 /* =========================================================
-   DAILY HEALTH TIPS (relevan untuk dokter rehabilitasi stroke)
+   BANNER SLIDES DATA
+   Default placeholder. Akan di-override dari Firestore jika ada.
    ========================================================= */
-const HEALTH_TIPS = [
-    {
-        icon: 'bi-heart-pulse',
-        text: 'Latihan ROM (Range of Motion) pasif 2× sehari membantu mencegah kontraktur pada pasien stroke fase akut.',
-        category: 'Rehabilitasi',
-        catIcon: 'bi-bandaid',
-    },
-    {
-        icon: 'bi-activity',
-        text: 'Pemantauan EMG secara rutin dapat mendeteksi pemulihan fungsi otot lebih awal, memungkinkan penyesuaian program terapi.',
-        category: 'Monitoring',
-        catIcon: 'bi-cpu',
-    },
-    {
-        icon: 'bi-droplet-half',
-        text: 'Pasien stroke perlu asupan cairan ≥ 2 L/hari untuk mendukung sirkulasi serebral dan fungsi kognitif.',
-        category: 'Nutrisi',
-        catIcon: 'bi-cup-hot',
-    },
-    {
-        icon: 'bi-person-walking',
-        text: 'Mobilisasi dini (24–48 jam pasca stroke) terbukti mengurangi risiko komplikasi DVT dan pneumonia aspirasi.',
-        category: 'Rehabilitasi',
-        catIcon: 'bi-bandaid',
-    },
-    {
-        icon: 'bi-brain',
-        text: 'Neuroplastisitas otak aktif selama 3–6 bulan pertama pasca stroke — periode emas untuk intervensi rehabilitasi intensif.',
-        category: 'Ilmu Saraf',
-        catIcon: 'bi-lightbulb',
-    },
-    {
-        icon: 'bi-shield-check',
-        text: 'Kontrol tekanan darah < 140/90 mmHg secara konsisten menurunkan risiko stroke rekuren hingga 40%.',
-        category: 'Pencegahan',
-        catIcon: 'bi-shield-fill-check',
-    },
-    {
-        icon: 'bi-emoji-smile',
-        text: 'Intervensi psikososial dan dukungan keluarga meningkatkan kepatuhan terapi hingga 65% pada pasien stroke.',
-        category: 'Kesehatan Mental',
-        catIcon: 'bi-emoji-smile',
-    },
-    {
-        icon: 'bi-stars',
-        text: 'Sesi terapi yang terdokumentasi secara digital memudahkan evaluasi perkembangan dan pengambilan keputusan klinis.',
-        category: 'Dokumentasi',
-        catIcon: 'bi-clipboard2-check',
-    },
-    {
-        icon: 'bi-bicycle',
-        text: 'Latihan aerobik intensitas sedang 30 menit/hari meningkatkan kapasitas fungsional dan mood pada penyintas stroke.',
-        category: 'Olahraga',
-        catIcon: 'bi-bicycle',
-    },
-    {
-        icon: 'bi-moon-stars',
-        text: 'Kualitas tidur yang baik (7–9 jam) mempercepat proses neuroplastisitas dan pemulihan fungsi motorik.',
-        category: 'Gaya Hidup',
-        catIcon: 'bi-moon',
-    },
+let BANNER_SLIDES = [
+    { src: '', alt: 'Banner 1' },
+    { src: '', alt: 'Banner 2' },
+    { src: '', alt: 'Banner 3' },
 ];
 
-let currentTipIndex = 0;
-let tipInterval = null;
+let bannerIndex = 0;
+let bannerInterval = null;
+let bannerStartX = 0;
+let bannerCurrentX = 0;
+let bannerDragging = false;
 
 /* =========================================================
-   TIP BANNER
+   BANNER SLIDER
    ========================================================= */
-function renderTip(index, animate = true) {
-    const tip  = HEALTH_TIPS[index];
-    const icon = document.getElementById('tipBannerIcon');
-    const text = document.getElementById('tipBannerText');
-    const cat  = document.getElementById('tipBannerCategory');
-    const dots = document.querySelectorAll('.tip-dot');
+async function initBannerSlider() {
+    const slider = document.getElementById('bannerSlider');
+    const track = document.getElementById('bannerTrack');
+    const dotsContainer = document.getElementById('bannerDots');
+    if (!slider || !track) return;
 
-    if (!icon || !text) return;
+    // Try loading banners from Firestore
+    await loadBannersFromFirestore();
 
-    if (animate) {
-        text.classList.add('fade-out');
-        setTimeout(() => {
-            applyTipContent(tip, icon, text, cat, dots, index);
-            text.classList.remove('fade-out');
-        }, 320);
-    } else {
-        applyTipContent(tip, icon, text, cat, dots, index);
-    }
-}
+    // Build slides
+    track.innerHTML = BANNER_SLIDES.map((slide, i) => {
+        if (slide.src) {
+            return `<div class="banner-slide"><img src="${slide.src}" alt="${slide.alt}" loading="lazy"></div>`;
+        }
+        return `<div class="banner-slide">
+            <div class="banner-slide-placeholder">
+                <i class="bi bi-image"></i>
+                <span>Banner ${i + 1}</span>
+            </div>
+        </div>`;
+    }).join('');
 
-function applyTipContent(tip, icon, text, cat, dots, index) {
-    // Update icon class
-    icon.className = 'bi ' + tip.icon;
-
-    // Update text
-    text.textContent = tip.text;
-
-    // Update category
-    if (cat) {
-        cat.innerHTML = `<i class="bi ${tip.catIcon}"></i> ${tip.category}`;
-    }
-
-    // Update dots
-    dots.forEach((d, i) => {
-        d.classList.toggle('active', i === index);
-    });
-}
-
-function nextTip() {
-    currentTipIndex = (currentTipIndex + 1) % HEALTH_TIPS.length;
-    renderTip(currentTipIndex);
-    resetTipInterval();
-}
-
-function prevTip() {
-    currentTipIndex = (currentTipIndex - 1 + HEALTH_TIPS.length) % HEALTH_TIPS.length;
-    renderTip(currentTipIndex);
-    resetTipInterval();
-}
-
-function goToTip(index) {
-    currentTipIndex = index;
-    renderTip(index);
-    resetTipInterval();
-}
-
-function resetTipInterval() {
-    if (tipInterval) clearInterval(tipInterval);
-    tipInterval = setInterval(nextTip, 7000);
-}
-
-function initTipBanner() {
-    const banner = document.getElementById('tipBanner');
-    if (!banner) return;
-
-    // Build dot indicators dynamically
-    const dotsContainer = document.getElementById('tipDotsContainer');
+    // Build dots
     if (dotsContainer) {
-        dotsContainer.innerHTML = HEALTH_TIPS.map((_, i) =>
-            `<span class="tip-dot${i === 0 ? ' active' : ''}" onclick="goToTip(${i})"></span>`
+        dotsContainer.innerHTML = BANNER_SLIDES.map((_, i) =>
+            `<span class="banner-dot${i === 0 ? ' active' : ''}" onclick="goToBanner(${i})"></span>`
         ).join('');
     }
 
-    // Randomize starting tip
-    currentTipIndex = Math.floor(Math.random() * HEALTH_TIPS.length);
-    renderTip(currentTipIndex, false);
+    // Touch / pointer events for swipe
+    track.addEventListener('pointerdown', onBannerPointerDown);
+    track.addEventListener('pointermove', onBannerPointerMove);
+    track.addEventListener('pointerup', onBannerPointerUp);
+    track.addEventListener('pointercancel', onBannerPointerUp);
 
     // Auto-rotate
-    resetTipInterval();
+    resetBannerInterval();
+}
+
+async function loadBannersFromFirestore() {
+    try {
+        // Tunggu Firebase siap
+        if (typeof firebase === 'undefined') return;
+        if (!firebase.apps || firebase.apps.length === 0) {
+            if (typeof initializeFirebase === 'function') initializeFirebase();
+            else return;
+        }
+
+        const fs = firebase.firestore();
+        const snap = await fs.collection('app_banners').orderBy('order', 'asc').get();
+        if (!snap.empty) {
+            const loaded = [];
+            snap.forEach(doc => {
+                const d = doc.data();
+                if (d.url) loaded.push({ src: d.url, alt: d.alt || 'Banner' });
+            });
+            if (loaded.length > 0) BANNER_SLIDES = loaded;
+        }
+    } catch (e) {
+        console.warn('Banner load from Firestore failed, using defaults:', e.message);
+    }
+}
+
+function goToBanner(index) {
+    const track = document.getElementById('bannerTrack');
+    if (!track) return;
+    bannerIndex = index;
+    track.style.transform = `translateX(-${bannerIndex * 100}%)`;
+    updateBannerDots();
+    resetBannerInterval();
+}
+
+function nextBanner() {
+    bannerIndex = (bannerIndex + 1) % BANNER_SLIDES.length;
+    goToBanner(bannerIndex);
+}
+
+function updateBannerDots() {
+    const dots = document.querySelectorAll('.banner-dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === bannerIndex));
+}
+
+function resetBannerInterval() {
+    if (bannerInterval) clearInterval(bannerInterval);
+    bannerInterval = setInterval(nextBanner, 5000);
+}
+
+/* --- Swipe handling --- */
+function onBannerPointerDown(e) {
+    const track = document.getElementById('bannerTrack');
+    if (!track) return;
+    bannerDragging = true;
+    bannerStartX = e.clientX;
+    bannerCurrentX = e.clientX;
+    track.classList.add('dragging');
+    track.setPointerCapture(e.pointerId);
+}
+
+function onBannerPointerMove(e) {
+    if (!bannerDragging) return;
+    bannerCurrentX = e.clientX;
+    const diff = bannerCurrentX - bannerStartX;
+    const track = document.getElementById('bannerTrack');
+    if (!track) return;
+    const offset = -(bannerIndex * 100);
+    const pxToPercent = (diff / track.offsetWidth) * 100;
+    track.style.transform = `translateX(${offset + pxToPercent}%)`;
+}
+
+function onBannerPointerUp(e) {
+    if (!bannerDragging) return;
+    bannerDragging = false;
+    const track = document.getElementById('bannerTrack');
+    if (track) track.classList.remove('dragging');
+
+    const diff = bannerCurrentX - bannerStartX;
+    const threshold = 50;
+
+    if (diff < -threshold) {
+        goToBanner((bannerIndex + 1) % BANNER_SLIDES.length);
+    } else if (diff > threshold) {
+        goToBanner((bannerIndex - 1 + BANNER_SLIDES.length) % BANNER_SLIDES.length);
+    } else {
+        goToBanner(bannerIndex); // snap back
+    }
 }
 
 /* =========================================================
@@ -182,14 +175,12 @@ function setAppBarAvatar(user) {
     const avatarEl = document.getElementById('appBarAvatar');
     if (!avatarEl) return;
 
-    // If user has photoURL, render profile photo inside app bar avatar.
     if (user && user.photoURL) {
         const safeName = (user.displayName || user.email || 'User').replace(/"/g, '&quot;');
         avatarEl.innerHTML = `<img src="${user.photoURL}" alt="${safeName}" loading="lazy">`;
         return;
     }
 
-    // Fallback to text-based initial when photoURL is unavailable.
     const initial = (user && (user.displayName || user.email) ? (user.displayName || user.email) : 'D')
         .charAt(0)
         .toUpperCase();
@@ -198,16 +189,12 @@ function setAppBarAvatar(user) {
 
 function bindAppBarAvatarWithFirebase() {
     if (typeof firebase === 'undefined') return;
-
-    // Prevent duplicate listeners if this function is called more than once.
     if (window.__appBarAvatarBound) return;
     window.__appBarAvatarBound = true;
 
-    // Ensure Firebase app exists before calling firebase.auth().
     if ((!firebase.apps || firebase.apps.length === 0) && typeof initializeFirebase === 'function') {
         initializeFirebase();
     }
-
     if (!firebase.apps || firebase.apps.length === 0) return;
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -221,6 +208,6 @@ function bindAppBarAvatarWithFirebase() {
 document.addEventListener('DOMContentLoaded', () => {
     updateAppBarDate();
     setInterval(updateAppBarDate, 60000);
-    initTipBanner();
+    initBannerSlider();
     bindAppBarAvatarWithFirebase();
 });

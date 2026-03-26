@@ -105,6 +105,13 @@ service cloud.firestore {
       allow write: if isAuthenticated();
     }
     
+    // App Banners collection - banner images for dashboard slider
+    // All authenticated users can read, only admin can write
+    match /app_banners/{bannerId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+
     // Default deny all other access
     match /{document=**} {
       allow read, write: if false;

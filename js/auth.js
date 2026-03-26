@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', function() {
             if (user) {
                 // Check if user is admin and redirect accordingly
                 if (user.email === 'admin@myosig.com') {
-                    window.location.href = 'admin/generate-dummy.html';
+                    window.location.href = 'admin/index.html';
                 } else {
                     // Redirect to dashboard (all authenticated users are doctors)
                     window.location.href = 'dashboard.html';
@@ -91,7 +91,7 @@ document.getElementById('loginFormElement').addEventListener('submit', async fun
         // Check if user is admin and redirect accordingly
         // Admin email: admin@myosig.com
         if (user.email === 'admin@myosig.com') {
-            window.location.href = 'admin/generate-dummy.html';
+            window.location.href = 'admin/index.html';
         } else {
             // Redirect to dashboard for regular users
             window.location.href = 'dashboard.html';
@@ -187,7 +187,7 @@ document.getElementById('registerFormElement').addEventListener('submit', async 
         // Check if user is admin and redirect accordingly
         // Admin email: admin@myosig.com
         if (email === 'admin@myosig.com') {
-            window.location.href = 'admin/generate-dummy.html';
+            window.location.href = 'admin/index.html';
         } else {
             window.location.href = 'dashboard.html';
         }
@@ -284,7 +284,7 @@ async function signInWithGoogle() {
         // Check if user is admin and redirect accordingly
         // Admin email: admin@myosig.com
         if (user.email === 'admin@myosig.com') {
-            window.location.href = 'admin/generate-dummy.html';
+            window.location.href = 'admin/index.html';
         } else {
             // Redirect to dashboard for regular users
             window.location.href = 'dashboard.html';

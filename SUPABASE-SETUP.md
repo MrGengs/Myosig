@@ -31,6 +31,10 @@ Supabase digunakan untuk menyimpan **foto dokumentasi pasien** setelah sesi moni
 
 ## Langkah 3: Buat Storage Bucket
 
+Kita butuh **2 bucket**: satu untuk foto pasien, satu untuk banner dashboard.
+
+### Bucket 1: patient-photos (foto dokumentasi pasien)
+
 1. Di sidebar kiri, klik **"Storage"**
 2. Klik **"New bucket"**
 3. Isi:
@@ -40,13 +44,25 @@ Supabase digunakan untuk menyimpan **foto dokumentasi pasien** setelah sesi moni
    - **Allowed MIME types**: `image/jpeg, image/png, image/webp`
 4. Klik **"Create bucket"**
 
+### Bucket 2: banners (gambar banner dashboard)
+
+1. Masih di halaman **"Storage"**, klik **"New bucket"** lagi
+2. Isi:
+   - **Name**: `banners`
+   - **Public bucket**: **ON** (centang/aktifkan)
+   - **File size limit**: `2MB`
+   - **Allowed MIME types**: `image/jpeg, image/png, image/webp`
+3. Klik **"Create bucket"**
+
 ---
 
 ## Langkah 4: Set Storage Policy (RLS)
 
-Setelah bucket dibuat, kita perlu set policy agar bisa upload dari browser:
+Setelah kedua bucket dibuat, kita perlu set policy agar bisa upload dari browser.
 
-1. Klik bucket **"patient-photos"**
+**Ulangi langkah di bawah ini untuk KEDUA bucket** (`patient-photos` dan `banners`):
+
+1. Klik bucket yang ingin di-set (misal **"patient-photos"**)
 2. Klik tab **"Policies"** (atau **"Configuration"** > **"Policies"**)
 3. Klik **"New policy"**
 4. Pilih **"For full customization"** (atau "Get started quickly" > "Allow access to all users")
@@ -66,6 +82,8 @@ Setelah bucket dibuat, kita perlu set policy agar bisa upload dari browser:
 - **Target roles**: pilih `anon`
 - **Policy definition (USING expression)**: `true`
 - Klik **"Review"** lalu **"Save policy"**
+
+6. **Ulangi langkah 1-5 untuk bucket `banners`** (policy yang sama)
 
 > **Catatan**: Policy ini mengizinkan siapa saja upload dan baca. Untuk production, sebaiknya dibatasi dengan auth. Tapi untuk tahap development ini cukup.
 
@@ -128,7 +146,9 @@ Klik Stop Recording
     → Selesai!
 ```
 
-### Struktur penyimpanan foto di Supabase:
+### Struktur penyimpanan di Supabase Storage:
+
+**Foto pasien** (bucket `patient-photos`):
 ```
 patient-photos/
   └── {doctorId}/
@@ -136,20 +156,52 @@ patient-photos/
           └── {timestamp}.jpg
 ```
 
-### URL foto yang tersimpan di Firestore:
+**Banner dashboard** (bucket `banners`):
+```
+banners/
+  └── {timestamp}_{filename}.jpg
+```
+
+### URL yang tersimpan di Firestore:
+
+**Foto pasien** → disimpan di document record monitoring:
 ```
 https://xxxxx.supabase.co/storage/v1/object/public/patient-photos/{doctorId}/{patientId}/{timestamp}.jpg
 ```
+
+**Banner** → disimpan di collection `app_banners`:
+```
+https://xxxxx.supabase.co/storage/v1/object/public/banners/{timestamp}_{filename}.jpg
+```
+
+---
+
+## Mengelola Banner Dashboard (untuk Admin)
+
+Setelah setup selesai, admin dapat mengelola banner melalui **Admin Panel**:
+
+1. Login sebagai admin (`admin@myosig.com`)
+2. Buka halaman **Admin Panel** (`/admin/index.html`)
+3. Scroll ke bagian **"Kelola Banner Dashboard"**
+4. Klik **"Tambah Banner"** → pilih gambar (JPG/PNG/WebP, maks 2MB)
+5. Gambar akan diupload ke Supabase bucket `banners` dan metadata disimpan di Firestore collection `app_banners`
+6. Banner langsung muncul di slider dashboard semua user
+7. Untuk menghapus banner, klik tombol hapus di samping banner
+
+**Batas**: Maksimal 10 banner aktif. Hapus yang lama untuk menambah yang baru.
 
 ---
 
 ## FAQ
 
 **Q: Apakah gratis?**
-A: Ya, Supabase free tier memberikan 1GB storage gratis.
+A: Ya, Supabase free tier memberikan 1GB storage gratis (cukup untuk ratusan foto + banner).
 
 **Q: Apakah aman menyimpan anon key di frontend?**
 A: Anon key memang dirancang untuk digunakan di frontend (seperti Firebase API key). Keamanan dijaga melalui RLS (Row Level Security) policies yang sudah kita set di bucket.
 
 **Q: Bisa pakai kamera HP?**
 A: Ya, menggunakan `navigator.mediaDevices.getUserMedia()` yang support di semua browser modern (Chrome, Safari, Firefox) baik desktop maupun mobile.
+
+**Q: Banner disimpan di mana?**
+A: Gambar banner disimpan di Supabase Storage (bucket `banners`), sedangkan URL dan urutan banner disimpan di Firestore collection `app_banners`. Dashboard user akan otomatis memuat banner dari Firestore saat halaman dibuka.

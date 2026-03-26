@@ -1,66 +1,17 @@
 // Manage Data JavaScript
 // CRUD operations for patient monitoring records
-// ADMIN ONLY - This page is restricted to admin users only
+// ADMIN ONLY — uses admin-shared.js for auth/logout/helpers
 
-let currentUser = null;
 let usersList = [];
 let patientsList = [];
 let recordsList = [];
 let currentSelectedUserId = null;
 let currentSelectedPatientId = null;
 let currentEditingRecordId = null;
-const ADMIN_EMAIL = 'admin@myosig.com'; // Admin email address
 
-// Check if current user is admin
-function isAdmin(user) {
-    return user && user.email === ADMIN_EMAIL;
-}
-
-// Initialize page
-window.addEventListener('DOMContentLoaded', function() {
-    // Wait for Firebase SDK and config to load
-    function initWhenReady() {
-        // Check if Firebase SDK is loaded
-        if (typeof firebase === 'undefined') {
-            setTimeout(initWhenReady, 100);
-            return;
-        }
-        
-        // Check if initializeFirebase function is available
-        if (typeof initializeFirebase === 'undefined') {
-            setTimeout(initWhenReady, 100);
-            return;
-        }
-        
-        // Initialize Firebase
-        initializeFirebase();
-        
-        // Check authentication and admin status
-        auth.onAuthStateChanged(function(user) {
-            if (!user) {
-                // Not logged in - redirect to auth page
-                window.location.href = '../auth.html';
-                return;
-            }
-            
-            // Check if user is admin
-            if (!isAdmin(user)) {
-                // Not admin - redirect to dashboard
-                alert('Akses ditolak. Halaman ini hanya untuk admin.');
-                window.location.href = '../dashboard.html';
-                return;
-            }
-            
-            // User is admin - proceed
-            currentUser = user;
-            
-            // Load users list
-            loadUsersList();
-        });
-    }
-    
-    // Start initialization
-    initWhenReady();
+// Init via admin-shared.js
+initAdminPage(function () {
+    loadUsersList();
 });
 
 // Load users list from Firestore
