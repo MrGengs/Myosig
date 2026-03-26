@@ -53,21 +53,88 @@ function initializeFirebase() {
 // Access from window object set by config.js
 // Use getter functions to access safely
 function getGeminiApiKey() {
-    return typeof window !== 'undefined' && window.GEMINI_API_KEY 
-        ? window.GEMINI_API_KEY 
+    return typeof window !== 'undefined' && window.GEMINI_API_KEY
+        ? window.GEMINI_API_KEY
         : undefined;
 }
 
 function getGeminiApiUrl() {
-    return typeof window !== 'undefined' && window.GEMINI_API_URL 
-        ? window.GEMINI_API_URL 
+    return typeof window !== 'undefined' && window.GEMINI_API_URL
+        ? window.GEMINI_API_URL
         : 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+}
+
+function getGeminiApiKeys() {
+    return typeof window !== 'undefined' && window.GEMINI_API_KEYS
+        ? window.GEMINI_API_KEYS
+        : [];
 }
 
 // Create constants that reference the window values
 // These are safe because they're just references, not redeclarations
 const GEMINI_API_KEY = getGeminiApiKey();
 const GEMINI_API_URL = getGeminiApiUrl();
+const GEMINI_API_KEYS = getGeminiApiKeys();
+
+// Gemini API call with automatic key rotation on rate limit / quota errors
+async function callGeminiWithRotation(apiUrl, requestBody) {
+    const keys = GEMINI_API_KEYS.length > 0 ? GEMINI_API_KEYS : (GEMINI_API_KEY ? [GEMINI_API_KEY] : []);
+    if (keys.length === 0) {
+        throw new Error('Gemini API key tidak ditemukan');
+    }
+
+    let startIndex = window.GEMINI_CURRENT_KEY_INDEX || 0;
+    let lastError = null;
+
+    for (let i = 0; i < keys.length; i++) {
+        const keyIndex = (startIndex + i) % keys.length;
+        const apiKey = keys[keyIndex];
+
+        try {
+            const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.ok) {
+                // Update current key index for next call
+                window.GEMINI_CURRENT_KEY_INDEX = keyIndex;
+                return await response.json();
+            }
+
+            // Check if error is rate limit or quota related - try next key
+            if (response.status === 429 || response.status === 403 || response.status === 401) {
+                console.warn(`Gemini API key #${keyIndex + 1} limit/error (${response.status}), mencoba key berikutnya...`);
+                lastError = new Error(`API Error: ${response.status} ${response.statusText}`);
+                continue;
+            }
+
+            // For other errors, don't rotate - throw immediately
+            let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+            try {
+                const errorData = await response.json();
+                if (errorData.error) {
+                    errorMessage = errorData.error.message || errorData.error.status || errorMessage;
+                }
+            } catch (e) { /* ignore parse error */ }
+            throw new Error(errorMessage);
+
+        } catch (error) {
+            if (error.message.startsWith('API Error:')) {
+                lastError = error;
+                continue;
+            }
+            // Network error - try next key
+            console.warn(`Gemini API key #${keyIndex + 1} network error, mencoba key berikutnya...`);
+            lastError = error;
+            continue;
+        }
+    }
+
+    // All keys exhausted
+    throw lastError || new Error('Semua API key telah mencapai limit. Silakan coba lagi nanti.');
+}
 
 // Function to get AI health tips
 async function getAIHealthTips() {
@@ -89,28 +156,16 @@ JANGAN gunakan format seperti:
 "**Tetap Terhidrasi**
 Minum air yang cukup..."`;
 
-        const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
+        const apiUrl = GEMINI_API_URL || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+        const requestBody = {
+            contents: [{
+                parts: [{
+                    text: prompt
                 }]
-            })
-        });
+            }]
+        };
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('API Error:', errorText);
-            // If API fails, return default tip instead of throwing error
-            throw new Error(`API Error: ${response.status}`);
-        }
-
-        const data = await response.json();
+        const data = await callGeminiWithRotation(apiUrl, requestBody);
         
         if (data.candidates && data.candidates[0] && data.candidates[0].content) {
             let text = data.candidates[0].content.parts[0].text;

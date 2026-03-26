@@ -1312,18 +1312,12 @@ function calculateAge(birthDate) {
 // Call Gemini API
 async function callGeminiAPI(patientSummary) {
     // Check if Gemini API constants are available (from firebase-config.js)
-    if (typeof GEMINI_API_KEY === 'undefined' || typeof GEMINI_API_URL === 'undefined') {
+    if (typeof callGeminiWithRotation === 'undefined') {
         throw new Error('Gemini API configuration tidak ditemukan. Pastikan firebase-config.js dimuat terlebih dahulu.');
     }
-    
+
     // Use the API URL from firebase-config.js (gemini-2.5-flash or fallback to gemini-pro)
-    const apiUrl = GEMINI_API_URL || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
-    const apiKey = GEMINI_API_KEY;
-    
-    // Validate API key format (basic check)
-    if (!apiKey || apiKey.length < 20) {
-        throw new Error('API key tidak valid');
-    }
+    const apiUrl = GEMINI_API_URL || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
     
     const prompt = `Anda adalah AI Assistant khusus untuk membantu DOKTER dalam menangani pasien rehabilitasi stroke. Berdasarkan data pasien berikut, berikan analisis dan rekomendasi profesional untuk DOKTER:
 
@@ -1369,40 +1363,7 @@ Gunakan bahasa Indonesia yang profesional dan medis. Fokus pada memberikan pandu
         }]
     };
     
-    const response = await fetch(`${apiUrl}?key=${apiKey}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody)
-    });
-    
-    if (!response.ok) {
-        let errorMessage = `API Error: ${response.status} ${response.statusText}`;
-        
-        try {
-            const errorData = await response.json();
-            if (errorData.error) {
-                errorMessage = errorData.error.message || errorData.error.status || errorMessage;
-            }
-        } catch (e) {
-            // If JSON parsing fails, use status text
-            console.warn('Could not parse error response:', e);
-        }
-        
-        // Provide more specific error messages
-        if (response.status === 403) {
-            errorMessage = 'API key tidak valid atau telah dilaporkan sebagai leaked. Silakan gunakan API key yang baru.';
-        } else if (response.status === 401) {
-            errorMessage = 'API key tidak valid atau tidak memiliki izin akses.';
-        } else if (response.status === 429) {
-            errorMessage = 'Terlalu banyak permintaan. Silakan coba lagi nanti.';
-        }
-        
-        throw new Error(errorMessage);
-    }
-    
-    const data = await response.json();
+    const data = await callGeminiWithRotation(apiUrl, requestBody);
     
     // Extract text from Gemini response
     if (data.candidates && data.candidates[0] && data.candidates[0].content) {

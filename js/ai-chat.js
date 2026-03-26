@@ -279,19 +279,18 @@ function hideLoading() {
 // Get AI response with Firebase data context
 async function getAIResponse(userMessage) {
     // Check if Gemini API is available
-    if (typeof GEMINI_API_KEY === 'undefined' || !GEMINI_API_KEY) {
+    if ((!GEMINI_API_KEYS || GEMINI_API_KEYS.length === 0) && (typeof GEMINI_API_KEY === 'undefined' || !GEMINI_API_KEY)) {
         throw new Error('Gemini API key tidak ditemukan');
     }
-    
+
     // Load Firebase data for context
     const firebaseData = await loadFirebaseDataForContext();
-    
+
     // Build context prompt
     const contextPrompt = buildContextPrompt(userMessage, firebaseData);
-    
+
     // Call Gemini API
     const apiUrl = GEMINI_API_URL || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
-    const apiKey = GEMINI_API_KEY;
     
     const requestBody = {
         contents: [{
@@ -312,30 +311,7 @@ async function getAIResponse(userMessage) {
         requestBody.contents[0].parts[0].text = `Konteks percakapan sebelumnya:\n${historyText}\n\n${contextPrompt}`;
     }
     
-    const response = await fetch(`${apiUrl}?key=${apiKey}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody)
-    });
-    
-    if (!response.ok) {
-        let errorMessage = `API Error: ${response.status} ${response.statusText}`;
-        
-        try {
-            const errorData = await response.json();
-            if (errorData.error) {
-                errorMessage = errorData.error.message || errorData.error.status || errorMessage;
-            }
-        } catch (e) {
-            console.warn('Could not parse error response:', e);
-        }
-        
-        throw new Error(errorMessage);
-    }
-    
-    const data = await response.json();
+    const data = await callGeminiWithRotation(apiUrl, requestBody);
     
     // Extract text from Gemini response
     if (data.candidates && data.candidates[0] && data.candidates[0].content) {
