@@ -127,8 +127,15 @@ function onBannerPointerMove(e) {
     const track = document.getElementById('bannerTrack');
     if (!track) return;
     const offset = -(bannerIndex * 100);
-    const pxToPercent = (diff / track.offsetWidth) * 100;
-    track.style.transform = `translateX(${offset + pxToPercent}%)`;
+    let pxToPercent = (diff / track.offsetWidth) * 100;
+
+    // Clamp: tidak bisa scroll melewati slide pertama atau terakhir
+    const maxLeft = 0;
+    const maxRight = -(BANNER_SLIDES.length - 1) * 100;
+    let target = offset + pxToPercent;
+    target = Math.max(maxRight, Math.min(maxLeft, target));
+
+    track.style.transform = `translateX(${target}%)`;
 }
 
 function onBannerPointerUp(e) {
@@ -140,10 +147,10 @@ function onBannerPointerUp(e) {
     const diff = bannerCurrentX - bannerStartX;
     const threshold = 50;
 
-    if (diff < -threshold) {
-        goToBanner((bannerIndex + 1) % BANNER_SLIDES.length);
-    } else if (diff > threshold) {
-        goToBanner((bannerIndex - 1 + BANNER_SLIDES.length) % BANNER_SLIDES.length);
+    if (diff < -threshold && bannerIndex < BANNER_SLIDES.length - 1) {
+        goToBanner(bannerIndex + 1);
+    } else if (diff > threshold && bannerIndex > 0) {
+        goToBanner(bannerIndex - 1);
     } else {
         goToBanner(bannerIndex); // snap back
     }
