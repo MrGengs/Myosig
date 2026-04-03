@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
@@ -19,14 +19,14 @@
             <span class="app-bar-page-title" style="font-weight:600; color:var(--text-dark); font-size:0.95rem;">Admin Panel</span>
             <div class="app-bar-actions">
                 <div class="admin-avatar-wrap">
-                    <div class="admin-avatar-btn" id="adminAvatarBtn" onclick="toggleAdminDropdown()" title="Profil Admin">A</div>
+                    <div class="admin-avatar-btn" id="adminAvatarBtn" onclick="toggleAdminDropdown()" title="Admin Profile">A</div>
                     <div class="admin-avatar-dropdown" id="adminAvatarDropdown">
                         <div class="admin-avatar-dropdown-header">
                             <div class="admin-avatar-dropdown-name" id="adminDropdownName">Admin</div>
                             <div class="admin-avatar-dropdown-email" id="adminDropdownEmail">admin@myosig.com</div>
                         </div>
                         <button class="admin-avatar-dropdown-item danger" onclick="closeAdminDropdown(); adminLogout();">
-                            <i class="bi bi-box-arrow-right"></i> Keluar
+                            <i class="bi bi-box-arrow-right"></i> Sign Out
                         </button>
                     </div>
                 </div>
@@ -34,6 +34,8 @@
             </div>
         </div>
     </header>
+
+    <button class="lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer; position: fixed; top: 10px; right: 10px; z-index: 9999;">ID</button>
 
     <div class="container" style="padding-bottom: 100px;">
 
@@ -43,7 +45,7 @@
                 <i class="bi bi-shield-lock"></i>
             </div>
             <h1>Admin Panel</h1>
-            <p id="adminGreeting">Selamat datang, Admin</p>
+            <p id="adminGreeting">Welcome, Admin</p>
         </div>
 
         <!-- Stats Overview -->
@@ -51,38 +53,38 @@
             <div class="stat-card" onclick="window.location.href='users.html'" style="cursor:pointer;">
                 <div class="stat-icon"><i class="bi bi-people"></i></div>
                 <div class="stat-value" id="statTotalUsers">-</div>
-                <div class="stat-label">Total Dokter</div>
+                <div class="stat-label">Total Doctors</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon"><i class="bi bi-person-heart"></i></div>
                 <div class="stat-value" id="statTotalPatients">-</div>
-                <div class="stat-label">Total Pasien</div>
+                <div class="stat-label">Total Patients</div>
             </div>
             <div class="stat-card" onclick="window.location.href='manage-data.html'" style="cursor:pointer;">
                 <div class="stat-icon"><i class="bi bi-activity"></i></div>
                 <div class="stat-value" id="statTotalRecords">-</div>
-                <div class="stat-label">Total Record</div>
+                <div class="stat-label">Total Records</div>
             </div>
             <div class="stat-card" onclick="window.location.href='banners.html'" style="cursor:pointer;">
                 <div class="stat-icon"><i class="bi bi-images"></i></div>
                 <div class="stat-value" id="statTotalBanners">-</div>
-                <div class="stat-label">Banner Aktif</div>
+                <div class="stat-label">Active Banners</div>
             </div>
         </div>
 
         <!-- Menu -->
         <div class="card fade-in">
             <div class="card-header">
-                <h2 class="card-title"><i class="bi bi-grid card-icon"></i> Menu Admin</h2>
+                <h2 class="card-title"><i class="bi bi-grid card-icon"></i> Admin Menu</h2>
             </div>
             <div class="admin-actions-grid">
                 <a href="users.html" class="admin-action-btn">
                     <i class="bi bi-people"></i>
-                    <span>Anggota</span>
+                    <span>Members</span>
                 </a>
                 <a href="manage-data.html" class="admin-action-btn">
                     <i class="bi bi-database-gear"></i>
-                    <span>Kelola Data</span>
+                    <span>Manage Data</span>
                 </a>
                 <a href="banners.html" class="admin-action-btn">
                     <i class="bi bi-images"></i>
@@ -90,7 +92,7 @@
                 </a>
                 <a href="../dashboard.html" class="admin-action-btn">
                     <i class="bi bi-box-arrow-up-right"></i>
-                    <span>Lihat App</span>
+                    <span>View App</span>
                 </a>
             </div>
         </div>
@@ -105,7 +107,7 @@
         </a>
         <a href="users.html" class="nav-item">
             <i class="bi bi-people"></i>
-            <span>Anggota</span>
+            <span>Members</span>
         </a>
         <a href="banners.html" class="nav-item">
             <i class="bi bi-images"></i>
@@ -124,6 +126,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
 
+    <script src="../js/translations.js"></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/firebase-config.js"></script>
     <script src="../js/modal.js"></script>

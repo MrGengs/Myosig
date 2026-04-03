@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
@@ -106,6 +106,7 @@
             </a>
             <div class="app-bar-actions">
                 <div class="app-bar-date" id="appBarDate"></div>
+                <button class="lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer; margin-right: 0.5rem;">ID</button>
                 <a href="account.html" class="app-bar-avatar" id="appBarAvatar" title="Profil"><i class="bi bi-person"></i></a>
             </div>
         </div>
@@ -123,7 +124,7 @@
 
         <!-- Welcome Header -->
         <div class="page-header fade-in">
-            <p>Pantau dan kelola pasien rehabilitasi stroke Anda</p>
+            <p data-i18n="dash.subtitle">Monitor and manage your stroke rehabilitation patients</p>
         </div>
 
         <!-- Stats Grid -->
@@ -133,7 +134,7 @@
                     <i class="bi bi-people"></i>
                 </div>
                 <div class="stat-value" id="totalPatients">0</div>
-                <div class="stat-label">Total Pasien</div>
+                <div class="stat-label" data-i18n="dash.stat.total_patients">Total Patients</div>
             </div>
             
             <div class="stat-card">
@@ -141,7 +142,7 @@
                     <i class="bi bi-activity"></i>
                 </div>
                 <div class="stat-value" id="totalRecords">0</div>
-                <div class="stat-label">Total Record</div>
+                <div class="stat-label" data-i18n="dash.stat.total_records">Total Records</div>
             </div>
             
             <div class="stat-card">
@@ -149,7 +150,7 @@
                     <i class="bi bi-calendar-check"></i>
                 </div>
                 <div class="stat-value" id="todayRecords">0</div>
-                <div class="stat-label">Record Hari Ini</div>
+                <div class="stat-label" data-i18n="dash.stat.today_records">Today's Records</div>
             </div>
             
             <div class="stat-card">
@@ -157,7 +158,7 @@
                     <i class="bi bi-clock-history"></i>
                 </div>
                 <div class="stat-value" id="avgActivity">0%</div>
-                <div class="stat-label">Rata-rata Aktivitas</div>
+                <div class="stat-label" data-i18n="dash.stat.avg_activity">Average Activity</div>
             </div>
         </div>
 
@@ -166,22 +167,22 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-lightning-charge card-icon"></i>
-                    Aksi Cepat
+                    <span data-i18n="dash.quick_actions">Quick Actions</span>
                 </h2>
             </div>
             
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
                 <a href="sensors.html" class="btn btn-green" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                     <i class="bi bi-record-circle" style="font-size: 2rem;"></i>
-                    <span>Mulai Monitoring</span>
+                    <span data-i18n="dash.action.monitoring">Start Monitoring</span>
                 </a>
                 <a href="patient.html" class="btn btn-purple" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                     <i class="bi bi-person-heart" style="font-size: 2rem;"></i>
-                    <span>Kelola Pasien</span>
+                    <span data-i18n="dash.action.patients">Manage Patients</span>
                 </a>
                 <a href="session-compare.html" class="btn btn-teal" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                     <i class="bi bi-arrow-left-right" style="font-size: 2rem;"></i>
-                    <span>Bandingkan Sesi</span>
+                    <span data-i18n="dash.action.compare">Compare Sessions</span>
                 </a>
                 <a href="ai-chat.html" class="btn btn-orange" style="padding: 1rem; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                     <i class="bi bi-robot" style="font-size: 2rem;"></i>
@@ -195,7 +196,7 @@
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
                     <i class="bi bi-clock-history card-icon"></i>
-                    Record Terkini
+                    <span data-i18n="dash.recent_records">Recent Records</span>
                 </h2>
                 <button onclick="loadRecentRecords()" class="btn btn-sm btn-secondary" style="padding: 0.5rem; min-width: auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0;" title="Refresh">
                     <i class="bi bi-arrow-clockwise"></i>
@@ -204,10 +205,10 @@
             
             <div class="timeline" id="recentRecordsTimeline">
                 <div class="timeline-item">
-                    <div class="timeline-date">Memuat...</div>
+                    <div class="timeline-date" data-i18n="dash.recent.loading">Loading...</div>
                     <div class="timeline-content">
-                        <strong>Memuat record terkini...</strong>
-                        <p style="margin-top: 0.5rem; margin-bottom: 0;">Mohon tunggu sebentar.</p>
+                        <strong data-i18n="dash.recent.loading_desc">Loading recent records...</strong>
+                        <p style="margin-top: 0.5rem; margin-bottom: 0;" data-i18n="dash.recent.wait">Please wait a moment.</p>
                     </div>
                 </div>
             </div>
@@ -218,16 +219,16 @@
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
                     <i class="bi bi-book card-icon"></i>
-                    Ensiklopedia Stroke
+                    <span data-i18n="dash.encyclopedia">Stroke Encyclopedia</span>
                 </h2>
-                <a href="encyclopedia.html" class="btn btn-sm btn-primary" style="padding: 0.5rem; min-width: auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; flex-shrink: 0;" title="Buka Ensiklopedia">
+                <a href="encyclopedia.html" class="btn btn-sm btn-primary" style="padding: 0.5rem; min-width: auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; flex-shrink: 0;" title="Open Encyclopedia" data-i18n-title="dash.encyclopedia.open">
                     <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; text-align: center;">
                 <a href="encyclopedia.html?cat=dasar" onclick="event.stopPropagation()" style="padding: 0.75rem; background: rgba(37, 99, 235, 0.06); border-radius: var(--border-radius); text-decoration: none; color: inherit; display: block;">
                     <i class="bi bi-heart-pulse" style="font-size: 1.5rem; color: #2563eb;"></i>
-                    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-secondary); margin-bottom: 0;">Dasar Stroke</p>
+                    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-secondary); margin-bottom: 0;"><span data-i18n="dash.encyclopedia.basics">Stroke Basics</span></p>
                 </a>
                 <a href="encyclopedia.html?cat=rehabilitasi" onclick="event.stopPropagation()" style="padding: 0.75rem; background: rgba(8, 145, 178, 0.06); border-radius: var(--border-radius); text-decoration: none; color: inherit; display: block;">
                     <i class="bi bi-bandaid" style="font-size: 1.5rem; color: #0891b2;"></i>
@@ -235,10 +236,10 @@
                 </a>
                 <a href="encyclopedia.html?cat=nutrisi" onclick="event.stopPropagation()" style="padding: 0.75rem; background: rgba(234, 179, 8, 0.06); border-radius: var(--border-radius); text-decoration: none; color: inherit; display: block;">
                     <i class="bi bi-cup-hot" style="font-size: 1.5rem; color: #eab308;"></i>
-                    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-secondary); margin-bottom: 0;">Nutrisi</p>
+                    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-secondary); margin-bottom: 0;"><span data-i18n="dash.encyclopedia.nutrition">Nutrition</span></p>
                 </a>
             </div>
-            <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 0;">12 artikel medis seputar stroke dan pemulihan</p>
+            <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 0;"><span data-i18n="dash.encyclopedia.articles">12 medical articles about stroke and recovery</span></p>
         </div>
 
         <!-- Patient Summary Card -->
@@ -246,9 +247,9 @@
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
                     <i class="bi bi-people card-icon"></i>
-                    Ringkasan Pasien
+                    <span data-i18n="dash.patient_summary">Patient Summary</span>
                 </h2>
-                <a href="patient.html" class="btn btn-sm btn-primary" style="padding: 0.5rem; min-width: auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; flex-shrink: 0;" title="Lihat Semua Pasien">
+                <a href="patient.html" class="btn btn-sm btn-primary" style="padding: 0.5rem; min-width: auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; flex-shrink: 0;" title="View All Patients" data-i18n-title="dash.patient_summary.view_all">
                     <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
@@ -256,7 +257,7 @@
             <div id="patientSummary">
                 <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
                     <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Memuat data pasien...</p>
+                    <p style="margin-top: 1rem;" data-i18n="dash.patient_summary.loading">Loading patient data...</p>
                 </div>
             </div>
         </div>
@@ -272,25 +273,28 @@
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item active">
             <i class="bi bi-house-door-fill" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
-            <span>Beranda</span>
+            <span data-i18n="nav.home">Home</span>
         </a>
         <a href="sensors.html" class="nav-item">
             <i class="bi bi-activity"></i>
-            <span>Monitoring</span>
+            <span data-i18n="nav.monitoring">Monitoring</span>
         </a>
         <a href="encyclopedia.html" class="nav-item">
             <i class="bi bi-book"></i>
-            <span>Ensiklopedia</span>
+            <span data-i18n="nav.encyclopedia">Encyclopedia</span>
         </a>
         <a href="patient.html" class="nav-item">
             <i class="bi bi-person-heart"></i>
-            <span>Pasien</span>
+            <span data-i18n="nav.patients">Patients</span>
         </a>
         <a href="account.html" class="nav-item">
             <i class="bi bi-person"></i>
-            <span>Akun</span>
+            <span data-i18n="nav.account">Account</span>
         </a>
     </nav>
+
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>

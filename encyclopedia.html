@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
@@ -353,6 +353,7 @@
             </a>
             <div class="app-bar-actions">
                 <div class="app-bar-date" id="appBarDate"></div>
+                <button class="lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer; margin-right: 0.5rem;">ID</button>
                 <a href="account.html" class="app-bar-avatar" id="appBarAvatar" title="Profil"><i class="bi bi-person"></i></a>
             </div>
         </div>
@@ -364,38 +365,38 @@
             <div style="width: 70px; height: 70px; background: var(--gradient-primary); border-radius: 20px; margin: 0 auto 0.75rem; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--white); box-shadow: var(--shadow-lg);">
                 <i class="bi bi-book"></i>
             </div>
-            <h1 style="font-size: 1.6rem;">Ensiklopedia Stroke</h1>
-            <p>Panduan lengkap seputar stroke, rehabilitasi, dan pemulihan</p>
+            <h1 style="font-size: 1.6rem;" data-i18n="enc.title">Stroke Encyclopedia</h1>
+            <p data-i18n="enc.subtitle">Complete guide about stroke, rehabilitation, and recovery</p>
         </div>
 
         <!-- Search -->
         <div class="search-container fade-in">
             <i class="bi bi-search"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="Cari artikel..." oninput="filterArticles()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search articles..." data-i18n-placeholder="enc.search" oninput="filterArticles()">
         </div>
 
         <!-- Category Filter -->
         <div class="category-scroll fade-in" id="categoryScroll">
             <button class="category-pill active" onclick="setCategory('semua')" data-cat="semua">
-                <i class="bi bi-grid-3x3-gap"></i> Semua
+                <i class="bi bi-grid-3x3-gap"></i> <span data-i18n="enc.cat.all">All</span>
             </button>
             <button class="category-pill" onclick="setCategory('dasar')" data-cat="dasar">
-                <i class="bi bi-heart-pulse"></i> Dasar Stroke
+                <i class="bi bi-heart-pulse"></i> <span data-i18n="enc.cat.basics">Stroke Basics</span>
             </button>
             <button class="category-pill" onclick="setCategory('rehabilitasi')" data-cat="rehabilitasi">
-                <i class="bi bi-bandaid"></i> Rehabilitasi
+                <i class="bi bi-bandaid"></i> <span data-i18n="enc.cat.rehab">Rehabilitation</span>
             </button>
             <button class="category-pill" onclick="setCategory('nutrisi')" data-cat="nutrisi">
-                <i class="bi bi-cup-hot"></i> Nutrisi
+                <i class="bi bi-cup-hot"></i> <span data-i18n="enc.cat.nutrition">Nutrition</span>
             </button>
             <button class="category-pill" onclick="setCategory('olahraga')" data-cat="olahraga">
-                <i class="bi bi-bicycle"></i> Olahraga
+                <i class="bi bi-bicycle"></i> <span data-i18n="enc.cat.exercise">Exercise</span>
             </button>
             <button class="category-pill" onclick="setCategory('mental')" data-cat="mental">
-                <i class="bi bi-emoji-smile"></i> Kesehatan Mental
+                <i class="bi bi-emoji-smile"></i> <span data-i18n="enc.cat.mental">Mental Health</span>
             </button>
             <button class="category-pill" onclick="setCategory('pencegahan')" data-cat="pencegahan">
-                <i class="bi bi-shield-check"></i> Pencegahan
+                <i class="bi bi-shield-check"></i> <span data-i18n="enc.cat.prevention">Prevention</span>
             </button>
         </div>
 
@@ -414,7 +415,7 @@
             <button class="article-detail-back" onclick="closeArticle()">
                 <i class="bi bi-arrow-left"></i>
             </button>
-            <span style="font-weight: 600; color: var(--text-dark); font-size: 0.95rem;" id="detailHeaderTitle">Artikel</span>
+            <span style="font-weight: 600; color: var(--text-dark); font-size: 0.95rem;" id="detailHeaderTitle" data-i18n="enc.article">Article</span>
         </div>
         <div class="article-detail-body" id="articleDetailBody">
             <!-- Article content rendered here -->
@@ -425,25 +426,28 @@
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item">
             <i class="bi bi-house-door"></i>
-            <span>Beranda</span>
+            <span data-i18n="nav.home">Home</span>
         </a>
         <a href="sensors.html" class="nav-item">
             <i class="bi bi-activity"></i>
-            <span>Monitoring</span>
+            <span data-i18n="nav.monitoring">Monitoring</span>
         </a>
         <a href="encyclopedia.html" class="nav-item active">
             <i class="bi bi-book" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
-            <span>Ensiklopedia</span>
+            <span data-i18n="nav.encyclopedia">Encyclopedia</span>
         </a>
         <a href="patient.html" class="nav-item">
             <i class="bi bi-person-heart"></i>
-            <span>Pasien</span>
+            <span data-i18n="nav.patients">Patients</span>
         </a>
         <a href="account.html" class="nav-item">
             <i class="bi bi-person"></i>
-            <span>Akun</span>
+            <span data-i18n="nav.account">Account</span>
         </a>
     </nav>
+
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>

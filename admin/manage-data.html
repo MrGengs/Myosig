@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body>
+    <button class="lang-toggle-btn" onclick="toggleLang()" style="position: fixed; top: 10px; right: 10px; z-index: 9999; background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer;">ID</button>
     <!-- ===== APP BAR ===== -->
     <header class="app-bar">
         <div class="app-bar-inner">
@@ -19,14 +20,14 @@
             <span class="app-bar-page-title" style="font-weight:600; color:var(--text-dark); font-size:0.95rem;">Admin Panel</span>
             <div class="app-bar-actions">
                 <div class="admin-avatar-wrap">
-                    <div class="admin-avatar-btn" id="adminAvatarBtn" onclick="toggleAdminDropdown()" title="Profil Admin">A</div>
+                    <div class="admin-avatar-btn" id="adminAvatarBtn" onclick="toggleAdminDropdown()" title="Admin Profile">A</div>
                     <div class="admin-avatar-dropdown" id="adminAvatarDropdown">
                         <div class="admin-avatar-dropdown-header">
                             <div class="admin-avatar-dropdown-name" id="adminDropdownName">Admin</div>
                             <div class="admin-avatar-dropdown-email" id="adminDropdownEmail">admin@myosig.com</div>
                         </div>
                         <button class="admin-avatar-dropdown-item danger" onclick="closeAdminDropdown(); adminLogout();">
-                            <i class="bi bi-box-arrow-right"></i> Keluar
+                            <i class="bi bi-box-arrow-right"></i> Sign Out
                         </button>
                     </div>
                 </div>
@@ -42,7 +43,7 @@
                 <i class="bi bi-pencil-square" style="color: var(--primary-blue);"></i>
                 Manage Data
             </h1>
-            <p>Kelola data pasien dan record monitoring</p>
+            <p>Manage patient data and monitoring records</p>
         </div>
 
         <!-- User Selection Card -->
@@ -50,10 +51,10 @@
             <div class="dummy-form-group">
                 <label class="dummy-form-label">
                     <i class="bi bi-person-badge"></i>
-                    Pilih User (Dokter)
+                    Select User (Doctor)
                 </label>
                 <select id="userSelect" class="dummy-select" onchange="loadUserPatients()">
-                    <option value="">Memuat daftar user...</option>
+                    <option value="">Loading user list...</option>
                 </select>
             </div>
         </div>
@@ -63,10 +64,10 @@
             <div class="dummy-form-group">
                 <label class="dummy-form-label">
                     <i class="bi bi-person-heart"></i>
-                    Pilih Pasien
+                    Select Patient
                 </label>
                 <select id="managePatientSelect" class="dummy-select" onchange="loadPatientRecords()">
-                    <option value="">Pilih pasien...</option>
+                    <option value="">Select patient...</option>
                 </select>
             </div>
         </div>
@@ -76,18 +77,18 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <h3 style="margin: 0; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem;">
                     <i class="bi bi-clock-history" style="color: var(--primary-blue);"></i>
-                    Daftar Record
+                    Record List
                 </h3>
                 <button class="btn btn-primary btn-sm" onclick="showAddRecordModal()" style="padding: 0.5rem 1rem; min-width: auto;">
                     <i class="bi bi-plus-circle"></i>
-                    <span>Tambah Record</span>
+                    <span>Add Record</span>
                 </button>
             </div>
             <div id="statusMessage" class="dummy-status"></div>
             <div id="recordsList" style="max-height: 500px; overflow-y: auto;">
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Memuat record...</p>
+                    <p style="margin-top: 1rem;">Loading records...</p>
                 </div>
             </div>
         </div>
@@ -99,7 +100,7 @@
             <div class="modal-header">
                 <h3>
                     <i class="bi bi-clipboard-plus"></i>
-                    <span id="modalTitle">Tambah Record Baru</span>
+                    <span id="modalTitle">Add New Record</span>
                 </h3>
                 <button class="modal-close-btn" onclick="closeRecordModal()">
                     <i class="bi bi-x-lg"></i>
@@ -109,44 +110,44 @@
                 <form id="recordForm" onsubmit="saveRecord(event)">
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-calendar"></i> Tanggal
+                            <i class="bi bi-calendar"></i> Date
                         </label>
                         <input type="date" id="recordDate" class="form-input" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-clock"></i> Waktu
+                            <i class="bi bi-clock"></i> Time
                         </label>
                         <input type="time" id="recordTime" class="form-input" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-activity"></i> Rata-rata Aktivitas Otot (%)
+                            <i class="bi bi-activity"></i> Average Muscle Activity (%)
                         </label>
                         <input type="number" id="recordAvgMuscleActivity" class="form-input" min="0" max="100" step="0.1" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-arrow-repeat"></i> Jumlah Gerakan
+                            <i class="bi bi-arrow-repeat"></i> Movement Count
                         </label>
                         <input type="number" id="recordMovementCount" class="form-input" min="0" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-speedometer2"></i> Akselerasi Maksimum (g)
+                            <i class="bi bi-speedometer2"></i> Maximum Acceleration (g)
                         </label>
                         <input type="number" id="recordMaxAcceleration" class="form-input" min="0" step="0.01" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-hourglass-split"></i> Durasi (detik)
+                            <i class="bi bi-hourglass-split"></i> Duration (seconds)
                         </label>
                         <input type="number" id="recordDuration" class="form-input" min="0" required>
                     </div>
                     <div class="modal-footer" style="padding: 0; border-top: none; margin-top: 0.5rem;">
-                        <button type="button" class="btn btn-secondary" onclick="closeRecordModal()">Batal</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeRecordModal()">Cancel</button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle"></i> Simpan
+                            <i class="bi bi-check-circle"></i> Save
                         </button>
                     </div>
                 </form>
@@ -162,7 +163,7 @@
         </a>
         <a href="users.html" class="nav-item">
             <i class="bi bi-people"></i>
-            <span>Anggota</span>
+            <span>Members</span>
         </a>
         <a href="banners.html" class="nav-item">
             <i class="bi bi-images"></i>
@@ -181,6 +182,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
     
+    <script src="../js/translations.js"></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/firebase-config.js"></script>
     <script src="../js/modal.js"></script>

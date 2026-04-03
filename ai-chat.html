@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
@@ -730,11 +730,12 @@
                 <i class="bi bi-robot"></i>
             </div>
             <div class="chat-header-info">
-                <h2 class="chat-header-title">AI Assistant Dokter</h2>
-                <p class="chat-header-subtitle">
-                    Asisten untuk dokter rehabilitasi stroke
+                <h2 class="chat-header-title" data-i18n="ai.title">AI Doctor Assistant</h2>
+                <p class="chat-header-subtitle" data-i18n="ai.subtitle">
+                    Assistant for stroke rehabilitation doctors
                 </p>
             </div>
+            <button class="lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer;">ID</button>
         </div>
 
         <!-- Chat Container -->
@@ -742,13 +743,13 @@
             <!-- Chat Suggestions -->
             <div class="chat-suggestions" id="chatSuggestions">
                 <button class="chat-suggestion" onclick="sendSuggestion('Berikan ringkasan data semua pasien saya')">
-                    <i class="bi bi-people"></i> Ringkasan Pasien
+                    <i class="bi bi-people"></i> <span data-i18n="ai.suggestion.patients">Patient Summary</span>
                 </button>
                 <button class="chat-suggestion" onclick="sendSuggestion('Apa rekomendasi program rehabilitasi untuk pasien stroke berdasarkan data monitoring?')">
-                    <i class="bi bi-heart-pulse"></i> Rekomendasi Program
+                    <i class="bi bi-heart-pulse"></i> <span data-i18n="ai.suggestion.program">Program Recommendations</span>
                 </button>
                 <button class="chat-suggestion" onclick="sendSuggestion('Analisis statistik dan tren perkembangan pasien')">
-                    <i class="bi bi-graph-up"></i> Analisis Statistik
+                    <i class="bi bi-graph-up"></i> <span data-i18n="ai.suggestion.stats">Statistical Analysis</span>
                 </button>
             </div>
 
@@ -757,8 +758,8 @@
                 <div class="chat-messages" id="chatMessages">
                     <div class="chat-empty-state">
                         <i class="bi bi-chat-dots"></i>
-                        <h3>Selamat Datang, Dokter!</h3>
-                        <p>Saya adalah AI Assistant khusus untuk membantu dokter dalam mengelola pasien rehabilitasi stroke. Saya dapat membantu dengan analisis data pasien, rekomendasi perawatan, dan evaluasi perkembangan pasien. Silakan tanyakan sesuatu atau pilih salah satu pertanyaan di atas!</p>
+                        <h3 data-i18n="ai.welcome.title">Welcome, Doctor!</h3>
+                        <p data-i18n="ai.welcome.desc">I am an AI Assistant specifically designed to help doctors manage stroke rehabilitation patients. I can assist with patient data analysis, treatment recommendations, and patient progress evaluation. Feel free to ask something or choose one of the questions above!</p>
                     </div>
                 </div>
             </div>
@@ -769,7 +770,7 @@
                     <textarea 
                         id="chatInput" 
                         class="chat-input" 
-                        placeholder="Tanyakan tentang pasien, data monitoring, atau rekomendasi perawatan..."
+                        placeholder="Ask about patients, monitoring data, or treatment recommendations..." data-i18n-placeholder="ai.input.placeholder"
                         rows="1"
                         onkeydown="handleChatInputKeydown(event)"
                         oninput="autoResizeTextarea(this)"
@@ -778,7 +779,7 @@
                         id="chatSendBtn" 
                         class="chat-send-btn" 
                         onclick="sendMessage()"
-                        title="Kirim pesan"
+                        title="Send message" data-i18n-title="ai.send"
                     >
                         <i class="bi bi-send-fill"></i>
                     </button>
@@ -798,6 +799,9 @@
             <img id="chatExerciseLightboxImg" src="" alt="Exercise" />
         </div>
     </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>

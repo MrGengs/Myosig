@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', function() {
             
             if (!patientId) {
                 if (typeof showAlert === 'function') {
-                    showAlert('ID Pasien tidak ditemukan!', 'Kesalahan');
+                    showAlert('Patient ID not found!', t('label.error'));
                 }
                 window.location.href = 'patient.html';
                 return;
@@ -79,7 +79,7 @@ async function loadPatientData() {
                 displayPatientInfo(data);
             } else {
                 if (typeof showAlert === 'function') {
-                    showAlert('Data pasien tidak ditemukan!', 'Kesalahan');
+                    showAlert('Patient data not found!', t('label.error'));
                 }
                 window.location.href = 'patient.html';
             }
@@ -87,7 +87,7 @@ async function loadPatientData() {
     } catch (error) {
         console.error('Error loading patient data:', error);
         if (typeof showAlert === 'function') {
-            showAlert('Gagal memuat data pasien: ' + error.message, 'Kesalahan');
+            showAlert('Failed to load patient data: ' + error.message, t('label.error'));
         }
     }
 }
@@ -99,7 +99,7 @@ function displayPatientInfo(data) {
     const patientIdValue = document.getElementById('patientIdValue');
     
     if (patientName) {
-        patientName.textContent = data.name || 'Nama Pasien';
+        patientName.textContent = data.name || 'Patient Name';
     }
     
     if (patientIdValue && patientId) {
@@ -137,7 +137,7 @@ async function loadPatientRecords() {
     recordsList.innerHTML = `
         <div style="text-align: center; padding: 2rem; color: var(--text-light);">
             <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
-            <p style="margin-top: 1rem;">Memuat riwayat record...</p>
+            <p style="margin-top: 1rem;">Loading record history...</p>
         </div>
     `;
     
@@ -152,7 +152,7 @@ async function loadPatientRecords() {
             
             if (!patientDoc.exists) {
                 if (typeof showAlert === 'function') {
-                    showAlert('Anda tidak memiliki akses ke pasien ini!', 'Akses Ditolak');
+                    showAlert('You do not have access to this patient!', 'Access Denied');
                 }
                 window.location.href = 'patient.html';
                 return;
@@ -252,7 +252,7 @@ async function loadPatientRecords() {
             recordsList.innerHTML = `
                 <div class="empty-state">
                     <i class="bi bi-inbox"></i>
-                    <p>Belum ada record monitoring untuk pasien ini.</p>
+                    <p>No monitoring records for this patient yet.</p>
                 </div>
             `;
             
@@ -267,7 +267,7 @@ async function loadPatientRecords() {
         recordsList.innerHTML = `
             <div class="empty-state">
                 <i class="bi bi-exclamation-triangle"></i>
-                <p>Gagal memuat riwayat record: ${error.message}</p>
+                <p>Failed to load record history: ${error.message}</p>
             </div>
         `;
     }
@@ -282,7 +282,7 @@ function displayRecords(records) {
         recordsList.innerHTML = `
             <div class="empty-state">
                 <i class="bi bi-inbox"></i>
-                <p>Belum ada record monitoring untuk pasien ini.</p>
+                <p>No monitoring records for this patient yet.</p>
             </div>
         `;
         return;
@@ -302,24 +302,24 @@ function displayRecords(records) {
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         ${fatigueInfo !== '-' ? `<span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; background: rgba(184, 168, 90, 0.15); color: #B8A85A; border-radius: 10px;"><i class="bi bi-battery-half"></i> ${fatigueInfo}%</span>` : ''}
-                        <span style="font-size: 0.85rem; color: var(--text-light);">${record.duration} detik</span>
+                        <span style="font-size: 0.85rem; color: var(--text-light);">${record.duration} sec</span>
                     </div>
                 </div>
                 <div class="record-stats">
                     <div class="record-stat">
-                        <div class="record-stat-label">Aktivitas Otot Rata-rata</div>
+                        <div class="record-stat-label">Avg Muscle Activity</div>
                         <div class="record-stat-value">${record.avgMuscleActivity}%</div>
                     </div>
                     <div class="record-stat">
-                        <div class="record-stat-label">Jumlah Gerakan</div>
+                        <div class="record-stat-label">Movement Count</div>
                         <div class="record-stat-value">${record.movementCount}</div>
                     </div>
                     <div class="record-stat">
-                        <div class="record-stat-label">Akselerasi Maks</div>
+                        <div class="record-stat-label">Max Acceleration</div>
                         <div class="record-stat-value">${record.maxAcceleration.toFixed(2)} g</div>
                     </div>
                     <div class="record-stat">
-                        <div class="record-stat-label">Durasi</div>
+                        <div class="record-stat-label">Duration</div>
                         <div class="record-stat-value">${Math.floor(record.duration / 60)}:${String(record.duration % 60).padStart(2, '0')}</div>
                     </div>
                 </div>
@@ -327,15 +327,15 @@ function displayRecords(records) {
                 <div style="margin-top: 0.75rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
                         <i class="bi bi-journal-text" style="color: var(--text-light); font-size: 0.85rem;"></i>
-                        <span style="font-size: 0.8rem; color: var(--text-light); font-weight: 500;">Catatan Sesi</span>
+                        <span style="font-size: 0.8rem; color: var(--text-light); font-weight: 500;">Session Notes</span>
                     </div>
                     <div style="display: flex; gap: 0.5rem;">
                         <input type="text" id="note-${record.id}" value="${(record.notes || '').replace(/"/g, '&quot;')}"
-                            placeholder="Tambahkan catatan sesi..."
+                            placeholder="Add session notes..."
                             style="flex: 1; padding: 0.5rem 0.75rem; border: 1px solid rgba(49, 69, 106, 0.15); border-radius: 12px; font-size: 0.85rem; background: var(--white); color: var(--text-dark);">
                         <button onclick="saveRecordNote('${record.id}', document.getElementById('note-${record.id}').value)"
                             style="padding: 0.5rem 0.75rem; background: var(--neumorphism-base); border: none; border-radius: 12px; cursor: pointer; box-shadow: var(--shadow-combined); color: var(--text-dark); font-size: 0.85rem;"
-                            title="Simpan Catatan">
+                            title="Save Notes">
                             <i class="bi bi-check-lg"></i>
                         </button>
                     </div>
@@ -349,12 +349,12 @@ function displayRecords(records) {
                     ${record.dailyPhotoUrl ? `
                     <button onclick="viewDocumentationPhoto('${record.dailyPhotoUrl}')"
                         style="flex: 1; padding: 0.4rem; background: var(--neumorphism-base); border: none; border-radius: 12px; cursor: pointer; box-shadow: var(--shadow-combined); color: #4A8B6A; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
-                        <i class="bi bi-camera-fill"></i> Foto Hari Ini
+                        <i class="bi bi-camera-fill"></i> Today's Photo
                     </button>
                     ` : `
                     <button disabled
                         style="flex: 1; padding: 0.4rem; background: var(--neumorphism-base); border: none; border-radius: 12px; cursor: not-allowed; box-shadow: var(--shadow-combined); color: var(--text-light); font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem; opacity: 0.5;">
-                        <i class="bi bi-camera"></i> Tidak ada foto
+                        <i class="bi bi-camera"></i> No photo
                     </button>
                     `}
                 </div>
@@ -479,7 +479,7 @@ function createIMUChart(records) {
                 chartContainer.innerHTML = `
                     <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                         <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                        <p style="margin-top: 1rem;">Chart.js tidak dimuat. Silakan refresh halaman.</p>
+                        <p style="margin-top: 1rem;">Chart.js not loaded. Please refresh the page.</p>
                     </div>
                 `;
             }
@@ -517,7 +517,7 @@ function createEMGChart(records) {
                 chartContainer.innerHTML = `
                     <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                         <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                        <p style="margin-top: 1rem;">Chart.js tidak dimuat. Silakan refresh halaman.</p>
+                        <p style="margin-top: 1rem;">Chart.js not loaded. Please refresh the page.</p>
                     </div>
                 `;
             }
@@ -594,7 +594,7 @@ function prepareRecordsForChart(records) {
             
             if (chartPeriod === 'weekly') {
                 // For weekly: show day and date (e.g., "Sen, 15/01")
-                const days = ['Minggu', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 const dayName = days[date.getDay()];
                 const day = date.getDate();
                 const month = date.getMonth() + 1;
@@ -625,7 +625,7 @@ function createIMUChartInternal(records) {
             chartContainer.innerHTML = `
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Canvas element tidak ditemukan.</p>
+                    <p style="margin-top: 1rem;">Canvas element not found.</p>
                 </div>
             `;
         }
@@ -646,24 +646,24 @@ function createIMUChartInternal(records) {
         imuChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Belum ada data'],
+                labels: ['No data yet'],
                 datasets: [
                     {
-                        label: 'Akselerasi X (g)',
+                        label: 'Acceleration X (g)',
                         data: [],
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.4
                     },
                     {
-                        label: 'Akselerasi Y (g)',
+                        label: 'Acceleration Y (g)',
                         data: [],
                         borderColor: 'rgb(54, 162, 235)',
                         backgroundColor: 'rgba(54, 162, 235, 0.1)',
                         tension: 0.4
                     },
                     {
-                        label: 'Akselerasi Z (g)',
+                        label: 'Acceleration Z (g)',
                         data: [],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
@@ -681,7 +681,7 @@ function createIMUChartInternal(records) {
                     },
                     title: {
                         display: true,
-                        text: 'Belum ada data record untuk ditampilkan',
+                        text: 'No record data to display yet',
                         position: 'bottom'
                     }
                 },
@@ -692,7 +692,7 @@ function createIMUChartInternal(records) {
                         position: 'left',
                         title: {
                             display: true,
-                            text: 'Akselerasi (g)'
+                            text: 'Acceleration (g)'
                         },
                         beginAtZero: false
                     }
@@ -718,7 +718,7 @@ function createIMUChartInternal(records) {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Akselerasi X (g)',
+                        label: 'Acceleration X (g)',
                         data: axData,
                         borderColor: 'rgb(255, 99, 132)', // Red color for X axis
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
@@ -729,7 +729,7 @@ function createIMUChartInternal(records) {
                         pointHoverRadius: 6
                     },
                     {
-                        label: 'Akselerasi Y (g)',
+                        label: 'Acceleration Y (g)',
                         data: ayData,
                         borderColor: 'rgb(54, 162, 235)', // Blue color for Y axis
                         backgroundColor: 'rgba(54, 162, 235, 0.1)',
@@ -740,7 +740,7 @@ function createIMUChartInternal(records) {
                         pointHoverRadius: 6
                     },
                     {
-                        label: 'Akselerasi Z (g)',
+                        label: 'Acceleration Z (g)',
                         data: azData,
                         borderColor: 'rgb(75, 192, 192)', // Teal color for Z axis
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
@@ -794,7 +794,7 @@ function createIMUChartInternal(records) {
                         display: true,
                         title: {
                             display: true,
-                            text: 'Tanggal',
+                            text: 'Date',
                             font: {
                                 size: 12,
                                 weight: 'bold'
@@ -811,7 +811,7 @@ function createIMUChartInternal(records) {
                         position: 'left',
                         title: {
                             display: true,
-                            text: 'Akselerasi (g)',
+                            text: 'Acceleration (g)',
                             font: {
                                 size: 12,
                                 weight: 'bold'
@@ -836,7 +836,7 @@ function createIMUChartInternal(records) {
             chartContainer.innerHTML = `
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Gagal membuat grafik IMU: ${error.message}</p>
+                    <p style="margin-top: 1rem;">Failed to create IMU chart: ${error.message}</p>
                 </div>
             `;
         }
@@ -854,7 +854,7 @@ function createEMGChartInternal(records) {
             chartContainer.innerHTML = `
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Canvas element tidak ditemukan.</p>
+                    <p style="margin-top: 1rem;">Canvas element not found.</p>
                 </div>
             `;
         }
@@ -875,10 +875,10 @@ function createEMGChartInternal(records) {
         emgChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Belum ada data'],
+                labels: ['No data yet'],
                 datasets: [
                     {
-                        label: 'Aktivitas Otot (%)',
+                        label: 'Muscle Activity (%)',
                         data: [],
                         borderColor: 'rgb(91, 155, 213)',
                         backgroundColor: 'rgba(91, 155, 213, 0.1)',
@@ -896,7 +896,7 @@ function createEMGChartInternal(records) {
                     },
                     title: {
                         display: true,
-                        text: 'Belum ada data record untuk ditampilkan',
+                        text: 'No record data to display yet',
                         position: 'bottom'
                     }
                 },
@@ -907,7 +907,7 @@ function createEMGChartInternal(records) {
                         position: 'left',
                         title: {
                             display: true,
-                            text: 'Aktivitas Otot (%)'
+                            text: 'Muscle Activity (%)'
                         },
                         beginAtZero: true,
                         max: 100
@@ -935,7 +935,7 @@ function createEMGChartInternal(records) {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Aktivitas Otot (%)',
+                        label: 'Muscle Activity (%)',
                         data: emgDataValues,
                         borderColor: 'rgb(91, 155, 213)', // Blue color for EMG
                         backgroundColor: 'rgba(91, 155, 213, 0.1)',
@@ -989,7 +989,7 @@ function createEMGChartInternal(records) {
                         display: true,
                         title: {
                             display: true,
-                            text: 'Tanggal',
+                            text: 'Date',
                             font: {
                                 size: 12,
                                 weight: 'bold'
@@ -1006,7 +1006,7 @@ function createEMGChartInternal(records) {
                         position: 'left',
                         title: {
                             display: true,
-                            text: 'Aktivitas Otot (%)',
+                            text: 'Muscle Activity (%)',
                             font: {
                                 size: 12,
                                 weight: 'bold'
@@ -1035,20 +1035,20 @@ function createEMGChartInternal(records) {
             chartContainer.innerHTML = `
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Gagal membuat grafik EMG: ${error.message}</p>
+                    <p style="margin-top: 1rem;">Failed to create EMG chart: ${error.message}</p>
                 </div>
             `;
         }
     }
 }
 
-// Format date to Indonesian format
+// Format date to localized format
 function formatDate(date) {
     if (!date) return '-';
     
     const d = new Date(date);
-    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
-                   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                   'July', 'August', 'September', 'October', 'November', 'December'];
     
     const day = d.getDate();
     const month = months[d.getMonth()];
@@ -1082,7 +1082,7 @@ async function getAIRecommendation() {
             aiContent.innerHTML = `
                 <div class="ai-error">
                     <i class="bi bi-exclamation-triangle"></i>
-                    <p>Data pasien belum dimuat. Silakan tunggu sebentar dan coba lagi.</p>
+                    <p>Patient data not loaded yet. Please wait a moment and try again.</p>
                 </div>
             `;
         }
@@ -1095,8 +1095,8 @@ async function getAIRecommendation() {
     aiContent.innerHTML = `
         <div class="ai-loading">
             <i class="bi bi-arrow-repeat" style="font-size: 2rem;"></i>
-            <p style="margin-top: 1rem;">AI sedang menganalisis perkembangan pasien dan menyiapkan rekomendasi untuk dokter...</p>
-            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-light);">Mohon tunggu sebentar...</p>
+            <p style="margin-top: 1rem;">AI is analyzing patient progress and preparing recommendations for the doctor...</p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-light);">Please wait a moment...</p>
         </div>
     `;
     
@@ -1109,7 +1109,7 @@ async function getAIRecommendation() {
                     <div style="color: var(--text-dark); line-height: 1.8; padding: 1rem;">
                         <p style="color: var(--text-light); font-style: italic; text-align: center; padding: 2rem;">
                             <i class="bi bi-info-circle" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
-                            Belum ada data riwayat untuk pasien ini.
+                            No history data for this patient yet.
                         </p>
                     </div>
                 </div>
@@ -1145,18 +1145,18 @@ async function getAIRecommendation() {
             aiContent.innerHTML = `
                 <div class="ai-error">
                     <i class="bi bi-exclamation-triangle"></i>
-                    <p><strong>Layanan AI Recommendation Sementara Tidak Tersedia</strong></p>
-                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">Layanan rekomendasi AI sedang dalam perawatan. Silakan hubungi administrator untuk informasi lebih lanjut.</p>
+                    <p><strong>AI Recommendation Service Temporarily Unavailable</strong></p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">The AI recommendation service is under maintenance. Please contact the administrator for more information.</p>
                     <div style="margin-top: 1rem; padding: 1rem; background: rgba(91, 155, 213, 0.1); border-radius: var(--border-radius); border-left: 3px solid var(--primary-blue);">
                         <p style="margin: 0; font-size: 0.9rem; color: var(--text-dark);">
-                            <strong>Rekomendasi Umum untuk Rehabilitasi Stroke:</strong>
+                            <strong>General Recommendations for Stroke Rehabilitation:</strong>
                         </p>
                         <ul style="margin-top: 0.5rem; margin-left: 1.5rem; color: var(--text-dark); line-height: 1.8;">
-                            <li>Lakukan latihan gerak lengan secara rutin setiap hari</li>
-                            <li>Pantau aktivitas otot dengan konsisten</li>
-                            <li>Istirahat yang cukup antara sesi latihan</li>
-                            <li>Konsultasikan dengan fisioterapis untuk program latihan yang sesuai</li>
-                            <li>Catat perkembangan secara berkala</li>
+                            <li>Perform arm movement exercises regularly every day</li>
+                            <li>Monitor muscle activity consistently</li>
+                            <li>Get adequate rest between exercise sessions</li>
+                            <li>Consult with a physiotherapist for a suitable exercise program</li>
+                            <li>Record progress periodically</li>
                         </ul>
                     </div>
                 </div>
@@ -1166,9 +1166,9 @@ async function getAIRecommendation() {
             aiContent.innerHTML = `
                 <div class="ai-error">
                     <i class="bi bi-exclamation-triangle"></i>
-                    <p><strong>Gagal mendapatkan rekomendasi AI</strong></p>
-                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">${error.message || 'Terjadi kesalahan saat memproses permintaan.'}</p>
-                    <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-light);">Silakan refresh halaman untuk mencoba lagi.</p>
+                    <p><strong>Failed to get AI recommendation</strong></p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">${error.message || 'An error occurred while processing the request.'}</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-light);">Please refresh the page to try again.</p>
                 </div>
             `;
         }
@@ -1211,7 +1211,7 @@ function preparePatientSummary() {
     // Monitoring records summary
     // Check if there are any records at all
     if (!patientRecords || patientRecords.length === 0) {
-        summary += `RIWAYAT MONITORING: Belum ada data riwayat untuk pasien ini.\n`;
+        summary += `MONITORING HISTORY: No history data for this patient yet.\n`;
         summary += `Pasien belum memiliki sesi monitoring yang tercatat.\n`;
         return summary;
     }
@@ -1296,7 +1296,7 @@ function preparePatientSummary() {
             summary += `- Konsistensi Data: ${consistency} (standar deviasi: ${stdDev.toFixed(1)}%)\n`;
         }
     } else {
-        summary += `RIWAYAT MONITORING: Belum ada data monitoring.\n`;
+        summary += `MONITORING HISTORY: No monitoring data yet.\n`;
     }
     
     return summary;
@@ -1319,7 +1319,7 @@ function calculateAge(birthDate) {
 async function callGeminiAPI(patientSummary) {
     // Check if Gemini API constants are available (from firebase-config.js)
     if (typeof callGeminiWithRotation === 'undefined') {
-        throw new Error('Gemini API configuration tidak ditemukan. Pastikan firebase-config.js dimuat terlebih dahulu.');
+        throw new Error('Gemini API configuration not found. Make sure firebase-config.js is loaded first.');
     }
 
     // Use the API URL from firebase-config.js (gemini-2.5-flash or fallback to gemini-pro)
@@ -1409,7 +1409,7 @@ Gunakan bahasa Indonesia yang profesional dan medis. Fokus pada memberikan pandu
     if (data.candidates && data.candidates[0] && data.candidates[0].content) {
         return data.candidates[0].content.parts[0].text;
     } else {
-        throw new Error('Format respons API tidak valid');
+        throw new Error('Invalid API response format');
     }
 }
 
@@ -1544,7 +1544,7 @@ function displayAIRecommendation(recommendation) {
             </div>
             <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: var(--text-light); display: flex; align-items: start; gap: 0.5rem;">
                 <i class="bi bi-info-circle" style="font-size: 1.1rem; margin-top: 0.1rem; color: var(--primary-blue);"></i>
-                <em>Rekomendasi ini dihasilkan oleh AI dan hanya sebagai panduan. Selalu konsultasikan dengan dokter atau fisioterapis sebelum mengikuti program rehabilitasi.</em>
+                <em>This recommendation is AI-generated and is for guidance only. Always consult with a doctor or physiotherapist before following a rehabilitation program.</em>
             </div>
         </div>
     `;
@@ -1644,7 +1644,7 @@ function loadZonesAnalysis() {
     if (!patientRecords || patientRecords.length === 0) {
         const container = document.getElementById('zonesAnalysisContainer');
         if (container) {
-            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">Belum ada data untuk analisis zona.</p>';
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">No data available for zone analysis.</p>';
         }
         return;
     }
@@ -1664,7 +1664,7 @@ function loadFatigueTrend() {
     if (!patientRecords || patientRecords.length === 0) {
         const container = document.getElementById('fatigueSummary');
         if (container) {
-            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 0.5rem;">Belum ada data untuk analisis kelelahan.</p>';
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 0.5rem;">No data available for fatigue analysis.</p>';
         }
         return;
     }
@@ -1684,7 +1684,7 @@ function loadFatigueTrend() {
 
     const labels = recent.map(t => {
         const d = t.timestamp instanceof Date ? t.timestamp : new Date(t.timestamp);
-        return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        return d.toLocaleDateString((typeof getLang === 'function' && getLang() === 'id') ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short' });
     });
 
     const avgData = recent.map(t => t.avgFatigue);
@@ -1701,7 +1701,7 @@ function loadFatigueTrend() {
             labels: labels,
             datasets: [
                 {
-                    label: 'Rata-rata Kelelahan (%)',
+                    label: 'Avg Fatigue (%)',
                     data: avgData,
                     borderColor: '#B8A85A',
                     backgroundColor: 'rgba(184, 168, 90, 0.1)',
@@ -1711,7 +1711,7 @@ function loadFatigueTrend() {
                     pointRadius: 4
                 },
                 {
-                    label: 'Puncak Kelelahan (%)',
+                    label: 'Peak Fatigue (%)',
                     data: peakData,
                     borderColor: '#B85A5A',
                     backgroundColor: 'rgba(184, 90, 90, 0.1)',
@@ -1730,8 +1730,8 @@ function loadFatigueTrend() {
                 legend: { display: true, position: 'top', labels: { usePointStyle: true, padding: 10, font: { size: 11 } } }
             },
             scales: {
-                x: { display: true, title: { display: true, text: 'Tanggal', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
-                y: { display: true, title: { display: true, text: 'Kelelahan (%)', font: { size: 11 } }, beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' } }
+                x: { display: true, title: { display: true, text: 'Date', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                y: { display: true, title: { display: true, text: 'Fatigue (%)', font: { size: 11 } }, beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' } }
             }
         }
     });
@@ -1744,16 +1744,16 @@ function loadFatigueTrend() {
         container.innerHTML = `
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center;">
                 <div style="padding: 0.5rem; background: var(--neumorphism-base); border-radius: var(--border-radius); box-shadow: var(--shadow-combined);">
-                    <div style="font-size: 0.7rem; color: var(--text-light);">Sesi Terakhir</div>
+                    <div style="font-size: 0.7rem; color: var(--text-light);">Last Session</div>
                     <div style="font-weight: 600; color: #B8A85A;">${latestFatigue.avgFatigue}%</div>
                 </div>
                 <div style="padding: 0.5rem; background: var(--neumorphism-base); border-radius: var(--border-radius); box-shadow: var(--shadow-combined);">
-                    <div style="font-size: 0.7rem; color: var(--text-light);">Puncak Tertinggi</div>
+                    <div style="font-size: 0.7rem; color: var(--text-light);">Highest Peak</div>
                     <div style="font-weight: 600; color: #B85A5A;">${Math.max(...peakData)}%</div>
                 </div>
                 <div style="padding: 0.5rem; background: var(--neumorphism-base); border-radius: var(--border-radius); box-shadow: var(--shadow-combined);">
-                    <div style="font-size: 0.7rem; color: var(--text-light);">Onset Terdeteksi</div>
-                    <div style="font-weight: 600; color: var(--text-dark);">${onsetCount}/${recent.length} sesi</div>
+                    <div style="font-size: 0.7rem; color: var(--text-light);">Onset Detected</div>
+                    <div style="font-weight: 600; color: var(--text-dark);">${onsetCount}/${recent.length} sessions</div>
                 </div>
             </div>
         `;
@@ -1777,7 +1777,7 @@ async function loadProgressGoals() {
     } else {
         const container = document.getElementById('progressGoalsContainer');
         if (container) {
-            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">Belum ada data untuk progress.</p>';
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">No data available for progress.</p>';
         }
     }
 }
@@ -1792,11 +1792,11 @@ window.openGoalsEditor = function() {
     const modalBody = document.getElementById('modalBody');
     const modalFooter = document.getElementById('modalFooter');
 
-    modalTitle.textContent = 'Edit Target Rehabilitasi';
+    modalTitle.textContent = 'Edit Rehabilitation Target';
     modalBody.innerHTML = renderGoalsEditor(currentGoals);
     modalFooter.innerHTML = `
-        <button class="btn btn-secondary" id="modalCancelBtn" style="flex: 1;">Batal</button>
-        <button class="btn btn-primary" id="modalSaveGoalsBtn" style="flex: 1;">Simpan</button>
+        <button class="btn btn-secondary" id="modalCancelBtn" style="flex: 1;">Cancel</button>
+        <button class="btn btn-primary" id="modalSaveGoalsBtn" style="flex: 1;">Save</button>
     `;
 
     document.getElementById('modalCancelBtn').addEventListener('click', () => modal.classList.remove('active'));
@@ -1807,10 +1807,10 @@ window.openGoalsEditor = function() {
             const success = await savePatientGoals(currentUser.uid, patientId, newGoals);
             if (success) {
                 modal.classList.remove('active');
-                if (typeof showAlert === 'function') showAlert('Target berhasil disimpan!', 'Berhasil');
+                if (typeof showAlert === 'function') showAlert('Target saved successfully!', t('label.success'));
                 loadProgressGoals();
             } else {
-                if (typeof showAlert === 'function') showAlert('Gagal menyimpan target.', 'Kesalahan');
+                if (typeof showAlert === 'function') showAlert('Failed to save target.', t('label.error'));
             }
         }
     });
@@ -1823,7 +1823,7 @@ window.handleExportCSV = function() {
     if (typeof exportAllRecordsToCSV === 'function' && patientRecords && patientData) {
         exportAllRecordsToCSV(patientRecords, patientData.name);
     } else {
-        if (typeof showAlert === 'function') showAlert('Tidak ada data untuk di-export.', 'Peringatan');
+        if (typeof showAlert === 'function') showAlert('No data to export.', t('label.warning'));
     }
 };
 
@@ -1831,7 +1831,7 @@ window.handleExportPDF = function() {
     if (typeof exportToPDF === 'function' && patientData) {
         exportToPDF(patientData, patientRecords, patientId);
     } else {
-        if (typeof showAlert === 'function') showAlert('Data pasien tidak tersedia.', 'Peringatan');
+        if (typeof showAlert === 'function') showAlert('Patient data not available.', t('label.warning'));
     }
 };
 
@@ -1839,7 +1839,7 @@ window.handleExportSingleCSV = function() {
     if (typeof exportRecordToCSV === 'function' && patientRecords && patientRecords.length > 0 && patientData) {
         exportRecordToCSV(patientRecords[0], patientData.name);
     } else {
-        if (typeof showAlert === 'function') showAlert('Tidak ada record untuk di-export.', 'Peringatan');
+        if (typeof showAlert === 'function') showAlert('No records to export.', t('label.warning'));
     }
 };
 
@@ -1860,10 +1860,10 @@ window.saveRecordNote = async function(recordId, note) {
             .collection('patients').doc(patientId)
             .collection('monitoringRecords').doc(recordId)
             .update({ notes: note });
-        if (typeof showAlert === 'function') showAlert('Catatan berhasil disimpan!', 'Berhasil');
+        if (typeof showAlert === 'function') showAlert('Notes saved successfully!', t('label.success'));
     } catch (e) {
         console.error('Error saving note:', e);
-        if (typeof showAlert === 'function') showAlert('Gagal menyimpan catatan.', 'Kesalahan');
+        if (typeof showAlert === 'function') showAlert('Failed to save notes.', t('label.error'));
     }
 };
 
@@ -1897,8 +1897,8 @@ function viewDocumentationPhoto(photoUrl) {
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
-            <img id="photoViewerImg" src="" alt="Foto Dokumentasi" style="max-width:90%; max-height:85vh; object-fit:contain; border-radius:8px;" />
-            <p style="color:rgba(255,255,255,0.6); font-size:0.85rem; margin-top:1rem;">Ketuk di luar foto untuk menutup</p>
+            <img id="photoViewerImg" src="" alt="Documentation Photo" style="max-width:90%; max-height:85vh; object-fit:contain; border-radius:8px;" />
+            <p style="color:rgba(255,255,255,0.6); font-size:0.85rem; margin-top:1rem;">Tap outside the photo to close</p>
         `;
         modal.addEventListener('click', function(e) {
             if (e.target === modal) closePhotoViewer();

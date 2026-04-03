@@ -42,7 +42,7 @@ async function loadPatientsList() {
     patientList.innerHTML = `
         <div class="card" style="text-align: center; padding: 2rem;">
             <i class="bi bi-hourglass-split" style="font-size: 2rem; color: var(--text-light);"></i>
-            <p style="margin-top: 1rem; color: var(--text-light);">Memuat daftar pasien...</p>
+            <p style="margin-top: 1rem; color: var(--text-light);">${t('patient.loading')}</p>
         </div>
     `;
     
@@ -59,7 +59,7 @@ async function loadPatientsList() {
                 const data = doc.data();
                 allPatients.push({
                     id: doc.id,
-                    name: data.name || 'Tanpa Nama',
+                    name: data.name || t('patient.no_name'),
                     email: data.email || '-',
                     phone: data.phone || '-',
                     birthDate: data.birthDate || '',
@@ -79,7 +79,7 @@ async function loadPatientsList() {
             patientList.innerHTML = `
                 <div class="empty-state">
                     <i class="bi bi-exclamation-circle"></i>
-                    <p>Firestore tidak tersedia. Tidak dapat memuat daftar pasien.</p>
+                    <p>${t('patient.firestore_error')}</p>
                 </div>
             `;
         }
@@ -88,7 +88,7 @@ async function loadPatientsList() {
         patientList.innerHTML = `
             <div class="empty-state">
                 <i class="bi bi-exclamation-triangle"></i>
-                <p>Gagal memuat daftar pasien: ${error.message}</p>
+                <p>${t('patient.load_error', {0: error.message})}</p>
             </div>
         `;
     }
@@ -103,7 +103,7 @@ function displayPatientsList(patients) {
         patientList.innerHTML = `
             <div class="empty-state">
                 <i class="bi bi-person-x"></i>
-                <p>Belum ada pasien terdaftar.</p>
+                <p>${t('patient.empty')}</p>
             </div>
         `;
         return;
@@ -174,7 +174,7 @@ function showAddPatientModal() {
     
     // Set title
     if (modalTitle) {
-        modalTitle.textContent = 'Tambah Pasien';
+        modalTitle.textContent = t('patient.modal.add_title');
     }
     
     // Clear form
@@ -205,7 +205,7 @@ function editPatient(patientId) {
     
     // Set title
     if (modalTitle) {
-        modalTitle.textContent = 'Edit Pasien';
+        modalTitle.textContent = t('patient.modal.edit_title');
     }
     
     // Fill form with patient data
@@ -248,18 +248,18 @@ async function savePatient() {
     // Validation
     if (!name) {
         if (typeof showAlert === 'function') {
-            showAlert('Nama harus diisi!', 'Validasi');
+            showAlert(t('patient.validate.name_required'), t('label.validation'));
         } else {
-            alert('Nama harus diisi!');
+            alert(t('patient.validate.name_required'));
         }
         return;
     }
     
     if (!email) {
         if (typeof showAlert === 'function') {
-            showAlert('Email harus diisi!', 'Validasi');
+            showAlert(t('patient.validate.email_required'), t('label.validation'));
         } else {
-            alert('Email harus diisi!');
+            alert(t('patient.validate.email_required'));
         }
         return;
     }
@@ -268,7 +268,7 @@ async function savePatient() {
     const saveBtn = event?.target || document.querySelector('button[onclick="savePatient()"]');
     const originalText = saveBtn.innerHTML;
     saveBtn.disabled = true;
-    saveBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Menyimpan...';
+    saveBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> ' + t('label.saving');
     
     try {
         const patientData = {
@@ -293,9 +293,9 @@ async function savePatient() {
                     .update(patientData);
                 
                 if (typeof showAlert === 'function') {
-                    showAlert('Data pasien berhasil diperbarui!', 'Berhasil');
+                    showAlert(t('patient.save.success_update'), t('label.success'));
                 } else {
-                    alert('Data pasien berhasil diperbarui!');
+                    alert(t('patient.save.success_update'));
                 }
             }
         } else {
@@ -308,9 +308,9 @@ async function savePatient() {
                     .add(patientData);
                 
                 if (typeof showAlert === 'function') {
-                    showAlert('Pasien baru berhasil ditambahkan!', 'Berhasil');
+                    showAlert(t('patient.save.success_add'), t('label.success'));
                 } else {
-                    alert('Pasien baru berhasil ditambahkan!');
+                    alert(t('patient.save.success_add'));
                 }
             }
         }
@@ -331,9 +331,9 @@ async function savePatient() {
         saveBtn.innerHTML = originalText;
         
         if (typeof showAlert === 'function') {
-            showAlert('Gagal menyimpan data pasien: ' + error.message, 'Kesalahan');
+            showAlert(t('patient.save.error', {0: error.message}), t('label.error'));
         } else {
-            alert('Gagal menyimpan data pasien: ' + error.message);
+            alert(t('patient.save.error', {0: error.message}));
         }
     }
 }
@@ -342,14 +342,14 @@ async function savePatient() {
 async function deletePatient(patientId, patientName) {
     if (typeof showConfirm === 'function') {
         showConfirm(
-            `Apakah Anda yakin ingin menghapus pasien "${patientName}"? Tindakan ini tidak dapat dibatalkan.`,
-            'Konfirmasi Hapus',
+            t('patient.delete.confirm', {0: patientName}),
+            t('patient.delete.confirm_title'),
             async () => {
                 await performDeletePatient(patientId);
             }
         );
     } else {
-        if (confirm(`Apakah Anda yakin ingin menghapus pasien "${patientName}"?`)) {
+        if (confirm(t('patient.delete.confirm', {0: patientName}))) {
             await performDeletePatient(patientId);
         }
     }
@@ -366,9 +366,9 @@ async function performDeletePatient(patientId) {
                 .delete();
             
             if (typeof showAlert === 'function') {
-                showAlert('Pasien berhasil dihapus!', 'Berhasil');
+                showAlert(t('patient.delete.success'), t('label.success'));
             } else {
-                alert('Pasien berhasil dihapus!');
+                alert(t('patient.delete.success'));
             }
             
             // Reload patients list
@@ -377,9 +377,9 @@ async function performDeletePatient(patientId) {
     } catch (error) {
         console.error('Error deleting patient:', error);
         if (typeof showAlert === 'function') {
-            showAlert('Gagal menghapus pasien: ' + error.message, 'Kesalahan');
+            showAlert(t('patient.delete.error', {0: error.message}), t('label.error'));
         } else {
-            alert('Gagal menghapus pasien: ' + error.message);
+            alert(t('patient.delete.error', {0: error.message}));
         }
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,23 +81,27 @@
     </style>
 </head>
 <body>
+    <button class="lang-toggle-btn" onclick="toggleLang()" style="position: fixed; top: 10px; right: 10px; z-index: 9999; background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer;">ID</button>
     <div class="error-container">
         <div class="error-card">
             <div class="error-icon">
                 <i class="bi bi-exclamation-triangle"></i>
             </div>
             <div class="error-code">404</div>
-            <h1 class="error-title">Halaman Tidak Ditemukan</h1>
-            <p class="error-desc">Maaf, halaman yang Anda cari tidak tersedia atau telah dipindahkan. Silakan kembali ke halaman utama.</p>
+            <h1 class="error-title" data-i18n="404.title">Page Not Found</h1>
+            <p class="error-desc" data-i18n="404.desc">Sorry, the page you are looking for is not available or has been moved. Please return to the main page.</p>
             <div class="error-actions">
                 <a href="dashboard.html" class="btn btn-primary">
-                    <i class="bi bi-house-door"></i> Kembali ke Dashboard
+                    <i class="bi bi-house-door"></i> <span data-i18n="404.dashboard">Back to Dashboard</span>
                 </a>
                 <a href="index.html" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Halaman Utama
+                    <i class="bi bi-arrow-left"></i> <span data-i18n="404.home">Home Page</span>
                 </a>
             </div>
         </div>
     </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 </body>
 </html>

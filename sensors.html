@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
@@ -147,6 +147,7 @@
             </a>
             <div class="app-bar-actions">
                 <div class="app-bar-date" id="appBarDate"></div>
+                <button class="lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer; margin-right: 0.5rem;">ID</button>
                 <a href="account.html" class="app-bar-avatar" id="appBarAvatar" title="Profil"><i class="bi bi-person"></i></a>
             </div>
         </div>
@@ -155,8 +156,8 @@
     <div class="container" style="padding-bottom: 100px;">
         <!-- Page Header -->
         <div class="page-header fade-in">
-            <h1><i class="bi bi-activity card-icon"></i> Monitoring Pasien</h1>
-            <p>Pantau aktivitas otot dan gerak lengan pasien secara real-time</p>
+            <h1><i class="bi bi-activity card-icon"></i> <span data-i18n="sensors.title">Patient Monitoring</span></h1>
+            <p data-i18n="sensors.subtitle">Monitor patient's muscle activity and arm movement in real-time</p>
         </div>
 
         <!-- Patient and Device Selection Card -->
@@ -164,7 +165,7 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-person-heart card-icon"></i>
-                    Pilih Pasien & Device
+                    <span data-i18n="sensors.select_patient_device">Select Patient & Device</span>
                 </h2>
             </div>
             
@@ -172,17 +173,17 @@
                 <!-- Patient Selection -->
                 <div style="margin-bottom: 1rem;">
                     <label for="patientSelect" style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-dark);">
-                        <i class="bi bi-person-heart"></i> Pilih Pasien
+                        <i class="bi bi-person-heart"></i> <span data-i18n="sensors.select_patient">Select Patient</span>
                     </label>
                     <select id="patientSelect" class="form-control" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-blue); border-radius: var(--border-radius); background: var(--white); color: var(--text-dark); font-size: 1rem; cursor: pointer; transition: var(--transition);">
-                        <option value="">-- Pilih Pasien --</option>
+                        <option value="" data-i18n="sensors.select_patient.default">-- Select Patient --</option>
                     </select>
                 </div>
 
                 <!-- Device Selection -->
                 <div>
                     <label for="deviceSelect" style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-dark);">
-                        <i class="bi bi-router"></i> Pilih Device
+                        <i class="bi bi-router"></i> <span data-i18n="sensors.select_device">Select Device</span>
                     </label>
                     <select id="deviceSelect" class="form-control" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-blue); border-radius: var(--border-radius); background: var(--white); color: var(--text-dark); font-size: 1rem; cursor: pointer; transition: var(--transition);">
                         <option value="device 1">Device 1</option>
@@ -193,14 +194,14 @@
                 <!-- Recording Status -->
                 <div id="recordingStatus" class="recording-status stopped" style="display: none; margin-top: 1rem;">
                     <i class="bi bi-circle-fill" style="font-size: 0.8rem; animation: pulse 2s infinite;"></i>
-                    <span id="recordingStatusText">Tidak sedang merekam</span>
+                    <span id="recordingStatusText" data-i18n="sensors.recording.idle">Not recording</span>
                 </div>
 
                 <!-- Record/Stop Buttons -->
                 <div class="record-buttons">
                     <button id="btnRecord" class="btn-record" onclick="startRecording()">
                         <i class="bi bi-record-circle"></i>
-                        Mulai Rekam
+                        <span data-i18n="sensors.btn.start">Start Record</span>
                     </button>
                     <button id="btnStop" class="btn-stop" onclick="stopRecording()" disabled>
                         <i class="bi bi-stop-circle"></i>
@@ -213,14 +214,14 @@
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
                         <div style="flex: 1;">
                             <div style="font-weight: 600; color: var(--text-dark); font-size: 0.9rem;">
-                                <i class="bi bi-camera"></i> Foto Dokumentasi Harian
+                                <i class="bi bi-camera"></i> <span data-i18n="sensors.photo.title">Daily Photo Documentation</span>
                             </div>
                             <div id="dailyPhotoStatus" style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">
-                                Pilih pasien terlebih dahulu
+                                <span data-i18n="sensors.photo.select_patient">Select a patient first</span>
                             </div>
                         </div>
                         <button id="btnDailyPhoto" onclick="takeDailyPhoto()" disabled style="padding: 0.6rem 1.2rem; background: #0891b2; color: #fff; border: none; border-radius: var(--border-radius); font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; opacity: 0.5; white-space: nowrap;">
-                            <i class="bi bi-camera-fill"></i> Ambil Foto
+                            <i class="bi bi-camera-fill"></i> <span data-i18n="sensors.photo.btn">Take Photo</span>
                         </button>
                     </div>
                 </div>
@@ -228,8 +229,8 @@
                 <div class="alert alert-info" style="margin-top: 1rem; margin-bottom: 0;">
                     <i class="bi bi-info-circle" style="font-size: 1.5rem;"></i>
                     <div>
-                        <strong>Petunjuk</strong>
-                        <p style="margin: 0; margin-top: 0.25rem;">Pilih pasien dan device, lalu klik "Mulai Rekam" untuk memulai monitoring. Klik "Stop" untuk menghentikan dan menyimpan data ke Firestore. Foto dokumentasi hanya bisa diambil 1x per hari per pasien.</p>
+                        <strong data-i18n="sensors.hint.title">Instructions</strong>
+                        <p style="margin: 0; margin-top: 0.25rem;" data-i18n="sensors.hint.desc">Select a patient and device, then click "Start Record" to begin monitoring. Click "Stop" to stop and save data to Firestore. Documentation photo can only be taken once per day per patient.</p>
                     </div>
                 </div>
             </div>
@@ -240,7 +241,7 @@
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
                     <i class="bi bi-clipboard-data card-icon"></i>
-                    Ringkasan Monitoring
+                    <span data-i18n="sensors.summary">Monitoring Summary</span>
                 </h2>
                 <button onclick="resetMonitoringStats()" class="btn btn-sm btn-secondary" style="padding: 0.5rem; min-width: auto;" title="Reset Statistik">
                     <i class="bi bi-arrow-counterclockwise"></i>
@@ -253,7 +254,7 @@
                         <i class="bi bi-activity"></i>
                     </div>
                     <div class="stat-value" id="avgMuscleActivity">0%</div>
-                    <div class="stat-label">Rata-rata Aktivitas Otot</div>
+                    <div class="stat-label" data-i18n="sensors.summary.avg_activity">Average Muscle Activity</div>
                 </div>
                 
                 <div class="stat-card">
@@ -261,7 +262,7 @@
                         <i class="bi bi-arrow-repeat"></i>
                     </div>
                     <div class="stat-value" id="movementCount">0</div>
-                    <div class="stat-label">Jumlah Gerakan</div>
+                    <div class="stat-label" data-i18n="sensors.summary.movement_count">Movement Count</div>
                 </div>
                 
                 <div class="stat-card">
@@ -269,7 +270,7 @@
                         <i class="bi bi-speedometer2"></i>
                     </div>
                     <div class="stat-value" id="maxAcceleration">0.0</div>
-                    <div class="stat-label">Akselerasi Maks (g)</div>
+                    <div class="stat-label" data-i18n="sensors.summary.max_accel">Max Acceleration (g)</div>
                 </div>
                 
                 <div class="stat-card">
@@ -277,7 +278,7 @@
                         <i class="bi bi-clock"></i>
                     </div>
                     <div class="stat-value" id="monitoringTime">0:00</div>
-                    <div class="stat-label">Waktu Monitoring</div>
+                    <div class="stat-label" data-i18n="sensors.summary.time">Monitoring Time</div>
                 </div>
             </div>
         </div>
@@ -287,7 +288,7 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-graph-up card-icon"></i>
-                    Grafik Real-time
+                    <span data-i18n="sensors.chart">Real-time Chart</span>
                 </h2>
             </div>
             
@@ -298,11 +299,11 @@
             <div class="chart-legend">
                 <div class="chart-legend-item">
                     <div class="chart-legend-color legend-emg"></div>
-                    <span>Aktivitas Otot (EMG)</span>
+                    <span data-i18n="sensors.chart.emg">Muscle Activity (EMG)</span>
                 </div>
                 <div class="chart-legend-item">
                     <div class="chart-legend-color legend-accel"></div>
-                    <span>Magnitude Akselerasi</span>
+                    <span data-i18n="sensors.chart.accel">Acceleration Magnitude</span>
                 </div>
             </div>
         </div>
@@ -312,14 +313,14 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-speedometer card-icon"></i>
-                    Zona Aktivitas Otot
+                    <span data-i18n="sensors.zone">Muscle Activity Zone</span>
                 </h2>
             </div>
             <div id="zoneIndicator">
                 <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: rgba(122, 139, 168, 0.15); border-radius: var(--border-radius);">
                     <i class="bi bi-moon" style="font-size: 1.5rem; color: #7A8BA8;"></i>
                     <div style="flex: 1;">
-                        <div style="font-weight: 600; color: #7A8BA8; font-size: 1.1rem;">Istirahat</div>
+                        <div style="font-weight: 600; color: #7A8BA8; font-size: 1.1rem;" data-i18n="sensors.zone.rest">Rest</div>
                         <div style="font-size: 0.8rem; color: var(--text-light);">0% - 10% EMG</div>
                     </div>
                     <div style="font-size: 1.5rem; font-weight: 700; color: #7A8BA8;">0%</div>
@@ -334,7 +335,7 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-battery-half card-icon"></i>
-                    Monitor Kelelahan
+                    <span data-i18n="sensors.fatigue">Fatigue Monitor</span>
                 </h2>
             </div>
             <div id="fatigueIndicator">
@@ -342,7 +343,7 @@
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
                             <i class="bi bi-battery-full" style="font-size: 1.3rem; color: #0891b2;"></i>
-                            <span style="font-weight: 600; color: #0891b2;">Segar</span>
+                            <span style="font-weight: 600; color: #0891b2;" data-i18n="sensors.fatigue.fresh">Fresh</span>
                         </div>
                         <span style="font-size: 1.5rem; font-weight: 700; color: #0891b2;">0%</span>
                     </div>
@@ -361,13 +362,13 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-heart-pulse card-icon"></i>
-                    Sensor EMG
+                    <span data-i18n="sensors.emg">EMG Sensor</span>
                 </h2>
             </div>
             
             <div class="sensor-data">
                 <div class="sensor-info">
-                    <div class="sensor-name">Aktivitas Otot</div>
+                    <div class="sensor-name" data-i18n="sensors.emg.activity">Muscle Activity</div>
                     <div class="sensor-value">
                         <span id="emgVoltage">0.00</span>
                         <span class="sensor-unit">V</span>
@@ -377,7 +378,7 @@
             
             <div style="margin: 1rem 0;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <span class="progress-label">Intensitas Kontraksi Otot</span>
+                    <span class="progress-label" data-i18n="sensors.emg.intensity">Muscle Contraction Intensity</span>
                     <span class="progress-value" id="emgIntensity">0%</span>
                 </div>
                 <div class="progress-bar-container">
@@ -400,22 +401,22 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-compass card-icon"></i>
-                    MPU Sensor - Deteksi Gerak Lengan
+                    <span data-i18n="sensors.mpu">MPU Sensor - Arm Movement Detection</span>
                 </h2>
             </div>
             
             <div class="sensor-data">
                 <div class="sensor-info">
-                    <div class="sensor-name">Status Gerak</div>
+                    <div class="sensor-name" data-i18n="sensors.mpu.status">Movement Status</div>
                     <div class="sensor-value">
-                        <span id="armMovementStatus">Gerak Off</span>
+                        <span id="armMovementStatus" data-i18n="sensors.movement.off">Movement Off</span>
                     </div>
                 </div>
             </div>
             
             <div class="sensor-data">
                 <div class="sensor-info">
-                    <div class="sensor-name">Magnitude Akselerasi</div>
+                    <div class="sensor-name" data-i18n="sensors.mpu.magnitude">Acceleration Magnitude</div>
                     <div class="sensor-value">
                         <span id="accelMagnitude">0.00</span>
                         <span class="sensor-unit">g</span>
@@ -425,17 +426,17 @@
             
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1rem 0;">
                 <div style="text-align: center; padding: 0.75rem; background: rgba(0, 212, 255, 0.1); border-radius: var(--border-radius); border: 1px solid rgba(0, 212, 255, 0.2);">
-                    <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.25rem;">Akselerasi X</div>
+                    <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.25rem;" data-i18n="sensors.mpu.accel_x">Acceleration X</div>
                     <div style="font-size: 1.25rem; font-weight: 600; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="mpuAccelX">0.00</div>
                     <div style="font-size: 0.75rem; color: var(--text-light);">g</div>
                 </div>
                 <div style="text-align: center; padding: 0.75rem; background: rgba(0, 212, 255, 0.1); border-radius: var(--border-radius); border: 1px solid rgba(0, 212, 255, 0.2);">
-                    <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.25rem;">Akselerasi Y</div>
+                    <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.25rem;" data-i18n="sensors.mpu.accel_y">Acceleration Y</div>
                     <div style="font-size: 1.25rem; font-weight: 600; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="mpuAccelY">0.00</div>
                     <div style="font-size: 0.75rem; color: var(--text-light);">g</div>
                 </div>
                 <div style="text-align: center; padding: 0.75rem; background: rgba(0, 212, 255, 0.1); border-radius: var(--border-radius); border: 1px solid rgba(0, 212, 255, 0.2);">
-                    <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.25rem;">Akselerasi Z</div>
+                    <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.25rem;" data-i18n="sensors.mpu.accel_z">Acceleration Z</div>
                     <div style="font-size: 1.25rem; font-weight: 600; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="mpuAccelZ">0.00</div>
                     <div style="font-size: 0.75rem; color: var(--text-light);">g</div>
                 </div>
@@ -466,8 +467,8 @@
         <div class="camera-modal-inner">
             <!-- Header -->
             <div class="camera-modal-header">
-                <h3><i class="bi bi-camera"></i> Dokumentasi Pasien</h3>
-                <p>Ambil foto pasien sebagai bukti dokumentasi sesi</p>
+                <h3><i class="bi bi-camera"></i> <span data-i18n="camera.title">Patient Documentation</span></h3>
+                <p data-i18n="camera.subtitle">Take a photo of the patient as session documentation</p>
             </div>
 
             <!-- Camera Preview -->
@@ -480,26 +481,26 @@
             <!-- Camera switch -->
             <div class="camera-actions-row">
                 <button id="btnSwitchCamera" onclick="switchCamera()" class="camera-btn camera-btn-glass">
-                    <i class="bi bi-arrow-repeat"></i> Ganti Kamera
+                    <i class="bi bi-arrow-repeat"></i> <span data-i18n="camera.switch">Switch Camera</span>
                 </button>
             </div>
 
             <!-- Action buttons -->
             <div class="camera-actions-row">
                 <button id="btnCapture" onclick="capturePhoto()" class="camera-btn camera-btn-primary" style="flex:2;">
-                    <i class="bi bi-camera-fill"></i> Ambil Foto
+                    <i class="bi bi-camera-fill"></i> <span data-i18n="camera.capture">Take Photo</span>
                 </button>
                 <button id="btnRetake" onclick="retakePhoto()" class="camera-btn camera-btn-glass" style="display:none;">
-                    <i class="bi bi-arrow-counterclockwise"></i> Ulang
+                    <i class="bi bi-arrow-counterclockwise"></i> <span data-i18n="camera.retake">Retake</span>
                 </button>
             </div>
 
             <div class="camera-actions-row">
                 <button id="btnUploadPhoto" onclick="uploadDocumentationPhoto()" class="camera-btn camera-btn-blue" style="flex:2; display:none;">
-                    <i class="bi bi-cloud-upload"></i> Simpan Foto
+                    <i class="bi bi-cloud-upload"></i> <span data-i18n="camera.upload">Save Photo</span>
                 </button>
                 <button id="btnCloseCamera" onclick="closeCameraModal()" class="camera-btn camera-btn-close">
-                    <i class="bi bi-x-lg"></i> Tutup
+                    <i class="bi bi-x-lg"></i> <span data-i18n="btn.close">Close</span>
                 </button>
             </div>
 
@@ -508,7 +509,7 @@
                 <div class="camera-progress-track">
                     <div id="uploadProgressBar" class="camera-progress-bar"></div>
                 </div>
-                <span id="uploadProgressText">Mengupload foto...</span>
+                <span id="uploadProgressText" data-i18n="camera.uploading">Uploading photo...</span>
             </div>
         </div>
     </div>
@@ -517,25 +518,28 @@
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item">
             <i class="bi bi-house-door"></i>
-            <span>Beranda</span>
+            <span data-i18n="nav.home">Home</span>
         </a>
         <a href="sensors.html" class="nav-item active">
             <i class="bi bi-activity" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
-            <span>Monitoring</span>
+            <span data-i18n="nav.monitoring">Monitoring</span>
         </a>
         <a href="encyclopedia.html" class="nav-item">
             <i class="bi bi-book"></i>
-            <span>Ensiklopedia</span>
+            <span data-i18n="nav.encyclopedia">Encyclopedia</span>
         </a>
         <a href="patient.html" class="nav-item">
             <i class="bi bi-person-heart"></i>
-            <span>Pasien</span>
+            <span data-i18n="nav.patients">Patients</span>
         </a>
         <a href="account.html" class="nav-item">
             <i class="bi bi-person"></i>
-            <span>Akun</span>
+            <span data-i18n="nav.account">Account</span>
         </a>
     </nav>
+
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -543,7 +547,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
-    
+
     <script src="js/config.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/modal.js"></script>

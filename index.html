@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,13 +39,14 @@
                 <img src="assets/image/logo.png" alt="MyoSig Logo">
             </a>
             <div class="navbar-links">
-                <a href="#about">Tentang</a>
-                <a href="#features">Fitur</a>
-                <a href="#product">Produk</a>
-                <a href="#team">Tim</a>
-                <a href="#collab">Kolaborasi</a>
+                <a href="#about" data-i18n="landing.nav.about">About</a>
+                <a href="#features" data-i18n="landing.nav.features">Features</a>
+                <a href="#product" data-i18n="landing.nav.product">Product</a>
+                <a href="#team" data-i18n="landing.nav.team">Team</a>
+                <a href="#collab" data-i18n="landing.nav.collab">Collaboration</a>
             </div>
             <div class="navbar-cta">
+                <button class="btn-primary-sm lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; min-width: auto; padding: 0.4rem 0.8rem; font-weight: 700; font-size: 0.85rem;">ID</button>
                 <button class="btn-primary-sm" onclick="window.location.href='auth.html'">
                     <i class="bi bi-box-arrow-in-right"></i> Login/Register
                 </button>
@@ -56,12 +57,13 @@
         </div>
         <div class="container">
             <div class="navbar-mobile" id="mobileMenu">
-                <a href="#about" onclick="document.getElementById('mobileMenu').classList.remove('open')">Tentang</a>
-                <a href="#features" onclick="document.getElementById('mobileMenu').classList.remove('open')">Fitur</a>
-                <a href="#product" onclick="document.getElementById('mobileMenu').classList.remove('open')">Produk</a>
-                <a href="#team" onclick="document.getElementById('mobileMenu').classList.remove('open')">Tim</a>
-                <a href="#collab" onclick="document.getElementById('mobileMenu').classList.remove('open')">Kolaborasi</a>
-                <a href="auth.html" class="btn-primary-sm">Masuk Dashboard</a>
+                <a href="#about" onclick="document.getElementById('mobileMenu').classList.remove('open')" data-i18n="landing.nav.about">About</a>
+                <a href="#features" onclick="document.getElementById('mobileMenu').classList.remove('open')" data-i18n="landing.nav.features">Features</a>
+                <a href="#product" onclick="document.getElementById('mobileMenu').classList.remove('open')" data-i18n="landing.nav.product">Product</a>
+                <a href="#team" onclick="document.getElementById('mobileMenu').classList.remove('open')" data-i18n="landing.nav.team">Team</a>
+                <a href="#collab" onclick="document.getElementById('mobileMenu').classList.remove('open')" data-i18n="landing.nav.collab">Collaboration</a>
+                <button class="lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.4rem 0.8rem; font-weight: 700; font-size: 0.85rem; border-radius: 8px; cursor: pointer;">ID</button>
+                <a href="auth.html" class="btn-primary-sm" data-i18n="landing.nav.dashboard">Go to Dashboard</a>
             </div>
         </div>
     </nav>
@@ -72,34 +74,34 @@
             <div class="hero-grid">
                 <div class="hero-content fade-up">
                     <div class="hero-badge">
-                        <i class="bi bi-award"></i> MTE & INNOPA Award Winner
+                        <i class="bi bi-award"></i> <span data-i18n="landing.hero.badge">MTE & INNOPA Award Winner</span>
                     </div>
                     <h1 class="hero-title">
-                        Smart Wearable untuk <span class="gradient-text">Rehabilitasi Stroke</span>
+                        <span data-i18n="landing.hero.title.pre">Smart Wearable for</span> <span class="gradient-text" data-i18n="landing.hero.title.highlight">Stroke Rehabilitation</span>
                     </h1>
-                    <p class="hero-desc">
-                        MyoSig adalah perangkat digital rehabilitasi yang memantau pemulihan neuromuskular secara real-time melalui sensor EMG + IMU, mengatasi keterbatasan terapi konvensional.
+                    <p class="hero-desc" data-i18n="landing.hero.desc">
+                        MyoSig is a digital rehabilitation device that monitors neuromuscular recovery in real-time via EMG + IMU sensors, overcoming the limitations of conventional therapy.
                     </p>
                     <div class="hero-buttons">
                         <a href="auth.html" class="btn-hero-primary">
-                            <i class="bi bi-rocket-takeoff"></i> Mulai Sekarang
+                            <i class="bi bi-rocket-takeoff"></i> <span data-i18n="landing.hero.cta.start">Get Started</span>
                         </a>
                         <a href="#product" class="btn-hero-secondary">
-                            <i class="bi bi-play-circle"></i> Lihat Produk
+                            <i class="bi bi-play-circle"></i> <span data-i18n="landing.hero.cta.product">View Product</span>
                         </a>
                     </div>
                     <div class="hero-stats glass">
                         <div class="hero-stat">
                             <div class="hero-stat-value">85%</div>
-                            <div class="hero-stat-label">Pasien Stroke Alami Gangguan Motorik</div>
+                            <div class="hero-stat-label" data-i18n="landing.hero.stat1.label">Stroke Patients Experience Motor Impairment</div>
                         </div>
                         <div class="hero-stat">
                             <div class="hero-stat-value">7+</div>
-                            <div class="hero-stat-label">Pasien Diuji Coba</div>
+                            <div class="hero-stat-label" data-i18n="landing.hero.stat2.label">Patients Tested</div>
                         </div>
                         <div class="hero-stat">
                             <div class="hero-stat-value">5</div>
-                            <div class="hero-stat-label">Fitur Utama</div>
+                            <div class="hero-stat-label" data-i18n="landing.hero.stat3.label">Key Features</div>
                         </div>
                     </div>
                 </div>
@@ -143,31 +145,31 @@
     <section class="section about" id="about">
         <div class="container">
             <div class="text-center fade-up">
-                <div class="section-badge"><i class="bi bi-info-circle"></i> Latar Belakang</div>
-                <h2 class="section-title">Mengapa MyoSig Dibutuhkan?</h2>
-                <p class="section-subtitle mx-auto">Stroke adalah penyebab utama disabilitas jangka panjang di dunia dengan prevalensi yang terus meningkat setiap tahunnya.</p>
+                <div class="section-badge"><i class="bi bi-info-circle"></i> <span data-i18n="landing.about.badge">Background</span></div>
+                <h2 class="section-title" data-i18n="landing.about.title">Why Is MyoSig Needed?</h2>
+                <p class="section-subtitle mx-auto" data-i18n="landing.about.subtitle">Stroke is the leading cause of long-term disability worldwide, with prevalence increasing every year.</p>
             </div>
             <div class="about-grid" style="margin-top: 2.5rem;">
                 <div class="about-card glass fade-up">
                     <div class="icon-circle" style="background: linear-gradient(135deg, #2563eb, #3b82f6);">
                         <i class="bi bi-heart-pulse"></i>
                     </div>
-                    <h3>Masalah Stroke</h3>
-                    <p>Menurut WHO, stroke adalah penyebab kematian ke-2 dan penyebab disabilitas utama pada orang dewasa. Di Indonesia, prevalensi stroke mencapai <strong>10,9 per 1.000</strong> penduduk.</p>
+                    <h3 data-i18n="landing.about.card1.title">Stroke Problem</h3>
+                    <p data-i18n-html="landing.about.card1.desc">According to WHO, stroke is the 2nd leading cause of death and the primary cause of disability in adults. In Indonesia, stroke prevalence reaches <strong>10.9 per 1,000</strong> population.</p>
                 </div>
                 <div class="about-card glass fade-up">
                     <div class="icon-circle" style="background: linear-gradient(135deg, #0891b2, #22d3ee);">
                         <i class="bi bi-exclamation-triangle"></i>
                     </div>
-                    <h3>Keterbatasan Terapi</h3>
-                    <p><strong>33%</strong> pasien stroke tidak mendapat pelatihan motorik berkelanjutan. Kebanyakan penilaian klinis tidak mampu menangkap perubahan neuromuskular secara <strong>real-time</strong>.</p>
+                    <h3 data-i18n="landing.about.card2.title">Therapy Limitations</h3>
+                    <p data-i18n-html="landing.about.card2.desc"><strong>33%</strong> of stroke patients do not receive continuous motor training. Most clinical assessments cannot capture neuromuscular changes in <strong>real-time</strong>.</p>
                 </div>
                 <div class="about-card glass fade-up">
                     <div class="icon-circle" style="background: linear-gradient(135deg, #1d4ed8, #2563eb);">
                         <i class="bi bi-lightbulb"></i>
                     </div>
-                    <h3>Solusi MyoSig</h3>
-                    <p>Alat rehabilitasi digital dengan sensor EMG + IMU untuk monitoring objektif dan pelacakan pemulihan neuromuskular secara real-time, mengatasi keterbatasan terapi subjektif.</p>
+                    <h3 data-i18n="landing.about.card3.title">MyoSig Solution</h3>
+                    <p data-i18n-html="landing.about.card3.desc">A digital rehabilitation device with EMG + IMU sensors for objective monitoring and real-time neuromuscular recovery tracking, overcoming the limitations of subjective therapy.</p>
                 </div>
             </div>
         </div>
@@ -177,9 +179,9 @@
     <section class="section features" id="features">
         <div class="container">
             <div class="text-center fade-up">
-                <div class="section-badge"><i class="bi bi-stars"></i> Fitur</div>
-                <h2 class="section-title">Fitur Unggulan MyoSig</h2>
-                <p class="section-subtitle mx-auto">Memadukan teknologi sensor canggih dengan kecerdasan buatan untuk rehabilitasi yang lebih efektif.</p>
+                <div class="section-badge"><i class="bi bi-stars"></i> <span data-i18n="landing.features.badge">Features</span></div>
+                <h2 class="section-title" data-i18n="landing.features.title">MyoSig Key Features</h2>
+                <p class="section-subtitle mx-auto" data-i18n="landing.features.subtitle">Combining advanced sensor technology with artificial intelligence for more effective rehabilitation.</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card glass fade-up">
@@ -187,8 +189,8 @@
                         <i class="bi bi-people"></i>
                     </div>
                     <div>
-                        <h3>Manajemen Data Pasien</h3>
-                        <p>Menyimpan profil pasien, melacak hasil penilaian otot dari waktu ke waktu, dan meninjau data historis untuk memantau kemajuan pemulihan.</p>
+                        <h3 data-i18n="landing.feature1.title">Patient Data Management</h3>
+                        <p data-i18n="landing.feature1.desc">Store patient profiles, track muscle assessment results over time, and review historical data to monitor recovery progress.</p>
                     </div>
                 </div>
                 <div class="feature-card glass fade-up">
@@ -196,8 +198,8 @@
                         <i class="bi bi-activity"></i>
                     </div>
                     <div>
-                        <h3>Pengukuran Aktivitas Otot (EMG)</h3>
-                        <p>Menangkap dan menganalisis sinyal elektrik otot untuk menilai tingkat aktivasi otot pasien selama rehabilitasi.</p>
+                        <h3 data-i18n="landing.feature2.title">Muscle Activity Measurement (EMG)</h3>
+                        <p data-i18n="landing.feature2.desc">Capture and analyze electrical muscle signals to assess patient muscle activation levels during rehabilitation.</p>
                     </div>
                 </div>
                 <div class="feature-card glass fade-up">
@@ -205,8 +207,8 @@
                         <i class="bi bi-compass"></i>
                     </div>
                     <div>
-                        <h3>Pengukuran Gerakan (IMU)</h3>
-                        <p>Melacak dan menganalisis gerakan tubuh menggunakan sensor inersial untuk menilai pola gerakan, rentang gerak, dan kinerja motorik.</p>
+                        <h3 data-i18n="landing.feature3.title">Motion Measurement (IMU)</h3>
+                        <p data-i18n="landing.feature3.desc">Track and analyze body movements using inertial sensors to assess movement patterns, range of motion, and motor performance.</p>
                     </div>
                 </div>
                 <div class="feature-card glass fade-up">
@@ -214,8 +216,8 @@
                         <i class="bi bi-clock-history"></i>
                     </div>
                     <div>
-                        <h3>Pelacakan Riwayat Rehabilitasi</h3>
-                        <p>Merekam dan memantau kemajuan rehabilitasi pasien dari waktu ke waktu untuk mengevaluasi peningkatan aktivitas otot dan gerakan.</p>
+                        <h3 data-i18n="landing.feature4.title">Rehabilitation History Tracking</h3>
+                        <p data-i18n="landing.feature4.desc">Record and monitor patient rehabilitation progress over time to evaluate improvements in muscle activity and movement.</p>
                     </div>
                 </div>
                 <div class="feature-card glass fade-up">
@@ -223,8 +225,8 @@
                         <i class="bi bi-robot"></i>
                     </div>
                     <div>
-                        <h3>Rekomendasi Berbasis AI</h3>
-                        <p>Memberikan rekomendasi cerdas yang membantu klinisi merancang program rehabilitasi yang lebih personal dan efektif untuk pasien stroke.</p>
+                        <h3 data-i18n="landing.feature5.title">AI-Based Recommendations</h3>
+                        <p data-i18n="landing.feature5.desc">Provide intelligent recommendations that help clinicians design more personalized and effective rehabilitation programs for stroke patients.</p>
                     </div>
                 </div>
             </div>
@@ -235,9 +237,9 @@
     <section class="section product" id="product">
         <div class="container">
             <div class="text-center fade-up">
-                <div class="section-badge"><i class="bi bi-cpu"></i> Produk</div>
+                <div class="section-badge"><i class="bi bi-cpu"></i> <span data-i18n="landing.product.badge">Product</span></div>
                 <h2 class="section-title">MyoSig Device</h2>
-                <p class="section-subtitle mx-auto">Perangkat wearable nirkabel yang kompak dengan sensor EMG dan IMU terintegrasi.</p>
+                <p class="section-subtitle mx-auto" data-i18n="landing.product.subtitle">A compact wireless wearable device with integrated EMG and IMU sensors.</p>
             </div>
             <div class="product-showcase">
                 <div class="product-image-card glass fade-up">
@@ -262,34 +264,34 @@
                     </div>
                 </div>
                 <div class="product-details fade-up">
-                    <h3>Teknologi dalam Genggaman</h3>
+                    <h3 data-i18n="landing.product.tech">Technology at Your Fingertips</h3>
                     <div class="product-detail-list">
                         <div class="product-detail-item">
                             <i class="bi bi-check-circle-fill"></i>
                             <div>
-                                <h4>Sensor EMG</h4>
-                                <p>Menangkap sinyal elektrik otot secara real-time untuk monitoring aktivitas neuromuskular.</p>
+                                <h4 data-i18n="landing.product.detail1.title">EMG Sensor</h4>
+                                <p data-i18n="landing.product.detail1.desc">Captures electrical muscle signals in real-time for neuromuscular activity monitoring.</p>
                             </div>
                         </div>
                         <div class="product-detail-item">
                             <i class="bi bi-check-circle-fill"></i>
                             <div>
-                                <h4>Sensor IMU (MPU6050)</h4>
-                                <p>Mengukur akselerasi dan giroskop 6-axis untuk pelacakan gerakan yang presisi.</p>
+                                <h4 data-i18n="landing.product.detail2.title">IMU Sensor (MPU6050)</h4>
+                                <p data-i18n="landing.product.detail2.desc">Measures 6-axis acceleration and gyroscope for precise motion tracking.</p>
                             </div>
                         </div>
                         <div class="product-detail-item">
                             <i class="bi bi-check-circle-fill"></i>
                             <div>
-                                <h4>Biofeedback Real-time</h4>
-                                <p>Memberikan umpan balik langsung tentang kekuatan, kelelahan, dan performa motorik pasien.</p>
+                                <h4 data-i18n="landing.product.detail3.title">Biofeedback Real-time</h4>
+                                <p data-i18n="landing.product.detail3.desc">Provides immediate feedback on patient strength, fatigue, and motor performance.</p>
                             </div>
                         </div>
                         <div class="product-detail-item">
                             <i class="bi bi-check-circle-fill"></i>
                             <div>
-                                <h4>Remote Monitoring</h4>
-                                <p>Memungkinkan klinisi memantau kemajuan pasien dari jarak jauh melalui aplikasi web.</p>
+                                <h4 data-i18n="landing.product.detail4.title">Remote Monitoring</h4>
+                                <p data-i18n="landing.product.detail4.desc">Enables clinicians to monitor patient progress remotely through the web application.</p>
                             </div>
                         </div>
                     </div>
@@ -302,9 +304,9 @@
     <section class="section team" id="team">
         <div class="container">
             <div class="text-center fade-up">
-                <div class="section-badge"><i class="bi bi-people-fill"></i> Tim Kami</div>
-                <h2 class="section-title">Bertemu dengan Tim MyoSig</h2>
-                <p class="section-subtitle mx-auto">Tujuh inovator muda yang berdedikasi untuk memajukan teknologi rehabilitasi stroke di Indonesia.</p>
+                <div class="section-badge"><i class="bi bi-people-fill"></i> <span data-i18n="landing.team.badge">Our Team</span></div>
+                <h2 class="section-title" data-i18n="landing.team.title">Meet the MyoSig Team</h2>
+                <p class="section-subtitle mx-auto" data-i18n="landing.team.subtitle">Seven dedicated young innovators advancing stroke rehabilitation technology in Indonesia.</p>
             </div>
             <div class="team-grid">
                 <div class="team-card glass fade-up">
@@ -372,10 +374,10 @@
     <section class="cta-section">
         <div class="container">
             <div class="cta-card fade-up">
-                <h2>Siap Memulai Rehabilitasi yang Lebih Baik?</h2>
-                <p>Akses dashboard MyoSig untuk memantau dan mengelola rehabilitasi pasien stroke secara real-time.</p>
+                <h2 data-i18n="landing.cta.title">Ready for Better Rehabilitation?</h2>
+                <p data-i18n="landing.cta.desc">Access the MyoSig dashboard to monitor and manage stroke patient rehabilitation in real-time.</p>
                 <a href="auth.html" class="btn-hero-primary" style="display: inline-flex;">
-                    <i class="bi bi-rocket-takeoff"></i> Mulai Sekarang
+                    <i class="bi bi-rocket-takeoff"></i> <span data-i18n="landing.cta.btn">Get Started</span>
                 </a>
             </div>
         </div>
@@ -390,23 +392,23 @@
                         <img src="assets/image/logo.png" alt="MyoSig">
                         MyoSig
                     </div>
-                    <p class="footer-desc">Smart Wearable Device for Rehabilitation Stroke Patient. Menggunakan sensor EMG dan IMU untuk monitoring real-time pemulihan neuromuskular.</p>
+                    <p class="footer-desc" data-i18n="landing.footer.desc">Smart Wearable Device for Rehabilitation Stroke Patient. Using EMG and IMU sensors for real-time neuromuscular recovery monitoring.</p>
                 </div>
                 <div class="footer-col">
-                    <h4>Navigasi</h4>
-                    <a href="#about">Tentang</a>
-                    <a href="#features">Fitur</a>
-                    <a href="#product">Produk</a>
-                    <a href="#team">Tim</a>
+                    <h4 data-i18n="landing.footer.nav">Navigation</h4>
+                    <a href="#about" data-i18n="landing.nav.about">About</a>
+                    <a href="#features" data-i18n="landing.nav.features">Features</a>
+                    <a href="#product" data-i18n="landing.nav.product">Product</a>
+                    <a href="#team" data-i18n="landing.nav.team">Team</a>
                 </div>
                 <div class="footer-col">
                     <h4>Platform</h4>
                     <a href="auth.html">Dashboard</a>
-                    <a href="encyclopedia.html">Ensiklopedia</a>
+                    <a href="encyclopedia.html" data-i18n="nav.encyclopedia">Encyclopedia</a>
                     <a href="ai-chat.html">AI Assistant</a>
                 </div>
                 <div class="footer-col">
-                    <h4>Kontak</h4>
+                    <h4 data-i18n="landing.footer.contact">Contact</h4>
                     <a href="#"><i class="bi bi-envelope"></i> myosig@email.com</a>
                     <a href="#"><i class="bi bi-geo-alt"></i> Yogyakarta, Indonesia</a>
                 </div>
@@ -416,6 +418,10 @@
             </div>
         </div>
     </footer>
+
+    <!-- i18n Scripts -->
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 
     <!-- Scroll Animation Script -->
     <script>

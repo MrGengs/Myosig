@@ -98,11 +98,12 @@ function updateFatigue(emgPercent) {
 
 // Get fatigue level label
 function getFatigueLabel(fatigueIndex) {
-    if (fatigueIndex < 20) return { label: 'Segar', color: '#4A8B6A', icon: 'bi-battery-full' };
+    const isId = typeof getLang === 'function' && getLang() === 'id';
+    if (fatigueIndex < 20) return { label: isId ? 'Segar' : 'Fresh', color: '#4A8B6A', icon: 'bi-battery-full' };
     if (fatigueIndex < 40) return { label: 'Normal', color: '#5A8B8A', icon: 'bi-battery-half' };
-    if (fatigueIndex < 60) return { label: 'Mulai Lelah', color: '#B8A85A', icon: 'bi-battery-half' };
-    if (fatigueIndex < 80) return { label: 'Lelah', color: '#B87A5A', icon: 'bi-battery-low' };
-    return { label: 'Sangat Lelah', color: '#B85A5A', icon: 'bi-battery' };
+    if (fatigueIndex < 60) return { label: isId ? 'Mulai Lelah' : 'Getting Tired', color: '#B8A85A', icon: 'bi-battery-half' };
+    if (fatigueIndex < 80) return { label: isId ? 'Lelah' : 'Tired', color: '#B87A5A', icon: 'bi-battery-low' };
+    return { label: isId ? 'Sangat Lelah' : 'Very Tired', color: '#B85A5A', icon: 'bi-battery' };
 }
 
 // Get current fatigue state
@@ -133,11 +134,11 @@ function renderFatigueIndicator(containerId) {
             ${fatigueState.onsetDetected ? `
                 <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-light); display: flex; align-items: center; gap: 0.25rem;">
                     <i class="bi bi-exclamation-triangle" style="color: ${info.color};"></i>
-                    Onset kelelahan terdeteksi
+                    ${typeof getLang === 'function' && getLang() === 'id' ? 'Onset kelelahan terdeteksi' : 'Fatigue onset detected'}
                 </div>
             ` : ''}
             <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-light);">
-                Puncak: ${fatigueState.peakFatigue}% | Sampel: ${fatigueState.readings.length}
+                ${typeof getLang === 'function' && getLang() === 'id' ? 'Puncak' : 'Peak'}: ${fatigueState.peakFatigue}% | ${typeof getLang === 'function' && getLang() === 'id' ? 'Sampel' : 'Samples'}: ${fatigueState.readings.length}
             </div>
         </div>
     `;

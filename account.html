@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
@@ -18,6 +18,7 @@
             </a>
             <div class="app-bar-actions">
                 <div class="app-bar-date" id="appBarDate"></div>
+                <button class="lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer; margin-right: 0.5rem;">ID</button>
                 <a href="account.html" class="app-bar-avatar" id="appBarAvatar" title="Profil"><i class="bi bi-person"></i></a>
             </div>
         </div>
@@ -43,7 +44,7 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-gear card-icon"></i>
-                    Pengaturan Akun
+                    <span data-i18n="account.settings">Account Settings</span>
                 </h2>
             </div>
             
@@ -52,8 +53,8 @@
                     <i class="bi bi-key"></i>
                 </div>
                 <div class="exercise-content">
-                    <div class="exercise-name">Ubah Kata Sandi</div>
-                    <div class="exercise-duration">Perbarui kata sandi akun Anda</div>
+                    <div class="exercise-name" data-i18n="account.change_password">Change Password</div>
+                    <div class="exercise-duration" data-i18n="account.change_password.desc">Update your account password</div>
                 </div>
                 <i class="bi bi-chevron-right" style="color: var(--text-light); font-size: 1.5rem;"></i>
             </a>
@@ -63,8 +64,8 @@
                     <i class="bi bi-bell"></i>
                 </div>
                 <div class="exercise-content">
-                    <div class="exercise-name">Notifikasi</div>
-                    <div class="exercise-duration">Kelola pengaturan notifikasi</div>
+                    <div class="exercise-name" data-i18n="account.notifications">Notifications</div>
+                    <div class="exercise-duration" data-i18n="account.notifications.desc">Manage notification settings</div>
                 </div>
                 <i class="bi bi-chevron-right" style="color: var(--text-light); font-size: 1.5rem;"></i>
             </a>
@@ -74,8 +75,8 @@
                     <i class="bi bi-shield-check"></i>
                 </div>
                 <div class="exercise-content">
-                    <div class="exercise-name">Privasi & Keamanan</div>
-                    <div class="exercise-duration">Kelola privasi dan keamanan data</div>
+                    <div class="exercise-name" data-i18n="account.privacy">Privacy & Security</div>
+                    <div class="exercise-duration" data-i18n="account.privacy.desc">Manage data privacy and security</div>
                 </div>
                 <i class="bi bi-chevron-right" style="color: var(--text-light); font-size: 1.5rem;"></i>
             </a>
@@ -88,7 +89,7 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-info-circle card-icon"></i>
-                    Tentang Aplikasi
+                    <span data-i18n="account.about">About App</span>
                 </h2>
             </div>
             
@@ -107,8 +108,8 @@
                         <i class="bi bi-question-circle"></i>
                     </div>
                     <div class="exercise-content">
-                        <div class="exercise-name">Bantuan & Dukungan</div>
-                        <div class="exercise-duration">Pusat bantuan dan FAQ</div>
+                        <div class="exercise-name" data-i18n="account.help">Help & Support</div>
+                        <div class="exercise-duration" data-i18n="account.help.desc">Help center and FAQ</div>
                     </div>
                     <i class="bi bi-chevron-right" style="color: var(--text-light); font-size: 1.5rem;"></i>
                 </a>
@@ -118,8 +119,8 @@
                         <i class="bi bi-file-text"></i>
                     </div>
                     <div class="exercise-content">
-                        <div class="exercise-name">Syarat & Ketentuan</div>
-                        <div class="exercise-duration">Baca syarat dan ketentuan penggunaan</div>
+                        <div class="exercise-name" data-i18n="account.terms">Terms & Conditions</div>
+                        <div class="exercise-duration" data-i18n="account.terms.desc">Read the terms and conditions of use</div>
                     </div>
                     <i class="bi bi-chevron-right" style="color: var(--text-light); font-size: 1.5rem;"></i>
                 </a>
@@ -129,8 +130,8 @@
                         <i class="bi bi-shield-lock"></i>
                     </div>
                     <div class="exercise-content">
-                        <div class="exercise-name">Kebijakan Privasi</div>
-                        <div class="exercise-duration">Baca kebijakan privasi kami</div>
+                        <div class="exercise-name" data-i18n="account.privacy_policy">Privacy Policy</div>
+                        <div class="exercise-duration" data-i18n="account.privacy_policy.desc">Read our privacy policy</div>
                     </div>
                     <i class="bi bi-chevron-right" style="color: var(--text-light); font-size: 1.5rem;"></i>
                 </a>
@@ -140,7 +141,7 @@
         <!-- Logout Button -->
         <div class="card fade-in">
             <button onclick="logout()" class="btn btn-danger">
-                <i class="bi bi-box-arrow-right"></i> Keluar dari Akun
+                <i class="bi bi-box-arrow-right"></i> <span data-i18n="account.logout">Sign Out</span>
             </button>
         </div>
     </div>
@@ -151,7 +152,7 @@
             <div class="modal-header">
                 <h3>
                     <i class="bi bi-pencil-square"></i>
-                    Edit Profil
+                    <span data-i18n="account.edit_profile">Edit Profile</span>
                 </h3>
                 <button class="modal-close-btn" onclick="closeEditModal()">
                     <i class="bi bi-x-lg"></i>
@@ -162,83 +163,83 @@
                 <!-- Profile Information Section -->
                 <div class="modal-section">
                     <div class="modal-section-title">
-                        <i class="bi bi-person"></i> Informasi Profil
+                        <i class="bi bi-person"></i> <span data-i18n="account.profile_info">Profile Information</span>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-person"></i> Nama Lengkap
+                            <i class="bi bi-person"></i> <span data-i18n="account.form.name">Full Name</span>
                         </label>
-                        <input type="text" id="profileName" class="form-input" placeholder="Masukkan nama lengkap">
+                        <input type="text" id="profileName" class="form-input" placeholder="Enter full name" data-i18n-placeholder="account.form.name.placeholder">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
                             <i class="bi bi-envelope"></i> Email
                         </label>
-                        <input type="email" id="profileEmail" class="form-input" placeholder="Masukkan email">
+                        <input type="email" id="profileEmail" class="form-input" placeholder="Enter email" data-i18n-placeholder="account.form.email.placeholder">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-telephone"></i> Nomor Telepon
+                            <i class="bi bi-telephone"></i> <span data-i18n="account.form.phone">Phone Number</span>
                         </label>
-                        <input type="tel" id="profilePhone" class="form-input" placeholder="Masukkan nomor telepon (contoh: 081234567890)" pattern="[0-9]{10,13}">
-                        <small class="form-hint">Format: 10-13 digit angka</small>
+                        <input type="tel" id="profilePhone" class="form-input" placeholder="Enter phone number (e.g.: 081234567890)" data-i18n-placeholder="account.form.phone.placeholder" pattern="[0-9]{10,13}">
+                        <small class="form-hint"><span data-i18n="account.form.phone.hint">Format: 10-13 digits</span></small>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-calendar"></i> Tanggal Lahir
+                            <i class="bi bi-calendar"></i> <span data-i18n="account.form.birthdate">Date of Birth</span>
                         </label>
                         <input type="date" id="profileBirthDate" class="form-input">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-gender-ambiguous"></i> Jenis Kelamin
+                            <i class="bi bi-gender-ambiguous"></i> <span data-i18n="account.form.gender">Gender</span>
                         </label>
                         <select id="profileGender" class="form-input">
-                            <option value="">Pilih Jenis Kelamin</option>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
+                            <option value="" data-i18n="account.form.gender.select">Select Gender</option>
+                            <option value="Laki-laki" data-i18n="account.form.gender.male">Male</option>
+                            <option value="Perempuan" data-i18n="account.form.gender.female">Female</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-geo-alt"></i> Alamat
+                            <i class="bi bi-geo-alt"></i> <span data-i18n="account.form.address">Address</span>
                         </label>
-                        <textarea id="profileAddress" class="form-input" rows="3" placeholder="Masukkan alamat lengkap"></textarea>
+                        <textarea id="profileAddress" class="form-input" rows="3" placeholder="Enter full address" data-i18n-placeholder="account.form.address.placeholder"></textarea>
                     </div>
                 </div>
 
                 <!-- Health Information Section -->
                 <div class="modal-section">
                     <div class="modal-section-title">
-                        <i class="bi bi-heart-pulse"></i> Informasi Kesehatan
+                        <i class="bi bi-heart-pulse"></i> <span data-i18n="account.health_info">Health Information</span>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-calendar-event"></i> Tanggal Stroke
+                            <i class="bi bi-calendar-event"></i> <span data-i18n="account.form.stroke_date">Stroke Date</span>
                         </label>
                         <input type="date" id="strokeDate" class="form-input">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="bi bi-file-medical"></i> Catatan Medis
+                            <i class="bi bi-file-medical"></i> <span data-i18n="account.form.medical_notes">Medical Notes</span>
                         </label>
-                        <textarea id="medicalNotes" class="form-input" rows="4" placeholder="Masukkan catatan medis atau informasi penting lainnya"></textarea>
+                        <textarea id="medicalNotes" class="form-input" rows="4" placeholder="Enter medical notes or other important information" data-i18n-placeholder="account.form.medical_notes.placeholder"></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button onclick="closeEditModal()" class="btn btn-secondary">Batal</button>
+                <button onclick="closeEditModal()" class="btn btn-secondary" data-i18n="btn.cancel">Cancel</button>
                 <button onclick="saveAllProfileData()" class="btn btn-primary">
-                    <i class="bi bi-check-circle"></i> Simpan Semua
+                    <i class="bi bi-check-circle"></i> <span data-i18n="account.save_all">Save All</span>
                 </button>
             </div>
         </div>
@@ -248,32 +249,35 @@
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item">
             <i class="bi bi-house-door"></i>
-            <span>Beranda</span>
+            <span data-i18n="nav.home">Home</span>
         </a>
         <a href="sensors.html" class="nav-item">
             <i class="bi bi-activity"></i>
-            <span>Monitoring</span>
+            <span data-i18n="nav.monitoring">Monitoring</span>
         </a>
         <a href="encyclopedia.html" class="nav-item">
             <i class="bi bi-book"></i>
-            <span>Ensiklopedia</span>
+            <span data-i18n="nav.encyclopedia">Encyclopedia</span>
         </a>
         <a href="patient.html" class="nav-item">
             <i class="bi bi-person-heart"></i>
-            <span>Pasien</span>
+            <span data-i18n="nav.patients">Patients</span>
         </a>
         <a href="account.html" class="nav-item active">
             <i class="bi bi-person-fill" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
-            <span>Akun</span>
+            <span data-i18n="nav.account">Account</span>
         </a>
     </nav>
+
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    
+
     <script src="js/config.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/modal.js"></script>

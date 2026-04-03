@@ -51,30 +51,30 @@ async function saveAllProfileData() {
     // Validation
     if (!name || !email) {
         if (typeof showAlert === 'function') {
-            showAlert('Nama dan email harus diisi!', 'Validasi');
+            showAlert(t('account.validate.name_email'), t('label.validation'));
         } else {
-            alert('Nama dan email harus diisi!');
+            alert(t('account.validate.name_email'));
         }
         return;
     }
-    
+
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         if (typeof showAlert === 'function') {
-            showAlert('Format email tidak valid!', 'Validasi');
+            showAlert(t('account.validate.email_format'), t('label.validation'));
         } else {
-            alert('Format email tidak valid!');
+            alert(t('account.validate.email_format'));
         }
         return;
     }
-    
+
     // Phone validation (if provided)
     if (phone && !/^[0-9]{10,13}$/.test(phone.replace(/\s/g, ''))) {
         if (typeof showAlert === 'function') {
-            showAlert('Format nomor telepon tidak valid! Gunakan 10-13 digit angka.', 'Validasi');
+            showAlert(t('account.validate.phone_format'), t('label.validation'));
         } else {
-            alert('Format nomor telepon tidak valid! Gunakan 10-13 digit angka.');
+            alert(t('account.validate.phone_format'));
         }
         return;
     }
@@ -83,8 +83,8 @@ async function saveAllProfileData() {
     const saveBtn = event?.target || document.querySelector('button[onclick="saveAllProfileData()"]');
     const originalText = saveBtn.innerHTML;
     saveBtn.disabled = true;
-    saveBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Menyimpan...';
-    
+    saveBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> ' + t('label.saving');
+
     try {
         // Save to Firestore if available
         if (currentUser && firestore) {
@@ -160,9 +160,9 @@ async function saveAllProfileData() {
         
         // Show success message
         if (typeof showAlert === 'function') {
-            showAlert('Semua data berhasil disimpan!', 'Berhasil');
+            showAlert(t('account.save.success'), t('label.success'));
         } else {
-            alert('Semua data berhasil disimpan!');
+            alert(t('account.save.success'));
         }
         
         // Close modal after successful save
@@ -175,17 +175,17 @@ async function saveAllProfileData() {
         saveBtn.disabled = false;
         saveBtn.innerHTML = originalText;
         
-        let errorMessage = 'Terjadi kesalahan saat menyimpan data.';
+        let errorMessage = t('account.save.error');
         if (error.code === 'permission-denied') {
-            errorMessage = 'Anda tidak memiliki izin untuk memperbarui profil.';
+            errorMessage = t('account.save.permission_denied');
         } else if (error.code === 'unavailable') {
-            errorMessage = 'Layanan tidak tersedia. Silakan coba lagi nanti.';
+            errorMessage = t('account.save.unavailable');
         } else if (error.message) {
             errorMessage += ' ' + error.message;
         }
-        
+
         if (typeof showAlert === 'function') {
-            showAlert(errorMessage, 'Kesalahan');
+            showAlert(errorMessage, t('label.error'));
         } else {
             alert(errorMessage);
         }
@@ -243,7 +243,7 @@ function loadUserProfile(user = null) {
                 const userEmailEl = document.getElementById('userEmail');
                 
                 if (userNameEl) {
-                    userNameEl.textContent = userData.name || user.displayName || 'Pengguna';
+                    userNameEl.textContent = userData.name || user.displayName || t('account.default_name');
                 }
                 if (userEmailEl) {
                     userEmailEl.textContent = userData.email || user.email || 'user@example.com';
@@ -298,7 +298,7 @@ function loadUserProfile(user = null) {
             } else {
                 // User document doesn't exist, create it
                 const userData = {
-                    name: user.displayName || 'Pengguna',
+                    name: user.displayName || t('account.default_name'),
                     email: user.email || '',
                     photoURL: user.photoURL || '',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -329,7 +329,7 @@ function loadUserProfileFromLocalStorage() {
             const userNameEl = document.getElementById('userName');
             const userEmailEl = document.getElementById('userEmail');
             
-            if (userNameEl) userNameEl.textContent = user.name || 'Pengguna';
+            if (userNameEl) userNameEl.textContent = user.name || t('account.default_name');
             if (userEmailEl) userEmailEl.textContent = user.email || 'user@example.com';
             
             // Display user photo if available
@@ -380,20 +380,20 @@ async function saveProfile() {
     
     if (!name || !email) {
         if (typeof showAlert === 'function') {
-            showAlert('Nama dan email harus diisi!', 'Validasi');
+            showAlert(t('account.validate.name_email'), t('label.validation'));
         } else {
-            alert('Nama dan email harus diisi!');
+            alert(t('account.validate.name_email'));
         }
         return;
     }
-    
+
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         if (typeof showAlert === 'function') {
-            showAlert('Format email tidak valid!', 'Validasi');
+            showAlert(t('account.validate.email_format'), t('label.validation'));
         } else {
-            alert('Format email tidak valid!');
+            alert(t('account.validate.email_format'));
         }
         return;
     }
@@ -402,8 +402,8 @@ async function saveProfile() {
     const saveBtn = event?.target || document.querySelector('button[onclick="saveProfile()"]');
     const originalText = saveBtn.innerHTML;
     saveBtn.disabled = true;
-    saveBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Menyimpan...';
-    
+    saveBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> ' + t('label.saving');
+
     try {
         // Save to Firestore if available
         if (currentUser && firestore) {
@@ -464,9 +464,9 @@ async function saveProfile() {
         saveBtn.innerHTML = originalText;
         
         if (typeof showAlert === 'function') {
-            showAlert('Profil berhasil diperbarui!', 'Berhasil');
+            showAlert(t('account.profile.success'), t('label.success'));
         } else {
-            alert('Profil berhasil diperbarui!');
+            alert(t('account.profile.success'));
         }
         
     } catch (error) {
@@ -474,17 +474,17 @@ async function saveProfile() {
         saveBtn.disabled = false;
         saveBtn.innerHTML = originalText;
         
-        let errorMessage = 'Terjadi kesalahan saat memperbarui profil.';
+        let errorMessage = t('account.profile.error');
         if (error.code === 'permission-denied') {
-            errorMessage = 'Anda tidak memiliki izin untuk memperbarui profil.';
+            errorMessage = t('account.save.permission_denied');
         } else if (error.code === 'unavailable') {
-            errorMessage = 'Layanan tidak tersedia. Silakan coba lagi nanti.';
+            errorMessage = t('account.save.unavailable');
         } else if (error.message) {
             errorMessage += ' ' + error.message;
         }
-        
+
         if (typeof showAlert === 'function') {
-            showAlert(errorMessage, 'Kesalahan');
+            showAlert(errorMessage, t('label.error'));
         } else {
             alert(errorMessage);
         }
@@ -541,8 +541,8 @@ async function saveHealthInfo() {
     const saveBtn = event?.target || document.querySelector('button[onclick="saveHealthInfo()"]');
     const originalText = saveBtn.innerHTML;
     saveBtn.disabled = true;
-    saveBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Menyimpan...';
-    
+    saveBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> ' + t('label.saving');
+
     try {
         const healthInfo = {
             strokeDate: strokeDate,
@@ -567,9 +567,9 @@ async function saveHealthInfo() {
         saveBtn.innerHTML = originalText;
         
         if (typeof showAlert === 'function') {
-            showAlert('Informasi kesehatan berhasil disimpan!', 'Berhasil');
+            showAlert(t('account.health.success'), t('label.success'));
         } else {
-            alert('Informasi kesehatan berhasil disimpan!');
+            alert(t('account.health.success'));
         }
         
     } catch (error) {
@@ -578,9 +578,9 @@ async function saveHealthInfo() {
         saveBtn.innerHTML = originalText;
         
         if (typeof showAlert === 'function') {
-            showAlert('Terjadi kesalahan saat menyimpan informasi kesehatan.', 'Kesalahan');
+            showAlert(t('account.health.error'), t('label.error'));
         } else {
-            alert('Terjadi kesalahan saat menyimpan informasi kesehatan.');
+            alert(t('account.health.error'));
         }
     }
 }
@@ -600,36 +600,36 @@ function changePassword() {
 async function changePasswordWithPrompts() {
     if (!currentUser) {
         if (typeof showAlert === 'function') {
-            showAlert('Anda harus masuk terlebih dahulu untuk mengubah kata sandi.', 'Informasi');
+            showAlert(t('account.password.login_first'), t('label.info'));
         } else {
-            alert('Anda harus masuk terlebih dahulu untuk mengubah kata sandi.');
+            alert(t('account.password.login_first'));
         }
         return;
     }
     
-    const oldPassword = prompt('Masukkan kata sandi lama:');
+    const oldPassword = prompt(t('account.password.old_prompt'));
     if (!oldPassword) return;
     
-    const newPassword = prompt('Masukkan kata sandi baru (minimal 8 karakter):');
+    const newPassword = prompt(t('account.password.new_prompt'));
     if (!newPassword) return;
     
     if (newPassword.length < 8) {
         if (typeof showAlert === 'function') {
-            showAlert('Kata sandi baru harus minimal 8 karakter!', 'Validasi');
+            showAlert(t('account.password.min_chars'), t('label.validation'));
         } else {
-            alert('Kata sandi baru harus minimal 8 karakter!');
+            alert(t('account.password.min_chars'));
         }
         return;
     }
     
-    const confirmPassword = prompt('Konfirmasi kata sandi baru:');
+    const confirmPassword = prompt(t('account.password.confirm_prompt'));
     if (!confirmPassword) return;
     
     if (newPassword !== confirmPassword) {
         if (typeof showAlert === 'function') {
-            showAlert('Kata sandi tidak cocok!', 'Validasi');
+            showAlert(t('account.password.mismatch'), t('label.validation'));
         } else {
-            alert('Kata sandi tidak cocok!');
+            alert(t('account.password.mismatch'));
         }
         return;
     }
@@ -646,24 +646,24 @@ async function changePasswordWithPrompts() {
         await currentUser.updatePassword(newPassword);
         
         if (typeof showAlert === 'function') {
-            showAlert('Kata sandi berhasil diubah!', 'Berhasil');
+            showAlert(t('account.password.success'), t('label.success'));
         } else {
-            alert('Kata sandi berhasil diubah!');
+            alert(t('account.password.success'));
         }
     } catch (error) {
         console.error('Error changing password:', error);
-        let errorMessage = 'Terjadi kesalahan saat mengubah kata sandi.';
-        
+        let errorMessage = t('account.password.error');
+
         if (error.code === 'auth/wrong-password') {
-            errorMessage = 'Kata sandi lama tidak benar.';
+            errorMessage = t('account.password.wrong_old');
         } else if (error.code === 'auth/weak-password') {
-            errorMessage = 'Kata sandi terlalu lemah. Gunakan kata sandi yang lebih kuat.';
+            errorMessage = t('account.password.weak');
         } else if (error.code === 'auth/requires-recent-login') {
-            errorMessage = 'Untuk keamanan, silakan keluar dan masuk kembali sebelum mengubah kata sandi.';
+            errorMessage = t('account.password.relogin');
         }
-        
+
         if (typeof showAlert === 'function') {
-            showAlert(errorMessage, 'Kesalahan');
+            showAlert(errorMessage, t('label.error'));
         } else {
             alert(errorMessage);
         }
@@ -673,56 +673,56 @@ async function changePasswordWithPrompts() {
 // Notification settings
 function notificationSettings() {
     if (typeof showAlert === 'function') {
-        showAlert('Fitur pengaturan notifikasi akan segera tersedia!', 'Informasi');
+        showAlert(t('account.notification.coming'), t('label.info'));
     } else {
-        alert('Fitur pengaturan notifikasi akan segera tersedia!');
+        alert(t('account.notification.coming'));
     }
 }
 
 // Privacy settings
 function privacySettings() {
     if (typeof showAlert === 'function') {
-        showAlert('Fitur pengaturan privasi akan segera tersedia!', 'Informasi');
+        showAlert(t('account.privacy.coming'), t('label.info'));
     } else {
-        alert('Fitur pengaturan privasi akan segera tersedia!');
+        alert(t('account.privacy.coming'));
     }
 }
 
 // Help & Support
 function showHelpSupport() {
     if (typeof showAlert === 'function') {
-        showAlert('Untuk bantuan dan dukungan, silakan hubungi tim support kami melalui email: support@myosig.com atau melalui fitur chat yang akan segera tersedia.', 'Bantuan & Dukungan');
+        showAlert(t('account.help.message'), t('account.help.title'));
     } else {
-        alert('Untuk bantuan dan dukungan, silakan hubungi tim support kami melalui email: support@myosig.com');
+        alert(t('account.help.message'));
     }
 }
 
 // Terms & Conditions
 function showTermsConditions() {
     if (typeof showAlert === 'function') {
-        showAlert('Syarat & Ketentuan:\n\n1. Pengguna bertanggung jawab atas penggunaan aplikasi ini.\n2. Data kesehatan yang dimasukkan adalah tanggung jawab pengguna.\n3. Aplikasi ini hanya sebagai alat bantu, bukan pengganti konsultasi medis profesional.\n4. Kami berhak mengubah syarat dan ketentuan sewaktu-waktu.\n\nDengan menggunakan aplikasi ini, Anda menyetujui syarat dan ketentuan yang berlaku.', 'Syarat & Ketentuan');
+        showAlert(t('account.terms.message'), t('account.terms'));
     } else {
-        alert('Syarat & Ketentuan:\n\n1. Pengguna bertanggung jawab atas penggunaan aplikasi ini.\n2. Data kesehatan yang dimasukkan adalah tanggung jawab pengguna.\n3. Aplikasi ini hanya sebagai alat bantu, bukan pengganti konsultasi medis profesional.');
+        alert(t('account.terms.message'));
     }
 }
 
 // Privacy Policy
 function showPrivacyPolicy() {
     if (typeof showAlert === 'function') {
-        showAlert('Kebijakan Privasi:\n\n1. Kami menghormati privasi Anda dan melindungi data pribadi Anda.\n2. Data yang dikumpulkan hanya digunakan untuk keperluan aplikasi dan rehabilitasi.\n3. Data tidak akan dibagikan kepada pihak ketiga tanpa persetujuan Anda.\n4. Kami menggunakan enkripsi untuk melindungi data sensitif.\n5. Anda dapat menghapus data Anda kapan saja melalui pengaturan akun.\n\nUntuk informasi lebih lanjut, silakan hubungi kami di privacy@myosig.com', 'Kebijakan Privasi');
+        showAlert(t('account.privacy.message'), t('account.privacy_policy'));
     } else {
-        alert('Kebijakan Privasi:\n\n1. Kami menghormati privasi Anda dan melindungi data pribadi Anda.\n2. Data yang dikumpulkan hanya digunakan untuk keperluan aplikasi dan rehabilitasi.\n3. Data tidak akan dibagikan kepada pihak ketiga tanpa persetujuan Anda.');
+        alert(t('account.privacy.message'));
     }
 }
 
 // Logout
 function logout() {
     if (typeof showConfirm === 'function') {
-        showConfirm('Apakah Anda yakin ingin keluar dari akun?', 'Konfirmasi Keluar', () => {
+        showConfirm(t('account.logout.confirm'), t('account.logout.title'), () => {
             performLogout();
         });
     } else {
-        if (confirm('Apakah Anda yakin ingin keluar dari akun?')) {
+        if (confirm(t('account.logout.confirm'))) {
             performLogout();
         }
     }

@@ -101,7 +101,7 @@ async function loadPatientsList() {
                 .get();
             
             // Clear existing options except the first one
-            patientSelect.innerHTML = '<option value="">-- Pilih Pasien --</option>';
+            patientSelect.innerHTML = `<option value="">${t('sensors.select_patient.default')}</option>`;
             
             snapshot.forEach(doc => {
                 const data = doc.data();
@@ -112,12 +112,12 @@ async function loadPatientsList() {
             });
         } else {
             // Fallback: show message
-            patientSelect.innerHTML = '<option value="">-- Tidak ada pasien --</option>';
+            patientSelect.innerHTML = `<option value="">${t('sensors.no_patients')}</option>`;
         }
     } catch (error) {
         console.error('Error loading patients:', error);
         if (typeof showAlert === 'function') {
-            showAlert('Gagal memuat daftar pasien.', 'Kesalahan');
+            showAlert(t('sensors.alert.load_patients_error'), t('label.error'));
         }
     }
 }
@@ -130,9 +130,9 @@ function startRecording() {
     // Validation: check if patient is selected
     if (!selectedPatientId) {
         if (typeof showAlert === 'function') {
-            showAlert('Silakan pilih pasien terlebih dahulu!', 'Peringatan');
+            showAlert(t('sensors.alert.select_patient'), t('label.warning'));
         } else {
-            alert('Silakan pilih pasien terlebih dahulu!');
+            alert(t('sensors.alert.select_patient'));
         }
         return;
     }
@@ -183,11 +183,11 @@ function startRecording() {
         recordingStatus.className = 'recording-status recording';
     }
     if (recordingStatusText) {
-        recordingStatusText.textContent = 'Sedang merekam...';
+        recordingStatusText.textContent = t('sensors.recording.active');
     }
     
     if (typeof showAlert === 'function') {
-        showAlert('Recording dimulai!', 'Info');
+        showAlert(t('sensors.alert.recording_started'), t('label.info'));
     }
 }
 
@@ -202,7 +202,7 @@ async function stopRecording() {
     
     if (!selectedPatientId) {
         if (typeof showAlert === 'function') {
-            showAlert('Tidak ada pasien yang dipilih!', 'Peringatan');
+            showAlert(t('sensors.alert.no_patient'), t('label.warning'));
         }
         return;
     }
@@ -229,7 +229,7 @@ async function stopRecording() {
         recordingStatus.className = 'recording-status stopped';
     }
     if (recordingStatusText) {
-        recordingStatusText.textContent = 'Tidak sedang merekam';
+        recordingStatusText.textContent = t('sensors.recording.idle');
     }
     
     // Calculate recording duration
@@ -237,7 +237,7 @@ async function stopRecording() {
     
     // Prepare data to save
     const now = new Date();
-    const time = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const time = now.toLocaleTimeString(getLang() === 'id' ? 'id-ID' : 'en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const date = now.getDate();
     const month = now.getMonth() + 1; // Month is 0-indexed
     const year = now.getFullYear();
@@ -277,7 +277,7 @@ async function stopRecording() {
     
     // Show loading
     if (recordingStatusText) {
-        recordingStatusText.textContent = 'Menyimpan data...';
+        recordingStatusText.textContent = t('sensors.recording.saving');
     }
     
     try {
@@ -292,7 +292,7 @@ async function stopRecording() {
                 .add(recordData);
 
             if (typeof showAlert === 'function') {
-                showAlert(`Data berhasil disimpan! Waktu: ${time}, Tanggal: ${dateMonthYear}`, 'Berhasil');
+                showAlert(t('sensors.alert.save_success', {0: time, 1: dateMonthYear}), t('label.success'));
             }
 
             // Reset stats after saving
@@ -307,7 +307,7 @@ async function stopRecording() {
             localStorage.setItem('monitoringRecords', JSON.stringify(records));
             
             if (typeof showAlert === 'function') {
-                showAlert('Data disimpan ke localStorage (Firestore tidak tersedia)', 'Info');
+                showAlert(t('sensors.alert.save_fallback'), t('label.info'));
             }
             // Reset stats (no camera flow for localStorage fallback)
             resetMonitoringStatsAfterSave();
@@ -316,9 +316,9 @@ async function stopRecording() {
     } catch (error) {
         console.error('Error saving record:', error);
         if (typeof showAlert === 'function') {
-            showAlert('Gagal menyimpan data: ' + error.message, 'Kesalahan');
+            showAlert(t('sensors.alert.save_error', {0: error.message}), t('label.error'));
         } else {
-            alert('Gagal menyimpan data: ' + error.message);
+            alert(t('sensors.alert.save_error', {0: error.message}));
         }
     }
 }
@@ -329,13 +329,13 @@ function checkMpuTimeout() {
         // MPU data timeout - show "Gerak Off"
         const armMovementStatusElement = document.getElementById('armMovementStatus');
         if (armMovementStatusElement) {
-            armMovementStatusElement.textContent = 'Gerak Off';
+            armMovementStatusElement.textContent = t('sensors.movement.off');
         }
         
         // Also update dashboard if on that page
         const dashboardArmMovement = document.getElementById('armMovement');
         if (dashboardArmMovement) {
-            dashboardArmMovement.textContent = 'Gerak Off';
+            dashboardArmMovement.textContent = t('sensors.movement.off');
         }
     }
 }
@@ -556,17 +556,17 @@ function updateMonitoringDataFromRealtime(data) {
     }
     
     // Determine arm movement status - check if MPU data is recent
-    let armMovementStatus = 'Stabil';
+    let armMovementStatus = t('sensors.movement.stable');
     if (lastMpuUpdateTime && (Date.now() - lastMpuUpdateTime) <= MPU_TIMEOUT) {
         // MPU data is recent, determine status based on movement
         if (accelMagnitude > 1.5) {
-            armMovementStatus = 'Gerak Aktif';
+            armMovementStatus = t('sensors.movement.active');
         } else if (accelMagnitude > 0.5) {
-            armMovementStatus = 'Gerak Ringan';
+            armMovementStatus = t('sensors.movement.light');
         }
     } else {
         // No recent MPU update
-        armMovementStatus = 'Gerak Off';
+        armMovementStatus = t('sensors.movement.off');
     }
     
     const armMovementStatusElement = document.getElementById('armMovementStatus');
@@ -672,7 +672,7 @@ function updateSensorData() {
         // No real data connection, show "Gerak Off"
         const armMovementStatusElement = document.getElementById('armMovementStatus');
         if (armMovementStatusElement) {
-            armMovementStatusElement.textContent = 'Gerak Off';
+            armMovementStatusElement.textContent = t('sensors.movement.off');
         }
         
         // Set MPU values to 0
@@ -744,11 +744,11 @@ function updateSensorData() {
     }
     
     // Determine arm movement status
-    let armMovementStatus = 'Stabil';
+    let armMovementStatus = t('sensors.movement.stable');
     if (accelMagnitude > 1.5) {
-        armMovementStatus = 'Gerak Aktif';
+        armMovementStatus = t('sensors.movement.active');
     } else if (accelMagnitude > 0.5) {
-        armMovementStatus = 'Gerak Ringan';
+        armMovementStatus = t('sensors.movement.light');
     }
     
     const armMovementStatusElement = document.getElementById('armMovementStatus');
@@ -791,11 +791,11 @@ function resetMonitoringStatsAfterSave() {
 // Reset monitoring statistics (manual reset button)
 function resetMonitoringStats() {
     if (typeof showConfirm === 'function') {
-        showConfirm('Apakah Anda yakin ingin mereset statistik monitoring?', 'Konfirmasi Reset', () => {
+        showConfirm(t('sensors.alert.reset_confirm'), t('sensors.alert.reset_title'), () => {
             performResetMonitoringStats();
         });
     } else {
-        if (confirm('Apakah Anda yakin ingin mereset statistik monitoring?')) {
+        if (confirm(t('sensors.alert.reset_confirm'))) {
             performResetMonitoringStats();
         }
     }
@@ -827,11 +827,11 @@ function performResetMonitoringStats() {
         
         // Show success message
         if (typeof showAlert === 'function') {
-            showAlert('Statistik monitoring telah direset!', 'Berhasil');
+            showAlert(t('sensors.alert.reset_success'), t('label.success'));
         }
     } else {
         if (typeof showAlert === 'function') {
-            showAlert('Tidak dapat mereset saat sedang recording!', 'Peringatan');
+            showAlert(t('sensors.alert.reset_recording'), t('label.warning'));
         }
     }
 }
@@ -848,7 +848,7 @@ function reconnectSensors() {
     // Don't reset if recording
     if (isRecording) {
         if (typeof showAlert === 'function') {
-            showAlert('Tidak dapat mengganti device saat sedang recording!', 'Peringatan');
+            showAlert(t('sensors.alert.device_recording'), t('label.warning'));
         }
         // Revert device selection
         if (deviceSelect) {
@@ -891,9 +891,9 @@ function reconnectSensors() {
             
             // Show success message
             if (typeof showAlert === 'function') {
-                showAlert('Berhasil', `Berhasil beralih ke ${currentDevice}!`);
+                showAlert(t('sensors.alert.device_switched', {0: currentDevice}), t('label.success'));
             } else {
-                console.log(`Berhasil beralih ke ${currentDevice}!`);
+                console.log(t('sensors.alert.device_switched', {0: currentDevice}));
             }
         }, 500);
     } else {
@@ -903,9 +903,9 @@ function reconnectSensors() {
             
             // Show success message
             if (typeof showAlert === 'function') {
-                showAlert('Berhasil', `Berhasil beralih ke ${currentDevice}!`);
+                showAlert(t('sensors.alert.device_switched', {0: currentDevice}), t('label.success'));
             } else {
-                console.log(`Berhasil beralih ke ${currentDevice}!`);
+                console.log(t('sensors.alert.device_switched', {0: currentDevice}));
             }
         }, 500);
     }
@@ -954,7 +954,7 @@ async function updatePhotoButtonState() {
     if (!selectedPatientId) {
         btn.disabled = true;
         btn.style.opacity = '0.5';
-        if (statusText) statusText.textContent = 'Pilih pasien terlebih dahulu';
+        if (statusText) statusText.textContent = t('sensors.photo.select_patient');
         todayPhotoTaken = false;
         return;
     }
@@ -966,11 +966,11 @@ async function updatePhotoButtonState() {
     if (exists) {
         btn.disabled = true;
         btn.style.opacity = '0.5';
-        if (statusText) statusText.textContent = 'Foto hari ini sudah diambil';
+        if (statusText) statusText.textContent = t('sensors.photo.taken');
     } else {
         btn.disabled = false;
         btn.style.opacity = '1';
-        if (statusText) statusText.textContent = 'Belum ada foto hari ini';
+        if (statusText) statusText.textContent = t('sensors.photo.not_taken');
     }
 }
 
@@ -981,7 +981,7 @@ async function takeDailyPhoto() {
 
     if (!selectedPatientId) {
         if (typeof showAlert === 'function') {
-            showAlert('Silakan pilih pasien terlebih dahulu!', 'Peringatan');
+            showAlert(t('sensors.alert.select_patient'), t('label.warning'));
         }
         return;
     }
@@ -992,7 +992,7 @@ async function takeDailyPhoto() {
         todayPhotoTaken = true;
         updatePhotoButtonState();
         if (typeof showAlert === 'function') {
-            showAlert('Foto dokumentasi hari ini sudah diambil untuk pasien ini.', 'Info');
+            showAlert(t('sensors.photo.already_taken'), t('label.info'));
         }
         return;
     }
@@ -1042,7 +1042,7 @@ async function startCamera() {
     } catch (error) {
         console.error('Error accessing camera:', error);
         if (typeof showAlert === 'function') {
-            showAlert('Tidak dapat mengakses kamera: ' + error.message, 'Kesalahan');
+            showAlert(t('sensors.alert.camera_error', {0: error.message}), t('label.error'));
         }
     }
 }
@@ -1098,7 +1098,7 @@ function retakePhoto() {
 async function uploadDocumentationPhoto() {
     if (!capturedBlob) {
         if (typeof showAlert === 'function') {
-            showAlert('Belum ada foto yang diambil!', 'Peringatan');
+            showAlert(t('sensors.alert.no_photo'), t('label.warning'));
         }
         return;
     }
@@ -1108,7 +1108,7 @@ async function uploadDocumentationPhoto() {
 
     if (!selectedPatientId || !currentUser) {
         if (typeof showAlert === 'function') {
-            showAlert('Pasien atau user tidak valid!', 'Kesalahan');
+            showAlert(t('sensors.alert.invalid_patient'), t('label.error'));
         }
         return;
     }
@@ -1126,7 +1126,7 @@ async function uploadDocumentationPhoto() {
     if (btnClose) btnClose.style.display = 'none';
     btnRetake.style.display = 'none';
     uploadProgressBar.style.width = '30%';
-    uploadProgressText.textContent = 'Mengupload foto...';
+    uploadProgressText.textContent = t('camera.uploading');
 
     try {
         const doctorId = currentUser.uid;
@@ -1153,14 +1153,14 @@ async function uploadDocumentationPhoto() {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || `Upload gagal (${response.status})`);
+            throw new Error(errorData.message || t('camera.upload_failed', {0: response.status}));
         }
 
         // Build public URL
         const publicUrl = `${window.SUPABASE_URL}/storage/v1/object/public/${window.SUPABASE_BUCKET}/${filePath}`;
 
         uploadProgressBar.style.width = '90%';
-        uploadProgressText.textContent = 'Menyimpan URL foto...';
+        uploadProgressText.textContent = t('camera.saving_url');
 
         // Save daily photo record to Firestore
         // Structure: users/{doctorId}/patients/{patientId}/dailyPhotos/{YYYY-MM-DD}
@@ -1177,7 +1177,7 @@ async function uploadDocumentationPhoto() {
             });
 
         uploadProgressBar.style.width = '100%';
-        uploadProgressText.textContent = 'Foto berhasil disimpan!';
+        uploadProgressText.textContent = t('camera.saved');
 
         todayPhotoTaken = true;
 
@@ -1186,21 +1186,21 @@ async function uploadDocumentationPhoto() {
             closeCameraModal();
             updatePhotoButtonState();
             if (typeof showAlert === 'function') {
-                showAlert('Foto dokumentasi hari ini berhasil disimpan!', 'Berhasil');
+                showAlert(t('sensors.photo.success'), t('label.success'));
             }
         }, 1000);
 
     } catch (error) {
         console.error('Error uploading photo:', error);
         uploadProgressBar.style.width = '0%';
-        uploadProgressText.textContent = 'Gagal upload: ' + error.message;
+        uploadProgressText.textContent = t('sensors.alert.upload_error', {0: error.message});
         btnUpload.disabled = false;
         btnUpload.style.opacity = '1';
         if (btnClose) btnClose.style.display = 'flex';
         btnRetake.style.display = 'flex';
 
         if (typeof showAlert === 'function') {
-            showAlert('Gagal mengupload foto: ' + error.message, 'Kesalahan');
+            showAlert(t('sensors.alert.upload_error', {0: error.message}), t('label.error'));
         }
     }
 }

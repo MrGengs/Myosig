@@ -48,7 +48,7 @@ function initializeChat() {
     // No need to show/hide them here
     
     // Add welcome message from AI
-    addMessage('ai', 'Halo, Dokter! Saya adalah AI Assistant khusus untuk membantu Anda dalam mengelola pasien rehabilitasi stroke. Saya dapat membantu dengan:\n\n• Analisis data pasien dan monitoring\n• Rekomendasi program rehabilitasi berdasarkan data\n• Evaluasi perkembangan dan tren pasien\n• Saran perawatan dan intervensi medis\n• Interpretasi hasil monitoring dan statistik\n\nSilakan tanyakan sesuatu tentang pasien Anda atau pilih salah satu pertanyaan di atas!');
+    addMessage('ai', t('ai.welcome.message'));
 }
 
 // Auto resize textarea
@@ -127,7 +127,7 @@ async function sendMessage() {
         hideLoading();
         
         // Show error message
-        addMessage('ai', 'Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi atau tanyakan hal lain.');
+        addMessage('ai', t('ai.error'));
     } finally {
         // Re-enable input and button
         input.disabled = false;
@@ -161,7 +161,7 @@ function addMessage(type, content, exercises) {
 
     // Get current time
     const now = new Date();
-    const timeStr = now.toLocaleTimeString('id-ID', {
+    const timeStr = now.toLocaleTimeString(getLang() === 'id' ? 'id-ID' : 'en-US', {
         hour: '2-digit',
         minute: '2-digit'
     });
@@ -367,7 +367,7 @@ async function loadFirebaseDataForContext() {
             const patientData = doc.data();
             data.patients.push({
                 id: doc.id,
-                name: patientData.name || 'Tidak diketahui',
+                name: patientData.name || 'Unknown',
                 email: patientData.email || '',
                 gender: patientData.gender || '',
                 birthDate: patientData.birthDate || '',
@@ -478,7 +478,7 @@ KONTEKS DATA FIREBASE:\n\n`;
             firebaseData.records.slice(0, 5).forEach((record, index) => {
                 const patient = firebaseData.patients.find(p => p.id === record.patientId);
                 const patientName = patient ? patient.name : 'Pasien';
-                let dateStr = 'Tanggal tidak tersedia';
+                let dateStr = 'Date not available';
                 if (record.timestamp) {
                     try {
                         const date = record.timestamp.toDate ? record.timestamp.toDate() : new Date(record.timestamp);
@@ -603,9 +603,9 @@ function renderChatExerciseGallery(exercises) {
     return `
         <div class="chat-exercise-gallery">
             <div class="chat-exercise-gallery-title">
-                <i class="bi bi-images"></i> Panduan Latihan Rehabilitasi
+                <i class="bi bi-images"></i> ${t('ai.exercise.gallery')}
             </div>
-            <div class="chat-exercise-gallery-hint">Geser untuk lihat semua • Tap gambar untuk perbesar</div>
+            <div class="chat-exercise-gallery-hint">${t('ai.exercise.hint')}</div>
             <div class="chat-exercise-scroll">${items}</div>
         </div>`;
 }

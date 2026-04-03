@@ -10,17 +10,17 @@ function createModalHTML() {
             <div class="custom-modal-overlay" id="modalOverlay"></div>
             <div class="custom-modal-content">
                 <div class="custom-modal-header">
-                    <h3 class="custom-modal-title" id="modalTitle">Konfirmasi</h3>
+                    <h3 class="custom-modal-title" id="modalTitle">Confirm</h3>
                     <button class="custom-modal-close" id="modalCloseBtn">
                         <i class="bi bi-x-lg"></i>
                     </button>
                 </div>
                 <div class="custom-modal-body" id="modalBody">
-                    <p id="modalMessage">Apakah Anda yakin?</p>
+                    <p id="modalMessage">Are you sure?</p>
                 </div>
                 <div class="custom-modal-footer" id="modalFooter">
-                    <button class="btn btn-secondary" id="modalCancelBtn">Batal</button>
-                    <button class="btn btn-primary" id="modalConfirmBtn">Ya</button>
+                    <button class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+                    <button class="btn btn-primary" id="modalConfirmBtn">Yes</button>
                 </div>
             </div>
         </div>
@@ -40,7 +40,7 @@ function closeCustomModal() {
 }
 
 // Show alert modal
-function showAlert(message, title = 'Informasi') {
+function showAlert(message, title = (typeof t === 'function' ? t('label.info') : 'Info')) {
     createModalHTML();
 
     const modal = document.getElementById('customModal');
@@ -54,15 +54,15 @@ function showAlert(message, title = 'Informasi') {
 }
 
 // Show confirm modal
-function showConfirm(message, title = 'Konfirmasi', onConfirm = null, onCancel = null) {
+function showConfirm(message, title = (typeof t === 'function' ? t('label.confirm') : 'Confirm'), onConfirm = null, onCancel = null) {
     createModalHTML();
 
     const modal = document.getElementById('customModal');
     document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalBody').innerHTML = `<p>${message}</p>`;
     document.getElementById('modalFooter').innerHTML = `
-        <button class="btn btn-secondary" id="modalCancelBtn">Batal</button>
-        <button class="btn btn-primary" id="modalConfirmBtn">Ya</button>
+        <button class="btn btn-secondary" id="modalCancelBtn">${typeof t === 'function' ? t('btn.cancel') : 'Cancel'}</button>
+        <button class="btn btn-primary" id="modalConfirmBtn">${typeof getLang === 'function' && getLang() === 'id' ? 'Ya' : 'Yes'}</button>
     `;
 
     document.getElementById('modalConfirmBtn').addEventListener('click', () => {
@@ -85,6 +85,6 @@ const originalConfirm = window.confirm;
 // Replace native alert after DOM loads
 window.addEventListener('DOMContentLoaded', function() {
     window.alert = function(message) {
-        showAlert(message, 'Informasi');
+        showAlert(message);
     };
 });

@@ -46,7 +46,7 @@ function loadUserData(user = null) {
                 const userData = doc.data();
                 const welcomeName = document.getElementById('welcomeName');
                 if (welcomeName) {
-                    welcomeName.textContent = `Selamat Datang, ${userData.name || user.displayName || 'Dokter'}!`;
+                    welcomeName.textContent = t('dash.welcome', {0: userData.name || user.displayName || t('dash.welcome.default')});
                 }
                 
                 // Store in localStorage for quick access
@@ -60,7 +60,7 @@ function loadUserData(user = null) {
                 // User document doesn't exist, use auth data
                 const welcomeName = document.getElementById('welcomeName');
                 if (welcomeName) {
-                    welcomeName.textContent = `Selamat Datang, ${user.displayName || 'Dokter'}!`;
+                    welcomeName.textContent = t('dash.welcome', {0: user.displayName || t('dash.welcome.default')});
                 }
             }
         }).catch(error => {
@@ -69,7 +69,7 @@ function loadUserData(user = null) {
             if (user) {
                 const welcomeName = document.getElementById('welcomeName');
                 if (welcomeName) {
-                    welcomeName.textContent = `Selamat Datang, ${user.displayName || 'Dokter'}!`;
+                    welcomeName.textContent = t('dash.welcome', {0: user.displayName || t('dash.welcome.default')});
                 }
             }
         });
@@ -80,7 +80,7 @@ function loadUserData(user = null) {
             const user = JSON.parse(userData);
             const welcomeName = document.getElementById('welcomeName');
             if (welcomeName) {
-                welcomeName.textContent = `Selamat Datang, ${user.name || 'Dokter'}!`;
+                welcomeName.textContent = t('dash.welcome', {0: user.name || t('dash.welcome.default')});
             }
         }
     }
@@ -258,7 +258,7 @@ async function loadRecentRecords(user = null) {
                             .doc(patientId)
                             .get();
                         if (patientDoc.exists) {
-                            patientNames[patientId] = patientDoc.data().name || 'Pasien';
+                            patientNames[patientId] = patientDoc.data().name || t('nav.patients');
                         }
                     } catch (e) {
                         console.error('Error loading patient name:', e);
@@ -271,7 +271,7 @@ async function loadRecentRecords(user = null) {
             timelineContainer.innerHTML = `
                 <div class="timeline-item">
                     <div class="timeline-content">
-                        <p style="color: var(--text-light); font-style: italic;">Belum ada record monitoring</p>
+                        <p style="color: var(--text-light); font-style: italic;">${t('dash.recent.empty')}</p>
                     </div>
                 </div>
             `;
@@ -281,7 +281,7 @@ async function loadRecentRecords(user = null) {
         timelineContainer.innerHTML = `
             <div class="timeline-item">
                 <div class="timeline-content">
-                    <p style="color: var(--text-light); font-style: italic;">Gagal memuat record</p>
+                    <p style="color: var(--text-light); font-style: italic;">${t('dash.recent.error')}</p>
                 </div>
             </div>
         `;
@@ -297,7 +297,7 @@ function displayRecentRecords(records, patientNames) {
         timelineContainer.innerHTML = `
             <div class="timeline-item">
                 <div class="timeline-content">
-                    <p style="color: var(--text-light); font-style: italic;">Belum ada record monitoring</p>
+                    <p style="color: var(--text-light); font-style: italic;">${t('dash.recent.empty')}</p>
                 </div>
             </div>
         `;
@@ -314,18 +314,18 @@ function displayRecentRecords(records, patientNames) {
         
         let dateStr = '';
         if (diffMins < 60) {
-            dateStr = `${diffMins} menit yang lalu`;
+            dateStr = t('dash.recent.minutes_ago', {0: diffMins});
         } else if (diffHours < 24) {
-            dateStr = `${diffHours} jam yang lalu`;
+            dateStr = t('dash.recent.hours_ago', {0: diffHours});
         } else if (diffDays === 1) {
-            dateStr = 'Kemarin, ' + date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            dateStr = t('dash.recent.yesterday', {0: date.toLocaleTimeString(getLang() === 'id' ? 'id-ID' : 'en-US', { hour: '2-digit', minute: '2-digit' })});
         } else if (diffDays < 7) {
-            dateStr = date.toLocaleDateString('id-ID', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+            dateStr = date.toLocaleDateString(getLang() === 'id' ? 'id-ID' : 'en-US', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
         } else {
-            dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+            dateStr = date.toLocaleDateString(getLang() === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
         }
         
-        const patientName = patientNames[record.patientId] || 'Pasien';
+        const patientName = patientNames[record.patientId] || t('nav.patients');
         const duration = record.duration || 0;
         const activity = record.avgMuscleActivity || 0;
         
@@ -335,8 +335,8 @@ function displayRecentRecords(records, patientNames) {
                 <div class="timeline-content">
                     <strong>${patientName}</strong>
                     <p style="margin-top: 0.5rem; margin-bottom: 0;">
-                        Durasi: ${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, '0')} | 
-                        Aktivitas: ${activity}%
+                        ${t('dash.recent.duration')}: ${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, '0')} |
+                        ${t('dash.recent.activity')}: ${activity}%
                     </p>
                 </div>
             </div>
@@ -362,7 +362,7 @@ async function loadPatientSummary() {
         patientSummary.innerHTML = `
             <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                 <i class="bi bi-exclamation-circle" style="font-size: 2rem;"></i>
-                <p style="margin-top: 1rem;">Tidak dapat memuat data pasien</p>
+                <p style="margin-top: 1rem;">${t('dash.patient_summary.error')}</p>
             </div>
         `;
         return;
@@ -381,7 +381,7 @@ async function loadPatientSummary() {
             const data = doc.data();
             patients.push({
                 id: doc.id,
-                name: data.name || 'Tanpa Nama',
+                name: data.name || t('dash.patient_summary.no_name'),
                 email: data.email || '-'
             });
         });
@@ -390,9 +390,9 @@ async function loadPatientSummary() {
             patientSummary.innerHTML = `
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-person-x" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Belum ada pasien terdaftar</p>
+                    <p style="margin-top: 1rem;">${t('dash.patient_summary.empty')}</p>
                     <a href="patient.html" class="btn btn-primary" style="margin-top: 1rem; text-decoration: none;">
-                        <i class="bi bi-plus-circle"></i> Tambah Pasien
+                        <i class="bi bi-plus-circle"></i> ${t('dash.patient_summary.add')}
                     </a>
                 </div>
             `;
@@ -418,7 +418,7 @@ async function loadPatientSummary() {
         patientSummary.innerHTML = `
             <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                 <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                <p style="margin-top: 1rem;">Gagal memuat data pasien</p>
+                <p style="margin-top: 1rem;">${t('dash.patient_summary.load_error')}</p>
             </div>
         `;
     }

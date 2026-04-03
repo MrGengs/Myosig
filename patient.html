@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
@@ -135,6 +135,7 @@
             </a>
             <div class="app-bar-actions">
                 <div class="app-bar-date" id="appBarDate"></div>
+                <button class="lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer; margin-right: 0.5rem;">ID</button>
                 <a href="account.html" class="app-bar-avatar" id="appBarAvatar" title="Profil"><i class="bi bi-person"></i></a>
             </div>
         </div>
@@ -144,25 +145,25 @@
         <!-- Page Header -->
         <div class="page-header fade-in" style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <h1><i class="bi bi-person-heart" style="color: var(--primary-blue);"></i> Daftar Pasien</h1>
-                <p>Kelola data pasien Anda</p>
+                <h1><i class="bi bi-person-heart" style="color: var(--primary-blue);"></i> <span data-i18n="patient.title">Patient List</span></h1>
+                <p data-i18n="patient.subtitle">Manage your patient data</p>
             </div>
             <button onclick="showAddPatientModal()" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">
-                <i class="bi bi-plus-circle"></i> Tambah Pasien
+                <i class="bi bi-plus-circle"></i> <span data-i18n="patient.add">Add Patient</span>
             </button>
         </div>
 
         <!-- Search Box -->
         <div class="search-box fade-in">
             <i class="bi bi-search"></i>
-            <input type="text" id="searchInput" placeholder="Cari pasien berdasarkan nama atau email..." oninput="filterPatients()">
+            <input type="text" id="searchInput" placeholder="Search patients by name or email..." data-i18n-placeholder="patient.search" oninput="filterPatients()">
         </div>
 
         <!-- Patient List -->
         <div id="patientList" class="fade-in">
             <div class="card" style="text-align: center; padding: 2rem;">
                 <i class="bi bi-hourglass-split" style="font-size: 2rem; color: var(--text-light);"></i>
-                <p style="margin-top: 1rem; color: var(--text-light);">Memuat daftar pasien...</p>
+                <p style="margin-top: 1rem; color: var(--text-light);" data-i18n="patient.loading">Loading patient list...</p>
             </div>
         </div>
     </div>
@@ -173,7 +174,7 @@
             <div class="modal-header">
                 <h3>
                     <i class="bi bi-person-plus"></i>
-                    <span id="patientModalTitle">Tambah Pasien</span>
+                    <span id="patientModalTitle" data-i18n="patient.modal.add_title">Add Patient</span>
                 </h3>
                 <button class="modal-close-btn" onclick="closePatientModal()">
                     <i class="bi bi-x-lg"></i>
@@ -183,69 +184,69 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label class="form-label">
-                        <i class="bi bi-person"></i> Nama Lengkap
+                        <i class="bi bi-person"></i> <span data-i18n="patient.form.name">Full Name</span>
                     </label>
-                    <input type="text" id="patientName" class="form-input" placeholder="Masukkan nama lengkap">
+                    <input type="text" id="patientName" class="form-input" placeholder="Enter full name" data-i18n-placeholder="patient.form.name.placeholder">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">
                         <i class="bi bi-envelope"></i> Email
                     </label>
-                    <input type="email" id="patientEmail" class="form-input" placeholder="Masukkan email">
+                    <input type="email" id="patientEmail" class="form-input" placeholder="Enter email" data-i18n-placeholder="patient.form.email.placeholder">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">
-                        <i class="bi bi-telephone"></i> Nomor Telepon
+                        <i class="bi bi-telephone"></i> <span data-i18n="patient.form.phone">Phone Number</span>
                     </label>
-                    <input type="tel" id="patientPhone" class="form-input" placeholder="Masukkan nomor telepon">
+                    <input type="tel" id="patientPhone" class="form-input" placeholder="Enter phone number" data-i18n-placeholder="patient.form.phone.placeholder">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">
-                        <i class="bi bi-calendar"></i> Tanggal Lahir
+                        <i class="bi bi-calendar"></i> <span data-i18n="patient.form.birthdate">Date of Birth</span>
                     </label>
                     <input type="date" id="patientBirthDate" class="form-input">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">
-                        <i class="bi bi-gender-ambiguous"></i> Jenis Kelamin
+                        <i class="bi bi-gender-ambiguous"></i> <span data-i18n="patient.form.gender">Gender</span>
                     </label>
                     <select id="patientGender" class="form-input">
-                        <option value="">-- Pilih --</option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
+                        <option value="" data-i18n="patient.form.gender.select">-- Select --</option>
+                        <option value="Laki-laki" data-i18n="patient.form.gender.male">Male</option>
+                        <option value="Perempuan" data-i18n="patient.form.gender.female">Female</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">
-                        <i class="bi bi-geo-alt"></i> Alamat
+                        <i class="bi bi-geo-alt"></i> <span data-i18n="patient.form.address">Address</span>
                     </label>
-                    <textarea id="patientAddress" class="form-input" rows="3" placeholder="Masukkan alamat"></textarea>
+                    <textarea id="patientAddress" class="form-input" rows="3" placeholder="Enter address" data-i18n-placeholder="patient.form.address.placeholder"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">
-                        <i class="bi bi-calendar-event"></i> Tanggal Stroke
+                        <i class="bi bi-calendar-event"></i> <span data-i18n="patient.form.stroke_date">Stroke Date</span>
                     </label>
                     <input type="date" id="patientStrokeDate" class="form-input">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">
-                        <i class="bi bi-file-text"></i> Catatan Medis
+                        <i class="bi bi-file-text"></i> <span data-i18n="patient.form.medical_notes">Medical Notes</span>
                     </label>
-                    <textarea id="patientMedicalNotes" class="form-input" rows="3" placeholder="Masukkan catatan medis"></textarea>
+                    <textarea id="patientMedicalNotes" class="form-input" rows="3" placeholder="Enter medical notes" data-i18n-placeholder="patient.form.medical_notes.placeholder"></textarea>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button onclick="closePatientModal()" class="btn btn-secondary">Batal</button>
+                <button onclick="closePatientModal()" class="btn btn-secondary" data-i18n="btn.cancel">Cancel</button>
                 <button onclick="savePatient()" class="btn btn-primary">
-                    <i class="bi bi-check-circle"></i> Simpan
+                    <i class="bi bi-check-circle"></i> <span data-i18n="btn.save">Save</span>
                 </button>
             </div>
         </div>
@@ -255,25 +256,28 @@
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item">
             <i class="bi bi-house-door"></i>
-            <span>Beranda</span>
+            <span data-i18n="nav.home">Home</span>
         </a>
         <a href="sensors.html" class="nav-item">
             <i class="bi bi-activity"></i>
-            <span>Monitoring</span>
+            <span data-i18n="nav.monitoring">Monitoring</span>
         </a>
         <a href="encyclopedia.html" class="nav-item">
             <i class="bi bi-book"></i>
-            <span>Ensiklopedia</span>
+            <span data-i18n="nav.encyclopedia">Encyclopedia</span>
         </a>
         <a href="patient.html" class="nav-item active">
             <i class="bi bi-person-heart" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
-            <span>Pasien</span>
+            <span data-i18n="nav.patients">Patients</span>
         </a>
         <a href="account.html" class="nav-item">
             <i class="bi bi-person"></i>
-            <span>Akun</span>
+            <span data-i18n="nav.account">Account</span>
         </a>
     </nav>
+
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>

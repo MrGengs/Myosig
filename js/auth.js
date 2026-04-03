@@ -47,15 +47,15 @@ document.getElementById('loginFormElement').addEventListener('submit', async fun
     
     // Simple validation
     if (!email || !password) {
-        alert('Mohon lengkapi semua field!');
+        alert(t('auth.error.fill_all'));
         return;
     }
-    
+
     // Disable button and show loading
     const submitBtn = document.getElementById('loginSubmitBtn');
     const originalText = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="auth-loading"></span> <span>Memproses...</span>';
+    submitBtn.innerHTML = '<span class="auth-loading"></span> <span>' + t('label.processing') + '</span>';
     
     try {
         // Sign in with Firebase Auth
@@ -77,7 +77,7 @@ document.getElementById('loginFormElement').addEventListener('submit', async fun
             // Store in localStorage for quick access
             localStorage.setItem('userData', JSON.stringify({
                 uid: user.uid,
-                name: userData.name || user.displayName || 'Pengguna',
+                name: userData.name || user.displayName || t('account.default_name'),
                 email: user.email,
                 phone: userData.phone || '',
                 photoURL: userData.photoURL || user.photoURL || '',
@@ -101,19 +101,19 @@ document.getElementById('loginFormElement').addEventListener('submit', async fun
         console.error('Login error:', error);
         
         // Restore button
-        submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> <span>Masuk</span>';
+        submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> <span>' + t('auth.login.submit') + '</span>';
         submitBtn.disabled = false;
         
         // Show error message
-        let errorMessage = 'Terjadi kesalahan saat login.';
+        let errorMessage = t('auth.error.login');
         if (error.code === 'auth/user-not-found') {
-            errorMessage = 'Email tidak terdaftar.';
+            errorMessage = t('auth.error.user_not_found');
         } else if (error.code === 'auth/wrong-password') {
-            errorMessage = 'Kata sandi salah.';
+            errorMessage = t('auth.error.wrong_password');
         } else if (error.code === 'auth/invalid-email') {
-            errorMessage = 'Format email tidak valid.';
+            errorMessage = t('auth.error.invalid_email');
         } else if (error.code === 'auth/too-many-requests') {
-            errorMessage = 'Terlalu banyak percobaan. Silakan coba lagi nanti.';
+            errorMessage = t('auth.error.too_many_requests');
         }
         
         alert(errorMessage);
@@ -133,30 +133,30 @@ document.getElementById('registerFormElement').addEventListener('submit', async 
     
     // Validation
     if (!name || !email || !phone || !password || !confirmPassword) {
-        alert('Mohon lengkapi semua field!');
+        alert(t('auth.error.fill_all'));
         return;
     }
-    
+
     if (password.length < 8) {
-        alert('Kata sandi minimal 8 karakter!');
+        alert(t('auth.error.password_min'));
         return;
     }
-    
+
     if (password !== confirmPassword) {
-        alert('Kata sandi tidak cocok!');
+        alert(t('auth.error.password_mismatch'));
         return;
     }
-    
+
     if (!agreeTerms) {
-        alert('Anda harus menyetujui Syarat & Ketentuan!');
+        alert(t('auth.error.agree_terms'));
         return;
     }
-    
+
     // Disable button and show loading
     const submitBtn = document.getElementById('registerSubmitBtn');
     const originalText = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="auth-loading"></span> <span>Memproses...</span>';
+    submitBtn.innerHTML = '<span class="auth-loading"></span> <span>' + t('label.processing') + '</span>';
     
     try {
         // Create user with Firebase Auth
@@ -182,7 +182,7 @@ document.getElementById('registerFormElement').addEventListener('submit', async 
         }));
         
         // Show success message and redirect
-        alert('Pendaftaran berhasil! Selamat datang di Myosig!');
+        alert(t('auth.success.register'));
         
         // Check if user is admin and redirect accordingly
         // Admin email: admin@myosig.com
@@ -196,17 +196,17 @@ document.getElementById('registerFormElement').addEventListener('submit', async 
         console.error('Registration error:', error);
         
         // Restore button
-        submitBtn.innerHTML = '<i class="bi bi-person-plus"></i> <span>Daftar</span>';
+        submitBtn.innerHTML = '<i class="bi bi-person-plus"></i> <span>' + t('auth.register.submit') + '</span>';
         submitBtn.disabled = false;
         
         // Show error message
-        let errorMessage = 'Terjadi kesalahan saat pendaftaran.';
+        let errorMessage = t('auth.error.register');
         if (error.code === 'auth/email-already-in-use') {
-            errorMessage = 'Email sudah terdaftar. Silakan gunakan email lain atau login.';
+            errorMessage = t('auth.error.email_in_use');
         } else if (error.code === 'auth/invalid-email') {
-            errorMessage = 'Format email tidak valid.';
+            errorMessage = t('auth.error.invalid_email');
         } else if (error.code === 'auth/weak-password') {
-            errorMessage = 'Kata sandi terlalu lemah. Gunakan minimal 8 karakter.';
+            errorMessage = t('auth.error.weak_password');
         }
         
         alert(errorMessage);
@@ -232,7 +232,7 @@ async function signInWithGoogle() {
     buttons.forEach(btn => {
         btn.disabled = true;
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="auth-loading"></span> <span>Memproses...</span>';
+        btn.innerHTML = '<span class="auth-loading"></span> <span>' + t('label.processing') + '</span>';
         btn.dataset.originalText = originalText;
     });
     
@@ -242,7 +242,7 @@ async function signInWithGoogle() {
         const user = result.user;
         
         // Get user data from Google
-        const name = user.displayName || 'Pengguna';
+        const name = user.displayName || t('account.default_name');
         const email = user.email;
         const photoURL = user.photoURL || '';
         
@@ -302,13 +302,13 @@ async function signInWithGoogle() {
         });
         
         // Show error message
-        let errorMessage = 'Terjadi kesalahan saat login dengan Google.';
+        let errorMessage = t('auth.error.google');
         if (error.code === 'auth/popup-closed-by-user') {
-            errorMessage = 'Login dibatalkan. Silakan coba lagi.';
+            errorMessage = t('auth.error.popup_closed');
         } else if (error.code === 'auth/popup-blocked') {
-            errorMessage = 'Popup diblokir. Silakan izinkan popup untuk browser ini.';
+            errorMessage = t('auth.error.popup_blocked');
         } else if (error.code === 'auth/account-exists-with-different-credential') {
-            errorMessage = 'Akun dengan email ini sudah terdaftar dengan metode lain.';
+            errorMessage = t('auth.error.account_exists');
         }
         
         alert(errorMessage);
@@ -317,16 +317,16 @@ async function signInWithGoogle() {
 
 // Show forgot password modal
 function showForgotPassword() {
-    const email = prompt('Masukkan email Anda untuk reset kata sandi:');
+    const email = prompt(t('auth.forgot.prompt'));
     if (!email) return;
     
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         if (typeof showAlert === 'function') {
-            showAlert('Format email tidak valid!', 'Validasi');
+            showAlert(t('auth.forgot.invalid_email'), 'Validasi');
         } else {
-            alert('Format email tidak valid!');
+            alert(t('auth.forgot.invalid_email'));
         }
         return;
     }
@@ -334,23 +334,23 @@ function showForgotPassword() {
     // Send password reset email
     auth.sendPasswordResetEmail(email).then(() => {
         if (typeof showAlert === 'function') {
-            showAlert('Email reset kata sandi telah dikirim ke ' + email + '. Silakan cek inbox Anda.', 'Email Terkirim');
+            showAlert(t('auth.forgot.sent', {0: email}), t('auth.forgot.sent_title'));
         } else {
-            alert('Email reset kata sandi telah dikirim ke ' + email + '. Silakan cek inbox Anda.');
+            alert(t('auth.forgot.sent', {0: email}));
         }
     }).catch(error => {
         console.error('Error sending password reset email:', error);
-        let errorMessage = 'Terjadi kesalahan saat mengirim email reset.';
+        let errorMessage = t('auth.forgot.error');
         if (error.code === 'auth/user-not-found') {
-            errorMessage = 'Email tidak terdaftar.';
+            errorMessage = t('auth.error.user_not_found');
         } else if (error.code === 'auth/invalid-email') {
-            errorMessage = 'Format email tidak valid.';
+            errorMessage = t('auth.error.invalid_email');
         } else if (error.code === 'auth/too-many-requests') {
-            errorMessage = 'Terlalu banyak percobaan. Silakan coba lagi nanti.';
+            errorMessage = t('auth.error.too_many_requests');
         }
-        
+
         if (typeof showAlert === 'function') {
-            showAlert(errorMessage, 'Kesalahan');
+            showAlert(errorMessage, t('label.error'));
         } else {
             alert(errorMessage);
         }
@@ -367,7 +367,7 @@ async function createUserDocument(user, additionalData = {}) {
         const userData = {
             uid: user.uid,
             email: user.email || additionalData.email,
-            name: additionalData.name || user.displayName || 'Pengguna',
+            name: additionalData.name || user.displayName || t('account.default_name'),
             phone: additionalData.phone || '',
             photoURL: additionalData.photoURL || user.photoURL || '',
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),

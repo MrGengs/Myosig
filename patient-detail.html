@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>Myosig - Detail Pasien</title>
+    <title>Myosig - Patient Detail</title>
     <link rel="icon" href="assets/image/logo.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -408,10 +408,11 @@
         <div class="app-bar-inner">
             <button onclick="window.history.back()" class="app-bar-back">
                 <i class="bi bi-arrow-left"></i>
-                <span>Kembali</span>
+                <span data-i18n="btn.back">Back</span>
             </button>
-            <span class="app-bar-page-title">Detail Pasien</span>
+            <span class="app-bar-page-title">Patient Detail</span>
             <div class="app-bar-actions">
+                <button class="lang-toggle-btn" onclick="toggleLang()" style="background: transparent; border: 2px solid #2563eb; color: #2563eb; padding: 0.3rem 0.6rem; font-weight: 700; font-size: 0.75rem; border-radius: 8px; cursor: pointer; margin-right: 0.5rem;">ID</button>
                 <div class="app-bar-date" id="appBarDate"></div>
             </div>
         </div>
@@ -423,8 +424,8 @@
             <div style="width: 120px; height: 120px; background: var(--gradient-primary); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--white); box-shadow: var(--shadow-lg); border: 4px solid var(--white);">
                 <i class="bi bi-person-heart"></i>
             </div>
-            <h1 id="patientName" style="margin-top: 0.5rem;">Nama Pasien</h1>
-            <p id="patientId" style="color: var(--text-light); font-size: 0.9rem; margin-top: 0.25rem;">ID Pasien: <span id="patientIdValue">-</span></p>
+            <h1 id="patientName" style="margin-top: 0.5rem;">Patient Name</h1>
+            <p id="patientId" style="color: var(--text-light); font-size: 0.9rem; margin-top: 0.25rem;">Patient ID: <span id="patientIdValue">-</span></p>
         </div>
 
         <!-- Patient Information Card -->
@@ -432,42 +433,42 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-person-vcard card-icon"></i>
-                    Informasi Pasien
+                    Patient Information
                 </h2>
             </div>
             
             <div class="patient-info-grid">
                 <div class="patient-info-item">
                     <div class="patient-info-label">
-                        <i class="bi bi-envelope"></i> Email
+                        <i class="bi bi-envelope"></i> <span data-i18n="patient.form.email">Email</span>
                     </div>
                     <div class="patient-info-value" id="infoEmail">-</div>
                 </div>
                 
                 <div class="patient-info-item">
                     <div class="patient-info-label">
-                        <i class="bi bi-telephone"></i> Telepon
+                        <i class="bi bi-telephone"></i> <span data-i18n="patient.form.phone">Phone</span>
                     </div>
                     <div class="patient-info-value" id="infoPhone">-</div>
                 </div>
                 
                 <div class="patient-info-item">
                     <div class="patient-info-label">
-                        <i class="bi bi-calendar"></i> Tanggal Lahir
+                        <i class="bi bi-calendar"></i> <span data-i18n="patient.form.birthdate">Date of Birth</span>
                     </div>
                     <div class="patient-info-value" id="infoBirthDate">-</div>
                 </div>
                 
                 <div class="patient-info-item">
                     <div class="patient-info-label">
-                        <i class="bi bi-gender-ambiguous"></i> Jenis Kelamin
+                        <i class="bi bi-gender-ambiguous"></i> <span data-i18n="patient.form.gender">Gender</span>
                     </div>
                     <div class="patient-info-value" id="infoGender">-</div>
                 </div>
                 
                 <div class="patient-info-item" style="grid-column: 1 / -1;">
                     <div class="patient-info-label">
-                        <i class="bi bi-geo-alt"></i> Alamat
+                        <i class="bi bi-geo-alt"></i> <span data-i18n="patient.form.address">Address</span>
                     </div>
                     <div class="patient-info-value" id="infoAddress">-</div>
                 </div>
@@ -479,21 +480,21 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-file-medical card-icon"></i>
-                    Informasi Medis
+                    Medical Information
                 </h2>
             </div>
             
             <div class="patient-info-grid">
                 <div class="patient-info-item">
                     <div class="patient-info-label">
-                        <i class="bi bi-calendar-event"></i> Tanggal Stroke
+                        <i class="bi bi-calendar-event"></i> <span data-i18n="patient.form.stroke_date">Stroke Date</span>
                     </div>
                     <div class="patient-info-value" id="infoStrokeDate">-</div>
                 </div>
                 
                 <div class="patient-info-item" style="grid-column: 1 / -1;">
                     <div class="patient-info-label">
-                        <i class="bi bi-file-text"></i> Catatan Medis
+                        <i class="bi bi-file-text"></i> <span data-i18n="patient.form.medical_notes">Medical Notes</span>
                     </div>
                     <div class="patient-info-value" id="infoMedicalNotes" style="text-align: left; padding-top: 0.5rem;">
                         <p style="margin: 0; color: var(--text-gray); line-height: 1.6;">-</p>
@@ -507,14 +508,14 @@
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
                     <i class="bi bi-graph-up card-icon"></i>
-                    Grafik IMU (Accelerometer)
+                    IMU Chart (Accelerometer)
                 </h2>
                 <div style="display: flex; gap: 0.5rem;">
                     <button id="btnIMUWeekly" onclick="changeChartPeriod('weekly')" class="btn btn-sm btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                        <i class="bi bi-calendar-week"></i> Mingguan
+                        <i class="bi bi-calendar-week"></i> Weekly
                     </button>
                     <button id="btnIMUMonthly" onclick="changeChartPeriod('monthly')" class="btn btn-sm btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                        <i class="bi bi-calendar-month"></i> Bulanan
+                        <i class="bi bi-calendar-month"></i> Monthly
                     </button>
                 </div>
             </div>
@@ -529,14 +530,14 @@
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
                     <i class="bi bi-activity card-icon"></i>
-                    Grafik EMG (Aktivitas Otot)
+                    EMG Chart (Muscle Activity)
                 </h2>
                 <div style="display: flex; gap: 0.5rem;">
                     <button id="btnEMGWeekly" onclick="changeChartPeriod('weekly')" class="btn btn-sm btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                        <i class="bi bi-calendar-week"></i> Mingguan
+                        <i class="bi bi-calendar-week"></i> Weekly
                     </button>
                     <button id="btnEMGMonthly" onclick="changeChartPeriod('monthly')" class="btn btn-sm btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                        <i class="bi bi-calendar-month"></i> Bulanan
+                        <i class="bi bi-calendar-month"></i> Monthly
                     </button>
                 </div>
             </div>
@@ -551,13 +552,13 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-bullseye card-icon"></i>
-                    Target & Progress Rehabilitasi
+                    Rehabilitation Targets & Progress
                 </h2>
             </div>
             <div id="progressGoalsContainer">
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Memuat target rehabilitasi...</p>
+                    <p style="margin-top: 1rem;" data-i18n="label.loading">Loading...</p>
                 </div>
             </div>
         </div>
@@ -567,13 +568,13 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-speedometer card-icon"></i>
-                    Analisis Zona EMG
+                    EMG Zone Analysis
                 </h2>
             </div>
             <div id="zonesAnalysisContainer">
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Memuat analisis zona...</p>
+                    <p style="margin-top: 1rem;" data-i18n="label.loading">Loading...</p>
                 </div>
             </div>
         </div>
@@ -583,7 +584,7 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-battery-half card-icon"></i>
-                    Tren Kelelahan Otot
+                    Muscle Fatigue Trend
                 </h2>
             </div>
             <div class="chart-container" style="height: 250px;">
@@ -597,7 +598,7 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-download card-icon"></i>
-                    Export & Aksi
+                    Export & Actions
                 </h2>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
@@ -607,15 +608,15 @@
                 </button>
                 <button onclick="handleExportPDF()" class="btn btn-secondary" style="padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;">
                     <i class="bi bi-filetype-pdf" style="font-size: 1.5rem;"></i>
-                    <span style="font-size: 0.85rem;">Laporan PDF</span>
+                    <span style="font-size: 0.85rem;">PDF Report</span>
                 </button>
                 <button onclick="goToSessionCompare()" class="btn btn-secondary" style="padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;">
                     <i class="bi bi-arrow-left-right" style="font-size: 1.5rem;"></i>
-                    <span style="font-size: 0.85rem;">Bandingkan Sesi</span>
+                    <span style="font-size: 0.85rem;">Compare Sessions</span>
                 </button>
                 <button onclick="handleExportSingleCSV()" class="btn btn-secondary" style="padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;">
                     <i class="bi bi-file-earmark-arrow-down" style="font-size: 1.5rem;"></i>
-                    <span style="font-size: 0.85rem;">Export Sesi Terakhir</span>
+                    <span style="font-size: 0.85rem;">Export Last Session</span>
                 </button>
             </div>
         </div>
@@ -625,14 +626,14 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-robot card-icon"></i>
-                    Rekomendasi AI untuk Dokter
+                    AI Recommendation for Doctor
                 </h2>
             </div>
             
             <div id="aiRecommendationContent" style="padding: 1rem;">
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">AI sedang menganalisis perkembangan pasien dan menyiapkan rekomendasi...</p>
+                    <p style="margin-top: 1rem;">AI is analyzing patient progress and preparing recommendations...</p>
                 </div>
             </div>
 
@@ -641,10 +642,10 @@
                 <div style="border-top: 1px solid rgba(0,0,0,0.08); padding-top: 1rem; margin-top: 0.5rem;">
                     <h3 style="color: var(--primary-blue); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                         <i class="bi bi-images"></i>
-                        Panduan Latihan dari Booklet Rehabilitasi
+                        Exercise Guide from Rehabilitation Booklet
                     </h3>
                     <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">
-                        Tap gambar untuk memperbesar. Sumber: Self Rehabilitation Booklet for Hemiplegic Patients.
+                        Tap image to enlarge. Source: Self Rehabilitation Booklet for Hemiplegic Patients.
                     </p>
                     <div id="exerciseImagesList"></div>
                 </div>
@@ -669,14 +670,14 @@
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="bi bi-clock-history card-icon"></i>
-                    Riwayat Record
+                    Record History
                 </h2>
             </div>
             
             <div id="recordsList">
                 <div style="text-align: center; padding: 2rem; color: var(--text-light);">
                     <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
-                    <p style="margin-top: 1rem;">Memuat riwayat record...</p>
+                    <p style="margin-top: 1rem;" data-i18n="label.loading">Loading...</p>
                 </div>
             </div>
         </div>
@@ -686,25 +687,28 @@
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item">
             <i class="bi bi-house-door"></i>
-            <span>Beranda</span>
+            <span data-i18n="nav.home">Home</span>
         </a>
         <a href="sensors.html" class="nav-item">
             <i class="bi bi-activity"></i>
-            <span>Monitoring</span>
+            <span data-i18n="nav.monitoring">Monitoring</span>
         </a>
         <a href="encyclopedia.html" class="nav-item">
             <i class="bi bi-book"></i>
-            <span>Ensiklopedia</span>
+            <span data-i18n="nav.encyclopedia">Encyclopedia</span>
         </a>
         <a href="patient.html" class="nav-item active">
             <i class="bi bi-person-heart" style="color: #2563eb !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; font-size: 1.5rem !important; z-index: 1000 !important; position: relative !important; -webkit-text-fill-color: #2563eb !important; background: transparent !important; font-family: 'bootstrap-icons' !important;"></i>
-            <span>Pasien</span>
+            <span data-i18n="nav.patients">Patients</span>
         </a>
         <a href="account.html" class="nav-item">
             <i class="bi bi-person"></i>
-            <span>Akun</span>
+            <span data-i18n="nav.account">Account</span>
         </a>
     </nav>
+
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
