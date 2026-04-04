@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "myosig-official"
+  },
+  "targets": {
+    "myosig-official": {
+      "hosting": {
+        "myosig-link": [
+          "myosig-link"
+        ]
+      }
+    }
+  }
+}

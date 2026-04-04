@@ -75,11 +75,16 @@
         });
     }
 
-    /** Update toggle button labels */
+    /** Update toggle button labels with icon */
     function updateLangButtons() {
         document.querySelectorAll('.lang-toggle-btn').forEach(btn => {
-            btn.textContent = _lang === 'en' ? 'ID' : 'EN';
+            btn.innerHTML = _lang === 'en'
+                ? '<i class="bi bi-translate" style="font-size:1em"></i> ID'
+                : '<i class="bi bi-translate" style="font-size:1em"></i> EN';
             btn.title = _lang === 'en' ? 'Switch to Indonesian' : 'Ganti ke Bahasa Inggris';
+            btn.style.display = 'inline-flex';
+            btn.style.alignItems = 'center';
+            btn.style.gap = '0.3rem';
         });
     }
 

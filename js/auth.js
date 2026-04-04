@@ -58,17 +58,17 @@ document.getElementById('loginFormElement').addEventListener('submit', async fun
     submitBtn.innerHTML = '<span class="auth-loading"></span> <span>' + t('label.processing') + '</span>';
     
     try {
-        // Sign in with Firebase Auth
-        const userCredential = await auth.signInWithEmailAndPassword(email, password);
-        const user = userCredential.user;
-        
-        // Set persistence
+        // Set persistence before signing in
         if (rememberMe) {
             await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         } else {
             await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
         }
-        
+
+        // Sign in with Firebase Auth
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
         // Get user data from Firestore
         const userDoc = await firestore.collection('users').doc(user.uid).get();
         
